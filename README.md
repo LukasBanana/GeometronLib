@@ -24,6 +24,13 @@ Example
 
 int main()
 {
+    Gm::Plane p0;
+    Gm::Ray3 ray;
+    Gm::OBB3 obbox3D;
+    Gm::AABB2 aabbox2D;
+    
+    //examples will follow...
+    
     return 0;
 }
 ```
