@@ -17,6 +17,8 @@
 #include "Plane.h"
 #include "Ray.h"
 #include "Sphere.h"
+#include "Transform2.h"
+#include "Transform3.h"
 #include "Triangle.h"
 
 

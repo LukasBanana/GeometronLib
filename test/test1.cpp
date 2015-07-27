@@ -5,9 +5,12 @@
  * See "LICENSE.txt" for license information.
  */
 
+#include <Gauss/Gauss.h>
 #include <Geom/Geom.h>
 #include <iostream>
 
+
+static const Gs::Real pi = Gs::Real(3.141592654);
 
 using namespace Gm;
 
@@ -18,6 +21,13 @@ static void test1()
 
     box0.UpdateHalfSize();
     
+    Transform3 transform;
+    transform.SetPosition({ 0, 4, -2 });
+    transform.SetScale({ 1, 2, 3 });
+    transform.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.25f, 0, 0)));
+    auto mat = transform.GetMatrix();
+
+    std::cout << "matrix = " << std::endl << mat << std::endl;
     
 }
 
