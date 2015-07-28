@@ -33,6 +33,11 @@ template <typename T> class Transform3T
 
         using MatrixType = Gs::SparseMatrix4T<T>;
 
+        Transform3T() :
+            scale_( T(1) )
+        {
+        }
+
         void SetPosition(const Gs::Vector3T<T>& position)
         {
             position_ = position;
@@ -68,8 +73,13 @@ template <typename T> class Transform3T
             if (hasChanged_)
             {
                 //matrix_.SetPosition(position_);
+                //Gs::SetPosition();
+                matrix_.At(0, 3) = position_.x;
+                matrix_.At(1, 3) = position_.y;
+                matrix_.At(2, 3) = position_.z;
+
                 Gs::QuaternionToMatrix(matrix_, rotation_);
-                //matrix_.Scale(scale_);
+                Gs::Scale(matrix_, scale_);
                 hasChanged_ = false;
             }
             return matrix_;

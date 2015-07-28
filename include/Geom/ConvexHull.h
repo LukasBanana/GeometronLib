@@ -35,9 +35,9 @@ template <typename T> class ConvexHullT
 
 /* --- Type Alias --- */
 
-using Plane     = PlaneT<Gs::Real>;
-using Planef    = PlaneT<float>;
-using Planed    = PlaneT<double>;
+using ConvexHull    = ConvexHullT<Gs::Real>;
+using ConvexHullf   = ConvexHullT<float>;
+using ConvexHulld   = ConvexHullT<double>;
 
 
 } // /namespace Gm

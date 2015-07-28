@@ -30,6 +30,11 @@ template <typename T> class Transform2T
 
         //using MatrixType = Gs::SparseMatrix3T<T>;
 
+        Transform2T() :
+            rotation_   ( T(0) ),
+            scale_      ( T(1) )
+        {
+        }
 
     private:
         

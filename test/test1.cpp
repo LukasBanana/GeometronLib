@@ -22,9 +22,9 @@ static void test1()
     box0.UpdateHalfSize();
     
     Transform3 transform;
-    transform.SetPosition({ 0, 4, -2 });
-    transform.SetScale({ 1, 2, 3 });
-    transform.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.25f, 0, 0)));
+    transform.SetPosition({ 3, 4, -2 });
+    transform.SetScale({ 2, 3, 4 });
+    transform.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.5f, 0, 0)));
     auto mat = transform.GetMatrix();
 
     std::cout << "matrix = " << std::endl << mat << std::endl;
