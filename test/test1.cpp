@@ -42,36 +42,37 @@ static void triangleTest1()
     auto n3 = tri3.Normal();
 }
 
-static void meshTest1()
+static void writeOBJFile(const Mesh& mesh, const std::string& filename)
 {
-    auto mesh = MeshGenerator::Cuboid({ { 1.0f, 1.0f, 1.0f }, /*{ 5, 2, 1 }*/{ 1, 1, 1 } });
-
-    auto edges = mesh.Edges();
-
-    #if 1
-
     // Write mesh to .OBJ file
-    std::ofstream f("TestMesh.obj");
+    std::ofstream f(filename);
     f << "o Mesh" << std::endl;
 
     for (const auto& v : mesh.vertices)
         f << "v " << v.position.x << ' ' << v.position.y << ' ' << v.position.z << std::endl;
     for (const auto& v : mesh.vertices)
         f << "vn " << v.normal.x << ' ' << v.normal.y << ' ' << v.normal.z << std::endl;
-    //for (const auto& v : mesh.vertices)
-    //    f << "vt " << v.texCoord.x << ' ' << v.texCoord.y << std::endl;
+    for (const auto& v : mesh.vertices)
+        f << "vt " << v.texCoord.x << ' ' << v.texCoord.y << std::endl;
 
     f << "g Material" << std::endl;
     f << "s off" << std::endl;
 
     for (const auto& t : mesh.triangles)
     {
-        f << "f " << t.a << "//" << t.a << ' ';
-        f << t.b << "//" << t.b << ' ';
-        f << t.c << "//" << t.c << std::endl;
+        f << "f " << (t.a + 1) << '/' << (t.a + 1) << '/' << (t.a + 1) << ' ';
+        f << (t.b + 1) << '/' << (t.b + 1) << '/' << (t.b + 1) << ' ';
+        f << (t.c + 1) << '/' << (t.c + 1) << '/' << (t.c + 1) << std::endl;
     }
+}
 
-    #endif
+static void meshTest1()
+{
+    auto mesh = MeshGenerator::Cuboid({ { 1.0f, 1.0f, 1.0f }, { 5, 2, 1 } });
+
+    auto edges = mesh.Edges();
+
+    writeOBJFile(mesh, "TestMesh.obj");
 }
 
 int main()
