@@ -68,7 +68,7 @@ static void writeOBJFile(const Mesh& mesh, const std::string& filename)
 
 static void meshTest1()
 {
-    auto mesh = MeshGenerator::Cuboid({ { 1.0f, 1.0f, 1.0f }, { 5, 2, 1 } });
+    auto mesh = MeshGenerator::Cuboid({ { 5.0f, 2.0f, 1.0f }, { 5, 2, 1 } });
 
     auto edges = mesh.Edges();
 

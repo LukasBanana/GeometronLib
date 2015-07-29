@@ -104,13 +104,13 @@ Mesh Cuboid(const CuboidDescription& desc)
     // top
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(pi*Gs::Real(0.5), 0, 0)),
-        desc.size.x, desc.size.y, -desc.size.z, desc.segments.x, desc.segments.y
+        desc.size.x, desc.size.z, -desc.size.y, desc.segments.x, desc.segments.z
     );
 
     // bottom
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(-pi*Gs::Real(0.5), 0, 0)),
-        desc.size.x, desc.size.y, -desc.size.z, desc.segments.x, desc.segments.y
+        desc.size.x, desc.size.z, -desc.size.y, desc.segments.x, desc.segments.z
     );
 
     return mesh;
