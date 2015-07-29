@@ -22,20 +22,19 @@ namespace Gm
 {
 
 
-//! Base vertex structure. Contains the members: position, normal, and texCoord.
-struct Vertex
-{
-    Gs::Vector3 position;
-    Gs::Vector3 normal;
-    Gs::Vector2 texCoord;
-};
-
-
 //! Base mesh class
 class TriangleMesh
 {
     
     public:
+
+        //! Base vertex structure. Contains the members: position, normal, and texCoord.
+        struct Vertex
+        {
+            Gs::Vector3 position;
+            Gs::Vector3 normal;
+            Gs::Vector2 texCoord;
+        };
 
         using Edge      = Line<std::size_t>;
         using Triangle  = Triangle<std::size_t>;
