@@ -11,6 +11,7 @@
 
 #include "Line.h"
 #include "Triangle.h"
+#include "AABB.h"
 
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>
@@ -49,6 +50,9 @@ class Mesh
 
         //! Returns a unique list of all edges.
         std::vector<Edge> Edges() const;
+
+        //! Returns the axis-aligned bounding-box of this mesh.
+        AABB3 BoundingBox() const;
 
         std::vector<Vertex>     vertices;
         std::vector<Triangle>   triangles;

@@ -76,6 +76,16 @@ std::vector<Mesh::Edge> Mesh::Edges() const
     return edges;
 }
 
+AABB3 Mesh::BoundingBox() const
+{
+    AABB3 box;
+
+    for (const auto& vert : vertices)
+        box.Insert(vert.position);
+
+    return box;
+}
+
 
 } // /namespace Gm
 

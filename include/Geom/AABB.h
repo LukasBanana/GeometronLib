@@ -12,6 +12,7 @@
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>
 #include <algorithm>
+#include <limits>
 
 
 namespace Gm
@@ -19,12 +20,40 @@ namespace Gm
 
 
 //! Base AABB (Axis-Aligned Bounding-Box) class.
-template <template <typename> class Vec, typename T> class AABB
+template <template <typename> class Vec, typename T>
+class AABB
 {
     
     public:
         
         using ThisType = AABB<Vec, T>;
+
+        /**
+        Constructs a maximal invald bounding-box,
+        i.e. min has the maximal values possible,
+        and max has the minimal values possible.
+        */
+        AABB() :
+            min( Gs::UninitializeTag{} ),
+            max( Gs::UninitializeTag{} )
+        {
+            for (std::size_t i = 0; i < Vec<T>::components; ++i)
+            {
+                min[i] = std::numeric_limits<T>::max();
+                max[i] = std::numeric_limits<T>::lowest();
+            }
+        }
+
+        void Insert(const Vec<T>& point)
+        {
+            for (std::size_t i = 0; i < Vec<T>::components; ++i)
+            {
+                if (min[i] > point[i])
+                    min[i] = point[i];
+                if (max[i] < point[i])
+                    max[i] = point[i];
+            }
+        }
 
         void Insert(const ThisType& aabb)
         {
@@ -69,6 +98,18 @@ template <template <typename> class Vec, typename T> class AABB
         Vec<T> min, max;
 
 };
+
+//! Returns true if the two AABBs do overlap.
+template <template <typename> class Vec, typename T>
+bool Overlap(const AABB<Vec, T>& a, const AABB<Vec, T>& b)
+{
+    for (std::size_t i = 0; i < Vec<T>::components; ++i)
+    {
+        if (b.min[i] > a.max[i] || b.max[i] < a.min[i])
+            return false;
+    }
+    return true;
+}
 
 
 /* --- Type Alias --- */
