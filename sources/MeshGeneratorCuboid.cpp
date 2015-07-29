@@ -17,7 +17,7 @@ namespace MeshGenerator
 
 
 static void BuildFace(
-    Mesh& mesh, const Gs::Quaternion& rotation,
+    TriangleMesh& mesh, const Gs::Quaternion& rotation,
     Gs::Real sizeHorz, Gs::Real sizeVert, Gs::Real sizeOffsetZ,
     unsigned int segsHorz, unsigned int segsVert)
 {
@@ -70,11 +70,11 @@ static void BuildFace(
     }
 };
 
-Mesh Cuboid(const CuboidDescription& desc)
+TriangleMesh Cuboid(const CuboidDescription& desc)
 {
     static const Gs::Real pi = Gs::Real(3.141592654);//!!!
 
-    Mesh mesh;
+    TriangleMesh mesh;
     
     /* Generate faces */
     // front
@@ -113,7 +113,7 @@ Mesh Cuboid(const CuboidDescription& desc)
         desc.size.x, desc.size.z, -desc.size.y, desc.segments.x, desc.segments.z
     );
 
-    return mesh;
+    return std::move(mesh);
 }
 
 

@@ -1,36 +1,36 @@
 /*
- * Mesh.cpp
+ * TriangleMesh.cpp
  * 
  * This file is part of the "GeometronLib" project (Copyright (c) 2015 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
-#include <Geom/Mesh.h>
+#include <Geom/TriangleMesh.h>
 
 
 namespace Gm
 {
 
 
-Mesh::Mesh(Mesh&& rhs) :
+TriangleMesh::TriangleMesh(TriangleMesh&& rhs) :
     vertices    ( std::move(rhs.vertices)  ),
     triangles   ( std::move(rhs.triangles) )
 {
 }
 
-std::size_t Mesh::AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord)
+std::size_t TriangleMesh::AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord)
 {
     auto idx = vertices.size();
     vertices.push_back({ position, normal, texCoord });
     return idx;
 }
 
-void Mesh::AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2)
+void TriangleMesh::AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2)
 {
     triangles.push_back({ v0, v1, v2 });
 }
 
-std::vector<Mesh::Edge> Mesh::Edges() const
+std::vector<TriangleMesh::Edge> TriangleMesh::Edges() const
 {
     std::vector<Edge> edges;
 
@@ -76,7 +76,7 @@ std::vector<Mesh::Edge> Mesh::Edges() const
     return edges;
 }
 
-AABB3 Mesh::BoundingBox() const
+AABB3 TriangleMesh::BoundingBox() const
 {
     AABB3 box;
 

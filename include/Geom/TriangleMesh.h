@@ -1,12 +1,12 @@
 /*
- * Mesh.h
+ * TriangleMesh.h
  * 
  * This file is part of the "GeometronLib" project (Copyright (c) 2015 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_MESH_H__
-#define __GM_MESH_H__
+#ifndef __GM_TRIANGLE_MESH_H__
+#define __GM_TRIANGLE_MESH_H__
 
 
 #include "Line.h"
@@ -32,7 +32,7 @@ struct Vertex
 
 
 //! Base mesh class
-class Mesh
+class TriangleMesh
 {
     
     public:
@@ -40,18 +40,20 @@ class Mesh
         using Edge      = Line<std::size_t>;
         using Triangle  = Triangle<std::size_t>;
 
-        Mesh() = default;
+        TriangleMesh() = default;
 
-        Mesh(Mesh&& rhs);
+        TriangleMesh(TriangleMesh&& rhs);
 
+        //! Adds a new vertex with the specified attributes.
         std::size_t AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord);
 
+        //! Adds a new triangle with the specified three indices.
         void AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2);
 
-        //! Returns a unique list of all edges.
+        //! Accumulates the unique list of all edges.
         std::vector<Edge> Edges() const;
 
-        //! Returns the axis-aligned bounding-box of this mesh.
+        //! Computes the axis-aligned bounding-box of this mesh.
         AABB3 BoundingBox() const;
 
         std::vector<Vertex>     vertices;

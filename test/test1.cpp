@@ -42,7 +42,7 @@ static void triangleTest1()
     auto n3 = tri3.Normal();
 }
 
-static void writeOBJFile(const Mesh& mesh, const std::string& filename)
+static void writeOBJFile(const TriangleMesh& mesh, const std::string& filename)
 {
     // Write mesh to .OBJ file
     std::ofstream f(filename);
@@ -72,7 +72,7 @@ static void meshTest1()
 
     auto edges = mesh.Edges();
 
-    writeOBJFile(mesh, "TestMesh.obj");
+    //writeOBJFile(mesh, "TestMesh.obj");
 }
 
 int main()

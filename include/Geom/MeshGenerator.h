@@ -9,7 +9,7 @@
 #define __GM_MESH_GENERATOR_H__
 
 
-#include "Mesh.h"
+#include "TriangleMesh.h"
 
 
 namespace Gm
@@ -25,7 +25,7 @@ struct CuboidDescription
     Gs::Vector3ui   segments;
 };
 
-Mesh Cuboid(const CuboidDescription& desc);
+TriangleMesh Cuboid(const CuboidDescription& desc);
 
 
 } // /namespace MeshGenerator

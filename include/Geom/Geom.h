@@ -20,7 +20,7 @@
 #include "Transform2.h"
 #include "Transform3.h"
 #include "Triangle.h"
-#include "Mesh.h"
+#include "TriangleMesh.h"
 #include "MeshGenerator.h"
 
 
