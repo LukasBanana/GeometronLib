@@ -11,7 +11,7 @@
 
 #include <Gauss/Vector3.h>
 #include <Gauss/Quaternion.h>
-#include <Gauss/SparseMatrix4.h>
+#include <Gauss/AffineMatrix4.h>
 #include <Gauss/Conversions.h>
 #include <type_traits>
 
@@ -31,7 +31,7 @@ template <typename T> class Transform3T
         
         static_assert(std::is_floating_point<T>::value, "Transform3T class only allows floating point types");
 
-        using MatrixType = Gs::SparseMatrix4T<T>;
+        using MatrixType = Gs::AffineMatrix4T<T>;
 
         Transform3T() :
             scale_( T(1) )
@@ -72,12 +72,7 @@ template <typename T> class Transform3T
         {
             if (hasChanged_)
             {
-                //matrix_.SetPosition(position_);
-                //Gs::SetPosition();
-                matrix_.At(0, 3) = position_.x;
-                matrix_.At(1, 3) = position_.y;
-                matrix_.At(2, 3) = position_.z;
-
+                matrix_.SetPosition(position_);
                 Gs::QuaternionToMatrix(matrix_, rotation_);
                 Gs::Scale(matrix_, scale_);
                 hasChanged_ = false;

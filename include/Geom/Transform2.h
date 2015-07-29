@@ -28,7 +28,7 @@ template <typename T> class Transform2T
         
         static_assert(std::is_floating_point<T>::value, "Transform2T class only allows floating point types");
 
-        //using MatrixType = Gs::SparseMatrix3T<T>;
+        //using MatrixType = Gs::AffineMatrix3T<T>;
 
         Transform2T() :
             rotation_   ( T(0) ),

@@ -24,7 +24,7 @@ static void test1()
     Transform3 transform;
     transform.SetPosition({ 3, 4, -2 });
     transform.SetScale({ 2, 3, 4 });
-    transform.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.5f, 0, 0)));
+    //transform.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.5f, 0, 0)));
     auto mat = transform.GetMatrix();
 
     std::cout << "matrix = " << std::endl << mat << std::endl;
