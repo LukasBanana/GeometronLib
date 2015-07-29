@@ -16,7 +16,10 @@ set(PROJECT_TEST_DIR "${PROJECT_SOURCE_DIR}/test")
 
 # === Global files ===
 
-file(GLOB_RECURSE FilesAll "${PROJECT_SOURCE_DIR}/include/*.*")
+file(GLOB_RECURSE HeadersAll "${PROJECT_SOURCE_DIR}/include/*.*")
+file(GLOB_RECURSE SourcesAll "${PROJECT_SOURCE_DIR}/sources/*.*")
+
+set(FilesAll ${HeadersAll} ${SourcesAll})
 
 
 # === Include directories ===
@@ -34,5 +37,7 @@ set_target_properties(geomlib PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
 
 add_executable(test1 "${PROJECT_TEST_DIR}/test1.cpp")
 set_target_properties(test1 PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
+
+target_link_libraries(test1 geomlib)
 
 
