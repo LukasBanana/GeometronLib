@@ -43,6 +43,7 @@ template <typename T> class Transform3T
             position_ = position;
             hasChanged_ = true;
         }
+
         const Gs::Vector3T<T>& GetPosition() const
         {
             return position_;
@@ -53,6 +54,7 @@ template <typename T> class Transform3T
             rotation_ = rotation;
             hasChanged_ = true;
         }
+
         const Gs::QuaternionT<T>& GetRotation() const
         {
             return rotation_;
@@ -63,6 +65,7 @@ template <typename T> class Transform3T
             scale_ = scale;
             hasChanged_ = true;
         }
+
         const Gs::Vector3T<T>& GetScale() const
         {
             return scale_;

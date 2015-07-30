@@ -10,7 +10,7 @@
 
 
 #include <Gauss/Vector2.h>
-//#include <Gauss/SparseMatrix3.h>
+#include <Gauss/AffineMatrix3.h>
 
 
 namespace Gm
@@ -28,12 +28,57 @@ template <typename T> class Transform2T
         
         static_assert(std::is_floating_point<T>::value, "Transform2T class only allows floating point types");
 
-        //using MatrixType = Gs::AffineMatrix3T<T>;
+        using MatrixType = Gs::AffineMatrix3T<T>;
 
         Transform2T() :
             rotation_   ( T(0) ),
             scale_      ( T(1) )
         {
+        }
+
+        void SetPosition(const Gs::Vector2T<T>& position)
+        {
+            position_ = position;
+            hasChanged_ = true;
+        }
+
+        const Gs::Vector2T<T>& GetPosition() const
+        {
+            return position_;
+        }
+
+        void SetRotation(const T& rotation)
+        {
+            rotation_ = rotation;
+            hasChanged_ = true;
+        }
+
+        const T& GetRotation() const
+        {
+            return rotation_;
+        }
+
+        void SetScale(const Gs::Vector2T<T>& scale)
+        {
+            scale_ = scale;
+            hasChanged_ = true;
+        }
+
+        const Gs::Vector2T<T>& GetScale() const
+        {
+            return scale_;
+        }
+        
+        const MatrixType& GetMatrix() const
+        {
+            if (hasChanged_)
+            {
+                matrix_.SetPosition(position_);
+                //Gs::RotateZ(matrix_, rotation_);
+                //Gs::Scale(matrix_, scale_);
+                hasChanged_ = false;
+            }
+            return matrix_;
         }
 
     private:
@@ -42,7 +87,7 @@ template <typename T> class Transform2T
         T                   rotation_;
         Gs::Vector2T<T>     scale_;
 
-        //mutable MatrixType  matrix_;
+        mutable MatrixType  matrix_;
         mutable bool        hasChanged_;
 
 };

@@ -22,13 +22,17 @@ static void transformTest1()
 
     box0.UpdateHalfSize();
     
-    Transform3 transform;
-    transform.SetPosition({ 3, 4, -2 });
-    transform.SetScale({ 2, 3, 4 });
-    //transform.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.5f, 0, 0)));
-    auto mat = transform.GetMatrix();
+    Transform3 transform3;
+    transform3.SetPosition({ 3, 4, -2 });
+    transform3.SetScale({ 2, 3, 4 });
+    transform3.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.5f, 0, 0)));
+    auto mat = transform3.GetMatrix();
 
-    std::cout << "matrix = " << std::endl << mat << std::endl;
+    Transform2 transform2;
+    transform2.SetPosition({ 4, 3 });
+
+    std::cout << "Transform 3D Matrix:" << std::endl << mat << std::endl;
+    std::cout << "Transform 2D Matrix:" << std::endl << transform2.GetMatrix() << std::endl;
 }
 
 static void triangleTest1()
