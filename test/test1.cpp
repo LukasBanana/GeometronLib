@@ -68,7 +68,13 @@ static void writeOBJFile(const TriangleMesh& mesh, const std::string& filename)
 
 static void meshTest1()
 {
-    auto mesh = MeshGenerator::Cuboid({ { 5.0f, 2.0f, 1.0f }, { 5, 2, 1 } });
+    MeshGenerator::CuboidDescription cuboidDesc;
+    {
+        //cuboidDesc.center   = Gs::Vector3(0.0);
+        cuboidDesc.size     = { 5.0f, 2.0f, 1.0f };
+        cuboidDesc.segments = { 5, 2, 1 };
+    }
+    auto mesh = MeshGenerator::Cuboid(cuboidDesc);
 
     auto edges = mesh.Edges();
 

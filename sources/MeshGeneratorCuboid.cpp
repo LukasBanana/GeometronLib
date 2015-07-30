@@ -7,6 +7,7 @@
 
 #include <Geom/MeshGenerator.h>
 #include <Gauss/Quaternion.h>
+#include <algorithm>
 
 
 namespace Gm
@@ -41,10 +42,10 @@ static void BuildFace(
         {
             auto u = invHorz * static_cast<Gs::Real>(j);
             auto v = invVert * static_cast<Gs::Real>(i);
-                
+
             auto x = sizeHorz * u - sizeHorz/Gs::Real(2);
             auto y = sizeVert * v - sizeVert/Gs::Real(2);
-                
+
             mesh.AddVertex(
                 rotation * Gs::Vector3T<Gs::Real>(x, y, sizeOffsetZ),
                 rotation * Gs::Vector3T<Gs::Real>(0, 0, -1),
@@ -72,45 +73,50 @@ static void BuildFace(
 
 TriangleMesh Cuboid(const CuboidDescription& desc)
 {
-    static const Gs::Real pi = Gs::Real(3.141592654);//!!!
+    static const Gs::Real pi        = Gs::Real(3.141592654);//!!!
+    static const Gs::Real pi_0_5    = pi*Gs::Real(0.5);
 
     TriangleMesh mesh;
     
+    auto segsX = std::max(1u, desc.segments.x);
+    auto segsY = std::max(1u, desc.segments.y);
+    auto segsZ = std::max(1u, desc.segments.z);
+
     /* Generate faces */
     // front
     BuildFace(
         mesh, Gs::Quaternion(),
-        desc.size.x, desc.size.y, -desc.size.z, desc.segments.x, desc.segments.y
+        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY
     );
 
     // back
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi, 0)),
-        desc.size.x, desc.size.y, -desc.size.z, desc.segments.x, desc.segments.y
+        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY
     );
 
     // left
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, -pi*Gs::Real(0.5), 0)),
-        desc.size.z, desc.size.y, -desc.size.x, desc.segments.z, desc.segments.y
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, -pi_0_5, 0)),
+        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY
     );
 
     // right
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi*Gs::Real(0.5), 0)),
-        desc.size.z, desc.size.y, -desc.size.x, desc.segments.z, desc.segments.y
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi_0_5, 0)),
+        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY
     );
 
     // top
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(pi*Gs::Real(0.5), 0, 0)),
-        desc.size.x, desc.size.z, -desc.size.y, desc.segments.x, desc.segments.z
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(pi_0_5, 0, 0)),
+        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ
     );
 
     // bottom
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(-pi*Gs::Real(0.5), 0, 0)),
-        desc.size.x, desc.size.z, -desc.size.y, desc.segments.x, desc.segments.z
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(-pi_0_5, 0, 0)),
+        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ
     );
 
     return std::move(mesh);
