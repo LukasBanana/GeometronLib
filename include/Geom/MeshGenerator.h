@@ -171,6 +171,8 @@ TriangleMesh Cuboid(const CuboidDescription& desc);
 
 //TriangleMesh Tube(const TubeDescription& desc);
 
+//TriangleMesh Capsule(const CapsuleDescription& desc);
+
 //TriangleMesh Torus(const TorusDescription& desc);
 
 //TriangleMesh Spiral(const SpiralDescription& desc);
