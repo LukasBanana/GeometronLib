@@ -9,6 +9,7 @@
 #define __GM_TRIANGLE_MESH_H__
 
 
+#include "Config.h"
 #include "Line.h"
 #include "Triangle.h"
 #include "AABB.h"
@@ -54,6 +55,17 @@ class TriangleMesh
 
         //! Computes the axis-aligned bounding-box of this mesh.
         AABB3 BoundingBox() const;
+
+        #ifdef GM_ENABLE_MULTI_THREADING
+
+        /**
+        \brief Computes the axis-aligned bounding-box of this mesh with the specified number of threads.
+        \param[in] threadCount Specifies the number of threads. This will be clamped to the range [1, vertices.size()].
+        \remarks This may only increase performance with very large triangle meshes, i.e. over 1 Mio. vertices and more.
+        */
+        AABB3 BoundingBoxMultiThreaded(std::size_t threadCount) const;
+
+        #endif
 
         std::vector<Vertex>     vertices;
         std::vector<Triangle>   triangles;

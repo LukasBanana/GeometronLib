@@ -74,8 +74,8 @@ template <typename T> class Transform2T
             if (hasChanged_)
             {
                 matrix_.SetPosition(position_);
-                //Gs::RotateZ(matrix_, rotation_);
-                //Gs::Scale(matrix_, scale_);
+                matrix_.SetRotation(rotation_);
+                matrix_.Scale(scale_);
                 hasChanged_ = false;
             }
             return matrix_;

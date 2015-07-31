@@ -10,8 +10,13 @@
 #include <iostream>
 #include <fstream>
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
-static const Gs::Real pi = Gs::Real(3.141592654);
+
+using Gs::Real;
+static const Real pi = Real(3.141592654);
 
 using namespace Gm;
 
@@ -25,11 +30,12 @@ static void transformTest1()
     Transform3 transform3;
     transform3.SetPosition({ 3, 4, -2 });
     transform3.SetScale({ 2, 3, 4 });
-    transform3.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.5f, 0, 0)));
+    transform3.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*Real(0.5), 0, 0)));
     auto mat = transform3.GetMatrix();
 
     Transform2 transform2;
     transform2.SetPosition({ 4, 3 });
+    transform2.SetRotation(Real(90.0)*pi/Real(180));
 
     std::cout << "Transform 3D Matrix:" << std::endl << mat << std::endl;
     std::cout << "Transform 2D Matrix:" << std::endl << transform2.GetMatrix() << std::endl;
@@ -75,12 +81,35 @@ static void meshTest1()
     MeshGenerator::CuboidDescription cuboidDesc;
     {
         //cuboidDesc.center   = Gs::Vector3(0.0);
-        cuboidDesc.size     = { 5.0f, 2.0f, 1.0f };
+        cuboidDesc.size     = { Real(5), Real(2), Real(1) };
         cuboidDesc.segments = { 5, 2, 1 };
     }
     auto mesh = MeshGenerator::Cuboid(cuboidDesc);
+    
+    //auto edges = mesh.Edges();
 
-    auto edges = mesh.Edges();
+    std::cout << "Mesh Bounding Box:" << std::endl;
+
+    #ifdef _WIN32
+    auto start = GetTickCount();
+    #endif
+
+    #if defined(GM_ENABLE_MULTI_THREADING) && 0
+    auto box = mesh.BoundingBoxMultiThreaded(8);
+    #else
+    auto box = mesh.BoundingBox();
+    #endif
+
+    #ifdef _WIN32
+    auto end = GetTickCount();
+    #endif
+
+    std::cout << "min = " << box.min << std::endl;
+    std::cout << "max = " << box.max << std::endl;
+
+    #ifdef _WIN32
+    std::cout << "tick diff = " << (end - start) << std::endl;
+    #endif
 
     //writeOBJFile(mesh, "TestMesh.obj");
 }
@@ -90,8 +119,8 @@ int main()
     std::cout << "GeometronLib Test 1" << std::endl;
     std::cout << "===================" << std::endl;
 
-    transformTest1();
-    triangleTest1();
+    //transformTest1();
+    //triangleTest1();
     meshTest1();
 
     #ifdef _WIN32

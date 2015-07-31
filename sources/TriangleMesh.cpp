@@ -7,6 +7,11 @@
 
 #include <Geom/TriangleMesh.h>
 
+#ifdef GM_ENABLE_MULTI_THREADING
+#   include <thread>
+#   include <memory>
+#endif
+
 
 namespace Gm
 {
@@ -85,6 +90,55 @@ AABB3 TriangleMesh::BoundingBox() const
 
     return box;
 }
+
+#ifdef GM_ENABLE_MULTI_THREADING
+
+static void BoundingBoxThreadProc(AABB3& box, const TriangleMesh::Vertex* vertices, std::size_t vertexCount)
+{
+    for (std::size_t i = 0; i < vertexCount; ++i)
+        box.Insert(vertices[i].position);
+}
+
+AABB3 TriangleMesh::BoundingBoxMultiThreaded(std::size_t threadCount) const
+{
+    /* Clamp thread count */
+    auto numVerts = vertices.size();
+
+    if (threadCount < 1)
+        threadCount = 1;
+    if (threadCount > numVerts)
+        threadCount = numVerts;
+
+    auto verticesPerThread = numVerts / threadCount;
+
+    /* Allocate threads */
+    std::vector< std::unique_ptr<std::thread> > threads(threadCount);
+    std::vector<AABB3> subBoxes(threadCount);
+
+    for (std::size_t i = 0; i < threadCount; ++i)
+    {
+        threads[i] = std::unique_ptr<std::thread>(
+            new std::thread(BoundingBoxThreadProc, subBoxes[i], &(vertices[verticesPerThread*i]), verticesPerThread)
+        );
+    }
+
+    /* Insert remaining vertices */
+    AABB3 box;
+
+    for (std::size_t i = verticesPerThread * threadCount; i < numVerts; ++i)
+        box.Insert(vertices[i].position);
+
+    /* Join all threads */
+    for (std::size_t i = 0; i < threadCount; ++i)
+    {
+        threads[i]->join();
+        box.Insert(subBoxes[i]);
+    }
+
+    return box;
+}
+
+#endif
 
 
 } // /namespace Gm
