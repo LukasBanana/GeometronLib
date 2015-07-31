@@ -20,7 +20,8 @@ namespace MeshGenerator
 static void BuildFace(
     TriangleMesh& mesh, const Gs::Quaternion& rotation,
     Gs::Real sizeHorz, Gs::Real sizeVert, Gs::Real sizeOffsetZ,
-    unsigned int segsHorz, unsigned int segsVert)
+    unsigned int segsHorz, unsigned int segsVert,
+    Gs::Real uScale, Gs::Real vScale, bool alternateGrid)
 {
     sizeOffsetZ /= 2;
 
@@ -29,10 +30,33 @@ static void BuildFace(
 
     auto idxOffset = mesh.vertices.size();
 
-    auto AddQuad = [&](const std::size_t& v0, const std::size_t& v1, const std::size_t& v2, const std::size_t& v3)
+    auto AddQuad = [&](
+        unsigned int u, unsigned int v,
+        const std::size_t& v0, const std::size_t& v1,
+        const std::size_t& v2, const std::size_t& v3)
     {
-        mesh.AddTriangle(idxOffset + v0, idxOffset + v1, idxOffset + v2);
-        mesh.AddTriangle(idxOffset + v0, idxOffset + v2, idxOffset + v3);
+        if ( !alternateGrid || ( ( u % 2 == 0 && v % 2 == 0 ) || ( u % 2 == 1 && v % 2 == 1 ) ) )
+        {
+            /*
+            1-----2
+            |   / |
+            | /   |
+            0-----3
+            */
+            mesh.AddTriangle(idxOffset + v0, idxOffset + v1, idxOffset + v2);
+            mesh.AddTriangle(idxOffset + v0, idxOffset + v2, idxOffset + v3);
+        }
+        else
+        {
+            /*
+            1-----2
+            | \   |
+            |   \ |
+            0-----3
+            */
+            mesh.AddTriangle(idxOffset + v0, idxOffset + v1, idxOffset + v3);
+            mesh.AddTriangle(idxOffset + v1, idxOffset + v2, idxOffset + v3);
+        }
     };
 
     /* Generate vertices */
@@ -49,7 +73,7 @@ static void BuildFace(
             mesh.AddVertex(
                 rotation * Gs::Vector3T<Gs::Real>(x, y, sizeOffsetZ),
                 rotation * Gs::Vector3T<Gs::Real>(0, 0, -1),
-                Gs::Vector2T<Gs::Real>(u, v)
+                Gs::Vector2T<Gs::Real>(u * uScale, (Gs::Real(1) - v) * vScale)
             );
         }
     }
@@ -62,6 +86,7 @@ static void BuildFace(
         for (unsigned int j = 0; j < segsHorz; ++j)
         {
             AddQuad(
+                i, j,
                  i   *strideHorz + j,
                 (i+1)*strideHorz + j,
                 (i+1)*strideHorz + j+1,
@@ -85,38 +110,38 @@ TriangleMesh Cuboid(const CuboidDescription& desc)
     /* Generate faces */
     // front
     BuildFace(
-        mesh, Gs::Quaternion(),
-        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, 0, pi)),//Gs::Quaternion(),
+        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY, desc.uvScale.x, desc.uvScale.y, desc.alternateGrid
     );
 
     // back
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi, 0)),
-        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi, pi)),
+        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY, desc.uvScale.x, desc.uvScale.y, desc.alternateGrid
     );
 
     // left
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, -pi_0_5, 0)),
-        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, -pi_0_5, pi)),
+        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY, desc.uvScale.z, desc.uvScale.y, desc.alternateGrid
     );
 
     // right
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi_0_5, 0)),
-        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi_0_5, pi)),
+        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY, desc.uvScale.z, desc.uvScale.y, desc.alternateGrid
     );
 
     // top
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(pi_0_5, 0, 0)),
-        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ
+        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ, desc.uvScale.x, desc.uvScale.z, desc.alternateGrid
     );
 
     // bottom
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(-pi_0_5, 0, 0)),
-        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ
+        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ, desc.uvScale.x, desc.uvScale.z, desc.alternateGrid
     );
 
     return std::move(mesh);

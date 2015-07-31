@@ -11,6 +11,8 @@
 
 #include "TriangleMesh.h"
 
+#include <functional>
+
 
 namespace Gm
 {
@@ -23,14 +25,17 @@ namespace MeshGenerator
 
 struct CuboidDescription
 {
-    //! Center factors (in percent, i.e. in the range [0.0, 1.0]). By default (0.5, 0.5, 0.5).
-    Gs::Vector3     center      = Gs::Vector3(Gs::Real(0.5));
-
     //! Cuboid size. By default (1, 1, 1).
-    Gs::Vector3     size        = Gs::Vector3(Gs::Real(1.0));
+    Gs::Vector3     size            = Gs::Vector3(Gs::Real(1.0));
+
+    //! Cuboid texture UV scaling (X, Y), (Z, Y), (X, Z).
+    Gs::Vector3     uvScale         = Gs::Vector3(Gs::Real(1.0));
 
     //! Cuboid segmentation. Each component will be clamped to [1, +inf). By default (1, 1, 1).
-    Gs::Vector3ui   segments    = Gs::Vector3ui(1, 1, 1);
+    Gs::Vector3ui   segments        = Gs::Vector3ui(1, 1, 1);
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default true.
+    bool            alternateGrid   = true;
 };
 
 struct EllipsoidDescription

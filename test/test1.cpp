@@ -56,6 +56,8 @@ static void writeOBJFile(const TriangleMesh& mesh, const std::string& filename)
 {
     // Write mesh to .OBJ file
     std::ofstream f(filename);
+
+    f << "mtllib TestMesh.mtl" << std::endl;
     f << "o Mesh" << std::endl;
 
     for (const auto& v : mesh.vertices)
@@ -66,6 +68,7 @@ static void writeOBJFile(const TriangleMesh& mesh, const std::string& filename)
         f << "vt " << v.texCoord.x << ' ' << v.texCoord.y << std::endl;
 
     f << "g Material" << std::endl;
+    f << "usemtl Mesh_Material" << std::endl;
     f << "s off" << std::endl;
 
     for (const auto& t : mesh.triangles)
@@ -80,9 +83,10 @@ static void meshTest1()
 {
     MeshGenerator::CuboidDescription cuboidDesc;
     {
-        //cuboidDesc.center   = Gs::Vector3(0.0);
-        cuboidDesc.size     = { Real(5), Real(2), Real(1) };
-        cuboidDesc.segments = { 5, 2, 1 };
+        cuboidDesc.size             = { Real(4), Real(2), Real(10) };
+        cuboidDesc.uvScale          = cuboidDesc.size;
+        cuboidDesc.segments         = { 4, 2, 10 };
+        cuboidDesc.alternateGrid    = true;
     }
     auto mesh = MeshGenerator::Cuboid(cuboidDesc);
     
@@ -111,7 +115,7 @@ static void meshTest1()
     std::cout << "tick diff = " << (end - start) << std::endl;
     #endif
 
-    //writeOBJFile(mesh, "TestMesh.obj");
+    writeOBJFile(mesh, "TestMesh.obj");
 }
 
 int main()
