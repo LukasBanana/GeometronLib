@@ -50,7 +50,7 @@ class TriangleMesh
         //! Adds a new triangle with the specified three indices.
         void AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2);
 
-        //! Accumulates the unique list of all edges.
+        //! Computes the set of all edges.
         std::vector<Edge> Edges() const;
 
         //! Computes the axis-aligned bounding-box of this mesh.
