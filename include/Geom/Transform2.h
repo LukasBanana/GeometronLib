@@ -31,8 +31,9 @@ template <typename T> class Transform2T
         using MatrixType = Gs::AffineMatrix3T<T>;
 
         Transform2T() :
-            rotation_   ( T(0) ),
-            scale_      ( T(1) )
+            rotation_   ( T(0)  ),
+            scale_      ( T(1)  ),
+            hasChanged_ ( false )
         {
         }
 
@@ -74,8 +75,7 @@ template <typename T> class Transform2T
             if (hasChanged_)
             {
                 matrix_.SetPosition(position_);
-                matrix_.SetRotation(rotation_);
-                matrix_.Scale(scale_);
+                matrix_.SetRotationAndScale(rotation_, scale_);
                 hasChanged_ = false;
             }
             return matrix_;
