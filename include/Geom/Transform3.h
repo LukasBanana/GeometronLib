@@ -34,8 +34,8 @@ template <typename T> class Transform3T
         using MatrixType = Gs::AffineMatrix4T<T>;
 
         Transform3T() :
-            scale_      ( T(1)  ),
-            hasChanged_ ( false )
+            scale_      ( T(1) ),
+            hasChanged_ ( true )
         {
         }
 

@@ -31,9 +31,9 @@ template <typename T> class Transform2T
         using MatrixType = Gs::AffineMatrix3T<T>;
 
         Transform2T() :
-            rotation_   ( T(0)  ),
-            scale_      ( T(1)  ),
-            hasChanged_ ( false )
+            rotation_   ( T(0) ),
+            scale_      ( T(1) ),
+            hasChanged_ ( true )
         {
         }
 
