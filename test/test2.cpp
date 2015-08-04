@@ -127,7 +127,7 @@ void updateProjection()
     }
 
     // setup final projection
-    projection = Gs::Lerp(perspProj, orthoProj, std::sin(morphing)*0.5f + 0.5f);
+    projection = Gs::Lerp(perspProj, orthoProj, morphing);
 
     #else
 
@@ -157,6 +157,7 @@ void initGL()
 
     // create model
     Gm::MeshGenerator::CuboidDescription mdlDesc;
+    mdlDesc.size = { 1, 1.5f, 0.5f };
     auto mdl = createCuboidModel(mdlDesc);
 
     mdl->transform.SetPosition({ 0, 0, -2 });
@@ -197,6 +198,42 @@ void drawModel(const Model& mdl)
     glEnd();
 }
 
+void drawLine(const Gs::Vector3& a, const Gs::Vector3& b)
+{
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glVertex3fv(a.Ptr());
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glVertex3fv(b.Ptr());
+}
+
+void drawAABB(const Gm::AABB3& box)
+{
+    glLoadIdentity();
+
+    glBegin(GL_LINES);
+
+    auto v0 = box.min;
+    auto v1 = box.max;
+
+    drawLine({ v0.x, v0.y, v0.z }, { v1.x, v0.y, v0.z });
+    drawLine({ v0.x, v1.y, v0.z }, { v1.x, v1.y, v0.z });
+    drawLine({ v0.x, v0.y, v0.z }, { v0.x, v1.y, v0.z });
+    drawLine({ v1.x, v0.y, v0.z }, { v1.x, v1.y, v0.z });
+
+    drawLine({ v0.x, v0.y, v1.z }, { v1.x, v0.y, v1.z });
+    drawLine({ v0.x, v1.y, v1.z }, { v1.x, v1.y, v1.z });
+    drawLine({ v0.x, v0.y, v1.z }, { v0.x, v1.y, v1.z });
+    drawLine({ v1.x, v0.y, v1.z }, { v1.x, v1.y, v1.z });
+
+    drawLine({ v0.x, v0.y, v0.z }, { v0.x, v0.y, v1.z });
+    drawLine({ v1.x, v0.y, v0.z }, { v1.x, v0.y, v1.z });
+    drawLine({ v1.x, v1.y, v0.z }, { v1.x, v1.y, v1.z });
+    drawLine({ v0.x, v1.y, v0.z }, { v0.x, v1.y, v1.z });
+
+    glEnd();
+}
+
 void updateScene()
 {
     auto& trans = models[0].transform;
@@ -225,7 +262,10 @@ void drawScene()
 
     // draw models
     for (const auto& mdl : models)
+    {
         drawModel(mdl);
+        drawAABB(mdl.mesh.BoundingBox(mdl.transform.GetMatrix()));
+    }
 }
 
 void displayCallback()

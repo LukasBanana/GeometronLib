@@ -6,6 +6,7 @@
  */
 
 #include <Geom/TriangleMesh.h>
+#include <Gauss/TransformVector.h>
 
 #ifdef GM_ENABLE_MULTI_THREADING
 #   include <thread>
@@ -87,6 +88,16 @@ AABB3 TriangleMesh::BoundingBox() const
 
     for (const auto& vert : vertices)
         box.Insert(vert.position);
+
+    return box;
+}
+
+AABB3 TriangleMesh::BoundingBox(const Gs::AffineMatrix4& matrix) const
+{
+    AABB3 box;
+
+    for (const auto& vert : vertices)
+        box.Insert(Gs::TransformVector(matrix, vert.position));
 
     return box;
 }

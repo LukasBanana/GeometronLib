@@ -16,6 +16,7 @@
 
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>
+#include <Gauss/AffineMatrix4.h>
 #include <algorithm>
 
 
@@ -55,6 +56,9 @@ class TriangleMesh
 
         //! Computes the axis-aligned bounding-box of this mesh.
         AABB3 BoundingBox() const;
+
+        //! Computes the axis-aligned bounding-box of this mesh with the specified transformation matrix.
+        AABB3 BoundingBox(const Gs::AffineMatrix4& matrix) const;
 
         #ifdef GM_ENABLE_MULTI_THREADING
 
