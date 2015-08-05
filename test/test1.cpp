@@ -118,6 +118,22 @@ static void meshTest1()
     writeOBJFile(mesh, "TestMesh.obj");
 }
 
+static void sphereTest1()
+{
+    Sphere s;
+
+    s.radius = 1.0f;
+    //s.SetVolume(4.18879f);
+    //s.SetArea(12.5664f);
+
+    // print information
+    std::cout.precision(10);
+    std::cout << "--- Sphere ---" << std::endl;
+    std::cout << "Radius: " << s.radius << std::endl;
+    std::cout << "Volume: " << s.GetVolume() << std::endl;
+    std::cout << "Area: " << s.GetArea() << std::endl;
+}
+
 int main()
 {
     std::cout << "GeometronLib Test 1" << std::endl;
@@ -125,7 +141,8 @@ int main()
 
     //transformTest1();
     //triangleTest1();
-    meshTest1();
+    //meshTest1();
+    sphereTest1();
 
     #ifdef _WIN32
     system("pause");

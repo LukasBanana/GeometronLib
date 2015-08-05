@@ -21,7 +21,8 @@ Base plane class with components: normal and distance.
 \tparam T Specifies the data type of the vector components.
 This should be a primitive data type such as float or double.
 */
-template <typename T> class PlaneT
+template <typename T>
+class PlaneT
 {
     
     public:
