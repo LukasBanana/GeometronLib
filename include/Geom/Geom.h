@@ -17,11 +17,14 @@
 #include "Plane.h"
 #include "Ray.h"
 #include "Sphere.h"
-#include "Transform2.h"
-#include "Transform3.h"
+#include "Spline.h"
 #include "Triangle.h"
+
 #include "TriangleMesh.h"
 #include "MeshGenerator.h"
+
+#include "Transform2.h"
+#include "Transform3.h"
 
 
 #endif

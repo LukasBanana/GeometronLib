@@ -234,6 +234,41 @@ void drawAABB(const Gm::AABB3& box)
     glEnd();
 }
 
+void drawSpline(const Gm::Spline2& spline, Gs::Real a, Gs::Real b, std::size_t details)
+{
+    // draw spline curve
+    glBegin(GL_LINE_STRIP);
+
+    Gs::Real step = (b - a) / (details + 1);
+
+    while (details-- > 0)
+    {
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+        // interpolate vertex
+        auto p = spline(a);
+        glVertex2fv(p.Ptr());
+        a += step;
+    }
+
+    glEnd();
+
+    // draw spline control points
+    glPointSize(5.0f);
+
+    glBegin(GL_POINTS);
+
+    for (const auto& p : spline.GetPoints())
+    {
+        glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
+        glVertex2fv(p.point.Ptr());
+    }
+
+    glEnd();
+
+    glPointSize(1.0f);
+}
+
 void updateScene()
 {
     auto& trans = models[0].transform;
@@ -245,7 +280,7 @@ void updateScene()
     trans.SetRotation(Gs::Quaternion(rotation));
 }
 
-void drawScene()
+void drawScene3D()
 {
     // setup projection
     #ifdef TEST_PROJECTION_MORPHING
@@ -268,6 +303,35 @@ void drawScene()
     }
 }
 
+void drawSceen2D()
+{
+    // setup projection
+    glMatrixMode(GL_PROJECTION);
+    auto proj = Gs::ProjectionMatrix4::Planar(resolution.x, resolution.y);
+    glLoadMatrix_T(proj.Ptr());
+
+    // setup model-view matrix
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    // draw scene
+    Gm::Spline2 s;
+    {
+        s.AddPoint({ 50, 50 }, 0.0f);
+        s.AddPoint({ 50, 50 }, 0.0f);
+        s.AddPoint({ 50, 50 }, 0.0f);
+        s.AddPoint({ 150, 200 }, 1.0f);
+        s.AddPoint({ 320, 170 }, 2.0f);
+        s.AddPoint({ 280, 130 }, 3.0f);
+        s.AddPoint({ 400, 350 }, 4.0f);
+        s.AddPoint({ 460, 500 }, 5.0f);
+        s.AddPoint({ 460, 500 }, 5.0f);
+        s.AddPoint({ 460, 500 }, 5.0f);
+        s.SetOrder(3);
+    }
+    drawSpline(s, 0.0f, 5.0f, 100);
+}
+
 void displayCallback()
 {
     // update scene
@@ -276,7 +340,8 @@ void displayCallback()
     // draw frame
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     {
-        drawScene();
+        //drawScene3D();
+        drawSceen2D();
     }
     glutSwapBuffers();
 }
