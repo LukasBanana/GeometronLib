@@ -61,6 +61,8 @@ std::vector<Model>      models;
 bool                    projMorphing        = false;
 bool                    projMorphingOrtho   = false;
 
+Gm::Spline2             spline;
+
 
 // ----- FUNCTIONS -----
 
@@ -163,6 +165,18 @@ void initGL()
     mdl->transform.SetPosition({ 0, 0, -2 });
 }
 
+void initScene()
+{
+    spline.AddPoint({ 50, 50 }, 0.0f);
+    spline.AddPoint({ 150, 200 }, 1.0f);
+    spline.AddPoint({ 320, 170 }, 2.0f);
+    spline.AddPoint({ 500, 80 }, 3.0f);
+    spline.AddPoint({ 400, 350 }, 4.0f);
+    spline.AddPoint({ 460, 500 }, 5.0f);
+    spline.AddPoint({ 250, 350 }, 6.0f);
+    spline.SetOrder(3);
+}
+
 void emitVertex(const Gm::TriangleMesh::Vertex& vert)
 {
     // generate color from vertex data
@@ -239,9 +253,9 @@ void drawSpline(const Gm::Spline2& spline, Gs::Real a, Gs::Real b, std::size_t d
     // draw spline curve
     glBegin(GL_LINE_STRIP);
 
-    Gs::Real step = (b - a) / (details + 1);
+    Gs::Real step = (b - a) / details;
 
-    while (details-- > 0)
+    for (std::size_t i = 0; i <= details; ++i)
     {
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -315,21 +329,7 @@ void drawSceen2D()
     glLoadIdentity();
 
     // draw scene
-    Gm::Spline2 s;
-    {
-        s.AddPoint({ 50, 50 }, 0.0f);
-        s.AddPoint({ 50, 50 }, 0.0f);
-        s.AddPoint({ 50, 50 }, 0.0f);
-        s.AddPoint({ 150, 200 }, 1.0f);
-        s.AddPoint({ 320, 170 }, 2.0f);
-        s.AddPoint({ 280, 130 }, 3.0f);
-        s.AddPoint({ 400, 350 }, 4.0f);
-        s.AddPoint({ 460, 500 }, 5.0f);
-        s.AddPoint({ 460, 500 }, 5.0f);
-        s.AddPoint({ 460, 500 }, 5.0f);
-        s.SetOrder(3);
-    }
-    drawSpline(s, 0.0f, 5.0f, 100);
+    drawSpline(spline, 0.0f, 6.0f, 500);
 }
 
 void displayCallback()
@@ -378,6 +378,22 @@ void keyboardCallback(unsigned char key, int x, int y)
     }
 }
 
+void specialCallback(int key, int x, int y)
+{
+    switch (key)
+    {
+        case GLUT_KEY_UP:
+            spline.SetOrder(spline.GetOrder() + 1);
+            std::cout << "Spline Order = " << spline.GetOrder() << std::endl;
+            break;
+
+        case GLUT_KEY_DOWN:
+            spline.SetOrder(spline.GetOrder() - 1);
+            std::cout << "Spline Order = " << spline.GetOrder() << std::endl;
+            break;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     glutInit(&argc, argv);
@@ -390,11 +406,14 @@ int main(int argc, char* argv[])
     glutDisplayFunc(displayCallback);
     glutReshapeFunc(reshapeCallback);
     glutIdleFunc(idleCallback);
+    glutSpecialFunc(specialCallback);
     glutKeyboardFunc(keyboardCallback);
 
     initGL();
+    initScene();
 
     glutMainLoop();
+
     return 0;
 }
 

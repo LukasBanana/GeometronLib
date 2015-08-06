@@ -59,24 +59,28 @@ class Spline
         {
             P result = P(0);
 
-            //for (std::size_t i = 0; /*i + order_ < points_.size()*/ i < 6; ++i)
-            //    result += points_[i].point * BernsteinPolynomial(i, order_, t);
+            if (!points_.empty())
+            {
+                int j = -order_;
+                for (std::size_t i = 0; i < points_.size(); ++i, ++j)
+                    result += points_[i].point * BernsteinPolynomial(order_, j, t);
+            }
 
             return result;
         }
-
-        std::size_t GetOrder() const
+        
+        int GetOrder() const
         {
             return order_;
         }
 
-        void SetOrder(std::size_t order)
+        void SetOrder(int order)
         {
             order_ = order;
             if (order_ < 1)
                 order_ = 1;
-            else if (order_ > points_.size())
-                order_ = points_.size();
+            else if (static_cast<std::size_t>(order_) > points_.size())
+                order_ = static_cast<int>(points_.size());
         }
 
         /**
@@ -100,26 +104,54 @@ class Spline
 
     private:
         
-        T BernsteinPolynomial(std::size_t i, std::size_t q, const T& t) const
+        std::size_t Idx(int i) const
         {
-            auto x = [&](std::size_t i)
-            {
-                return points_[i].interval;
-            };
+            if (i < 0)
+                return 0;
+            else if (static_cast<std::size_t>(i) >= points_.size())
+                return points_.size() - 1;
+            return static_cast<std::size_t>(i);
+        }
+
+        P Point(int i) const
+        {
+            return points_[Idx(i)].point;
+        }
+
+        T Interval(int i) const
+        {
+            return points_[Idx(i)].interval;
+        }
+
+        T BernsteinPolynomial(int q, int i, const T& t) const
+        {
+            auto xi = Interval(i);
+            auto xi1 = Interval(i + 1);
 
             if (q == 0)
-                return (x(i) <= t && t < x(i + 1)) ? T(1) : T(0);
+                return (xi <= t && t < xi1) ? T(1) : T(0);
 
-            return
-                (t - x(i))/(x(i + q) - x(i)) * BernsteinPolynomial(i, q - 1, t) +
-                (x(i + 1 + q) - t)/(x(i + 1 + q) - x(i + 1)) * BernsteinPolynomial(i + 1, q - 1, t);
+            auto xiq = Interval(i + q);
+            auto xiq1 = Interval(i + q + 1);
+
+            auto dx1 = xiq - xi;
+            auto dx2 = xiq1 - xi1;
+
+            T r1 = T(0), r2 = T(0);
+
+            if (dx1 > T(0))
+                r1 = (t - xi)/dx1 * BernsteinPolynomial(q - 1, i, t);
+            if (dx2 > T(0))
+                r2 = (xiq1 - t)/dx2 * BernsteinPolynomial(q - 1, i + 1, t);
+
+            return r1 + r2;
         }
 
         //! B-Spline control points
         std::vector<ControlPoint> points_;
 
         //! Order must always be less than or equal to 'points.size()'.
-        std::size_t order_ = 1;
+        int order_ = 1;
 
 };
 
