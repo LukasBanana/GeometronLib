@@ -134,6 +134,15 @@ static void sphereTest1()
     std::cout << "Area: " << s.GetArea() << std::endl;
 }
 
+static void planeTest1()
+{
+    Plane p({ 0, 1, 0 }, 5.0f);
+
+    p.Normalize();
+    p.Build({ 0, 4, 0 }, { 1, 5, 0 }, { 1, 5, -1 });
+
+}
+
 int main()
 {
     std::cout << "GeometronLib Test 1" << std::endl;
@@ -142,7 +151,8 @@ int main()
     //transformTest1();
     //triangleTest1();
     //meshTest1();
-    sphereTest1();
+    //sphereTest1();
+    planeTest1();
 
     #ifdef _WIN32
     system("pause");

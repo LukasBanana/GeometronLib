@@ -9,10 +9,11 @@
 #define __GM_SPLINE_H__
 
 
+#include "Macros.h"
+
 #include <Gauss/Real.h>
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>
-#include <type_traits>
 
 
 namespace Gm
@@ -32,6 +33,8 @@ class Spline
     
     public:
         
+        __GM_ASSERT_FLOAT_TYPE__("Spline");
+
         struct ControlPoint
         {
             P point;

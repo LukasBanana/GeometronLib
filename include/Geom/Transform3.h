@@ -9,11 +9,12 @@
 #define __GM_TRANSFORM3_H__
 
 
+#include "Macros.h"
+
 #include <Gauss/Vector3.h>
 #include <Gauss/Quaternion.h>
 #include <Gauss/AffineMatrix4.h>
 #include <Gauss/Conversions.h>
-#include <type_traits>
 
 
 namespace Gm
@@ -29,7 +30,7 @@ template <typename T> class Transform3T
     
     public:
         
-        static_assert(std::is_floating_point<T>::value, "Transform3T class only allows floating point types");
+        __GM_ASSERT_FLOAT_TYPE__("Transform3T");
 
         using MatrixType = Gs::AffineMatrix4T<T>;
 

@@ -9,6 +9,8 @@
 #define __GM_TRANSFORM2_H__
 
 
+#include "Macros.h"
+
 #include <Gauss/Vector2.h>
 #include <Gauss/AffineMatrix3.h>
 
@@ -26,7 +28,7 @@ template <typename T> class Transform2T
     
     public:
         
-        static_assert(std::is_floating_point<T>::value, "Transform2T class only allows floating point types");
+        __GM_ASSERT_FLOAT_TYPE__("Transform2T");
 
         using MatrixType = Gs::AffineMatrix3T<T>;
 
