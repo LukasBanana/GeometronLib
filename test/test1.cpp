@@ -140,6 +140,7 @@ static void planeTest1()
 
     p.Normalize();
     p.Build({ 0, 4, 0 }, { 1, 5, 0 }, { 1, 5, -1 });
+    p.Flip();
 
 }
 
