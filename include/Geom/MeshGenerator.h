@@ -62,10 +62,10 @@ struct IcoSphereDescription
 struct ConeDescription
 {
     //! Cone radius in U (x component), and V (y component) direction. By default (0.5, 0.5).
-    Gs::Vector2     radius  = Gs::Vector2(Gs::Real(0.5));
+    Gs::Vector2     radius          = Gs::Vector2(Gs::Real(0.5));
 
     //! Cone height. By default 1.
-    Gs::Real        height  = Gs::Real(1);
+    Gs::Real        height          = Gs::Real(1);
 
     //! Segmentation around the cone (x component), and height (y component). By default (20, 1).
     Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
@@ -115,14 +115,14 @@ struct CapsuleDescription
     //! Capsule height (without top- and bottom half-sphere). By default 1.
     Gs::Real        height              = Gs::Real(1);
 
-    /**
-    Segmentation of the top- and bottom half-ellipsoids in U (x component), and V (y component) direction.
-    Each component will be clamped to [3, +inf). By default (20, 10).
-    */
-    Gs::Vector2ui   ellipsoidSegments   = Gs::Vector2ui(20, 10);
+    //! Segmentation around the cylinder (x component), and height (y component). By default (20, 1).
+    Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(20, 1);
 
-    //! Segmentation of the mantle height. By default 1.
-    unsigned int    mantleSegments      = 1;
+    /**
+    Segmentation of the top- and bottom half-ellipsoids.
+    Each component will be clamped to [3, +inf). By default 10.
+    */
+    unsigned int    ellipsoidSegments   = 10;
 };
 
 struct TorusDescription
@@ -130,8 +130,8 @@ struct TorusDescription
     //! Radius of the hole in X, and Y direction. By default (0.5, 0.5).
     Gs::Vector2     holeRadius  = Gs::Vector2(Gs::Real(0.5));
 
-    //! Radius of the ring in U (x component), and V (y component) direction. By default (0.25, 0.25, 0.25).
-    Gs::Vector3     ringRadius  = Gs::Vector3(Gs::Real(0.25));
+    //! Radius of the ring in U (x component), and V (y component) direction. By default (0.25, 0.25).
+    Gs::Vector2     ringRadius  = Gs::Vector2(Gs::Real(0.25));
 
     /**
     Segmentation in U (x component), and V (y component) direction.

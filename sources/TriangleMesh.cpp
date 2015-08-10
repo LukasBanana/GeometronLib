@@ -115,6 +115,9 @@ AABB3 TriangleMesh::BoundingBoxMultiThreaded(std::size_t threadCount) const
     /* Clamp thread count */
     auto numVerts = vertices.size();
 
+    if (threadCount < 2 || numVerts / threadCount < 64)
+        return BoundingBox();
+
     if (threadCount < 1)
         threadCount = 1;
     if (threadCount > numVerts)

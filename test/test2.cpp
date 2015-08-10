@@ -78,6 +78,11 @@ Model* createCuboidModel(const Gm::MeshGenerator::CuboidDescription& desc)
 
 void updateProjection()
 {
+    int flags = Gs::ProjectionFlags::OpenGLPreset;
+
+    if (resolution.y > resolution.x)
+        flags |= Gs::ProjectionFlags::HorizontalFOV;
+
     #ifdef TEST_PROJECTION_MORPHING
 
     // setup perspective projection
@@ -86,7 +91,7 @@ void updateProjection()
         0.1f,
         100.0f,
         DEG_TO_RAD(fov),
-        Gs::ProjectionFlags::OpenGLPreset
+        flags
     );
 
     // setup orthogonal projection
@@ -96,7 +101,7 @@ void updateProjection()
         static_cast<Gs::Real>(resolution.y) * orthoZoom,
         0.1f,
         100.0f,
-        Gs::ProjectionFlags::OpenGLPreset
+        flags
     );
 
     // update morphing animation
@@ -139,7 +144,7 @@ void updateProjection()
         0.1f,
         100.0f,
         DEG_TO_RAD(fov),
-        Gs::ProjectionFlags::OpenGLPreset
+        flags
     );
 
     #endif
@@ -227,23 +232,8 @@ void drawAABB(const Gm::AABB3& box)
 
     glBegin(GL_LINES);
 
-    auto v0 = box.min;
-    auto v1 = box.max;
-
-    drawLine({ v0.x, v0.y, v0.z }, { v1.x, v0.y, v0.z });
-    drawLine({ v0.x, v1.y, v0.z }, { v1.x, v1.y, v0.z });
-    drawLine({ v0.x, v0.y, v0.z }, { v0.x, v1.y, v0.z });
-    drawLine({ v1.x, v0.y, v0.z }, { v1.x, v1.y, v0.z });
-
-    drawLine({ v0.x, v0.y, v1.z }, { v1.x, v0.y, v1.z });
-    drawLine({ v0.x, v1.y, v1.z }, { v1.x, v1.y, v1.z });
-    drawLine({ v0.x, v0.y, v1.z }, { v0.x, v1.y, v1.z });
-    drawLine({ v1.x, v0.y, v1.z }, { v1.x, v1.y, v1.z });
-
-    drawLine({ v0.x, v0.y, v0.z }, { v0.x, v0.y, v1.z });
-    drawLine({ v1.x, v0.y, v0.z }, { v1.x, v0.y, v1.z });
-    drawLine({ v1.x, v1.y, v0.z }, { v1.x, v1.y, v1.z });
-    drawLine({ v0.x, v1.y, v0.z }, { v0.x, v1.y, v1.z });
+    for (const auto& edge : box.Edges())
+        drawLine(edge.a, edge.b);
 
     glEnd();
 }
@@ -340,8 +330,8 @@ void displayCallback()
     // draw frame
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     {
-        //drawScene3D();
-        drawSceen2D();
+        drawScene3D();
+        //drawSceen2D();
     }
     glutSwapBuffers();
 }
@@ -361,6 +351,8 @@ void reshapeCallback(GLsizei w, GLsizei h)
     #ifndef TEST_PROJECTION_MORPHING
     updateProjection();
     #endif
+
+    displayCallback();
 }
 
 void keyboardCallback(unsigned char key, int x, int y)

@@ -13,6 +13,9 @@
 #include <Gauss/Vector3.h>
 #include <algorithm>
 #include <limits>
+#include <vector>
+
+#include "Line.h"
 
 
 namespace Gm
@@ -95,21 +98,15 @@ class AABB
             return center;
         }
 
+        //! Returns the list of all edges of this AABB.
+        std::vector< Line< Vec<T> > > Edges() const
+        {
+            return AABBEdges(*this);
+        }
+
         Vec<T> min, max;
 
 };
-
-//! Returns true if the two AABBs do overlap.
-template <template <typename> class Vec, typename T>
-bool Overlap(const AABB<Vec, T>& a, const AABB<Vec, T>& b)
-{
-    for (std::size_t i = 0; i < Vec<T>::components; ++i)
-    {
-        if (b.min[i] > a.max[i] || b.max[i] < a.min[i])
-            return false;
-    }
-    return true;
-}
 
 
 /* --- Type Alias --- */
@@ -124,6 +121,65 @@ using AABB2d    = AABB2T<double>;
 using AABB3     = AABB3T<Gs::Real>;
 using AABB3f    = AABB3T<float>;
 using AABB3d    = AABB3T<double>;
+
+
+/* --- Global Functions --- */
+
+//! Returns true if the two AABBs do overlap.
+template <template <typename> class Vec, typename T>
+bool Overlap(const AABB<Vec, T>& a, const AABB<Vec, T>& b)
+{
+    for (std::size_t i = 0; i < Vec<T>::components; ++i)
+    {
+        if (b.min[i] > a.max[i] || b.max[i] < a.min[i])
+            return false;
+    }
+    return true;
+}
+
+//! Returns the list of all edges of the specified 2D AABB.
+template <typename T>
+std::vector< Line2T<T> > AABBEdges(const AABB2T<T>& aabb)
+{
+    std::vector< Line2T<T> > lines(4);
+
+    const auto& a = aabb.min;
+    const auto& b = aabb.max;
+
+    lines[0] = Line2T<T>({ a.x, a.y }, { a.x, b.y });
+    lines[1] = Line2T<T>({ a.x, b.y }, { b.x, b.y });
+    lines[2] = Line2T<T>({ b.x, b.y }, { b.x, a.y });
+    lines[3] = Line2T<T>({ b.x, a.y }, { a.x, a.y });
+
+    return lines;
+}
+
+//! Returns the list of all edges of the specified 3D AABB.
+template <typename T>
+std::vector< Line3T<T> > AABBEdges(const AABB3T<T>& aabb)
+{
+    std::vector< Line3T<T> > lines(12);
+
+    const auto& a = aabb.min;
+    const auto& b = aabb.max;
+
+    lines[ 0] = Line3T<T>({ a.x, a.y, a.z }, { a.x, b.y, a.z });
+    lines[ 1] = Line3T<T>({ a.x, b.y, a.z }, { b.x, b.y, a.z });
+    lines[ 2] = Line3T<T>({ b.x, b.y, a.z }, { b.x, a.y, a.z });
+    lines[ 3] = Line3T<T>({ b.x, a.y, a.z }, { a.x, a.y, a.z });
+
+    lines[ 4] = Line3T<T>({ a.x, a.y, b.z }, { a.x, b.y, b.z });
+    lines[ 5] = Line3T<T>({ a.x, b.y, b.z }, { b.x, b.y, b.z });
+    lines[ 6] = Line3T<T>({ b.x, b.y, b.z }, { b.x, a.y, b.z });
+    lines[ 7] = Line3T<T>({ b.x, a.y, b.z }, { a.x, a.y, b.z });
+
+    lines[ 8] = Line3T<T>({ a.x, a.y, a.z }, { a.x, a.y, b.z });
+    lines[ 9] = Line3T<T>({ a.x, b.y, a.z }, { a.x, b.y, b.z });
+    lines[10] = Line3T<T>({ b.x, b.y, a.z }, { b.x, b.y, b.z });
+    lines[11] = Line3T<T>({ b.x, a.y, a.z }, { b.x, a.y, b.z });
+
+    return lines;
+}
 
 
 } // /namespace Gm
