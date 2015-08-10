@@ -10,7 +10,9 @@
 
 
 //! Enables multi-threading features.
-#define GM_ENABLE_MULTI_THREADING
+#ifndef __GNUC__
+#   define GM_ENABLE_MULTI_THREADING
+#endif
 
 
 #endif

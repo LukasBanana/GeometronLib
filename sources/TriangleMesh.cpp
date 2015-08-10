@@ -24,6 +24,13 @@ TriangleMesh::TriangleMesh(TriangleMesh&& rhs) :
 {
 }
 
+TriangleMesh& TriangleMesh::operator = (TriangleMesh&& rhs)
+{
+    vertices = std::move(rhs.vertices);
+    triangles = std::move(rhs.triangles);
+    return *this;
+}
+
 std::size_t TriangleMesh::AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord)
 {
     auto idx = vertices.size();

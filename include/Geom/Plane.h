@@ -32,7 +32,7 @@ class PlaneT
         }
 
         PlaneT(Gs::UninitializeTag) :
-            normal( Gs::UninitializeTag )
+            normal( Gs::UninitializeTag{} )
         {
             // do nothing
         }

@@ -38,12 +38,15 @@ class TriangleMesh
             Gs::Vector2 texCoord;
         };
 
-        using Edge      = Line<std::size_t>;
-        using Triangle  = Triangle<std::size_t>;
+        using Edge      = Gm::Line<std::size_t>;
+        using Triangle  = Gm::Triangle<std::size_t>;
 
         TriangleMesh() = default;
 
         TriangleMesh(TriangleMesh&& rhs);
+
+        TriangleMesh& operator = (const TriangleMesh& rhs) = default;
+        TriangleMesh& operator = (TriangleMesh&& rhs);
 
         //! Adds a new vertex with the specified attributes.
         std::size_t AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord);
