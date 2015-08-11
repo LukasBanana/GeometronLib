@@ -19,7 +19,8 @@ namespace Gm
 
 
 //! Base convex hull class.
-template <typename T> class ConvexHullT
+template <typename T>
+class ConvexHullT
 {
     
     public:

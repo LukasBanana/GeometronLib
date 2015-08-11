@@ -19,7 +19,8 @@ namespace Gm
 
 
 //! Base frustum class.
-template <typename T> class FrustumT
+template <typename T>
+class FrustumT
 {
     
     public:

@@ -17,7 +17,8 @@ namespace Gm
 
 
 //! Base OBB (Oriented Bounding-Box) class.
-template <template <typename> class Vec, typename T> class OBB
+template <template <typename> class Vec, typename T>
+class OBB
 {
     
     public:

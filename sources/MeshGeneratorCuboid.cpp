@@ -98,8 +98,8 @@ static void BuildFace(
 
 TriangleMesh Cuboid(const CuboidDescription& desc)
 {
-    static const Gs::Real pi        = Gs::Real(3.141592654);//!!!
-    static const Gs::Real pi_0_5    = pi*Gs::Real(0.5);
+    static const auto pi = Gs::pi;
+    static const auto pi_0_5 = pi*Gs::Real(0.5);
 
     TriangleMesh mesh;
     

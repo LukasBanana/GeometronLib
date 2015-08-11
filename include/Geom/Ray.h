@@ -18,7 +18,8 @@ namespace Gm
 
 
 //! Base ray class.
-template <template <typename> class Vec, typename T> class Ray
+template <template <typename> class Vec, typename T>
+class Ray
 {
     
     public:
