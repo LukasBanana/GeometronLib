@@ -41,7 +41,10 @@ class Ray
 
         Vec<T> Lerp(const T& t) const
         {
-            return origin + direction * t;
+            Vec<T> result = direction;
+            result *= t;
+            result += origin;
+            return result;
         }
 
         Vec<T> origin, direction;

@@ -26,6 +26,8 @@
 #include "Transform2.h"
 #include "Transform3.h"
 
+#include "PlaneCollision.h"
+
 
 #endif
 
