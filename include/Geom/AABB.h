@@ -47,6 +47,18 @@ class AABB
             }
         }
 
+        AABB(const Vec<T>& min, const Vec<T>& max) :
+            min( min ),
+            max( max )
+        {
+        }
+
+        //! Sets the minimum and maximum to the specified point.
+        void Reset(const Vec<T>& point)
+        {
+            min = max = point;
+        }
+
         void Insert(const Vec<T>& point)
         {
             for (std::size_t i = 0; i < Vec<T>::components; ++i)

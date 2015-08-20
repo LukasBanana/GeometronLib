@@ -63,6 +63,8 @@ bool                    projMorphingOrtho   = false;
 
 Gm::Spline2             spline;
 
+Gm::Frustum             frustum;
+
 static const Gs::Real   epsilon             = Gs::Epsilon<Gs::Real>::value;
 
 
@@ -286,6 +288,19 @@ void updateScene()
     trans.SetRotation(Gs::Quaternion(rotation));
 }
 
+void updateFrustum()
+{
+    // build view frustum from projection and view matrix
+    frustum.SetFromMatrix(
+        Gs::ProjectionMatrix4::Perspective(
+            static_cast<Gs::Real>(resolution.x) / resolution.y,
+            0.1f,
+            100.0f,
+            DEG_TO_RAD(fov)
+        ).ToMatrix4()// * viewMatrix.ToMatrix4()
+    );
+}
+
 void drawScene3D()
 {
     // setup projection
@@ -300,6 +315,9 @@ void drawScene3D()
     // update view matrix
     glMatrixMode(GL_MODELVIEW);
     viewMatrix = cameraTransform.GetMatrix().Inverse();
+
+    // update view frustum
+    updateFrustum();
 
     // draw models
     for (const auto& mdl : models)

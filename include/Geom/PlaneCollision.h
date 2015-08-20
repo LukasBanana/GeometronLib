@@ -163,6 +163,7 @@ enum class PlaneAABBRelation
     Behind,     //!< The AABB is behind the plane.
 };
 
+//! Computes the relation between the specified plane and AABB.
 template <typename T>
 PlaneAABBRelation RelationToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
 {
