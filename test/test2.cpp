@@ -63,6 +63,8 @@ bool                    projMorphingOrtho   = false;
 
 Gm::Spline2             spline;
 
+static const Gs::Real   epsilon             = Gs::Epsilon<Gs::Real>::value;
+
 
 // ----- FUNCTIONS -----
 
@@ -115,7 +117,7 @@ void updateProjection()
         {
             morphing += speed;
 
-            if (morphing >= 1.0f - Gs::epsilon)
+            if (morphing >= 1.0f - epsilon)
             {
                 morphing = 1.0f;
                 projMorphing = false;
@@ -125,7 +127,7 @@ void updateProjection()
         {
             morphing -= speed;
 
-            if (morphing <= 0.0f + Gs::epsilon)
+            if (morphing <= 0.0f + epsilon)
             {
                 morphing = 0.0f;
                 projMorphing = false;

@@ -20,9 +20,11 @@ namespace Gm
 
 
 /**
-Base plane class with components: normal and distance.
+\brief Base plane class with components: normal and distance.
 \tparam T Specifies the data type of the vector components.
 This should be a primitive data type such as float or double.
+\remarks The plane equation is: ax + by + cz + d = 0,
+where (a, b, c) is a point on the plane, (x, y, z) is the normal vector and d is the (signed) distance.
 */
 template <typename T>
 class PlaneT
@@ -71,9 +73,16 @@ class PlaneT
             /* Build plane with equation: normal := || (b - a) x (c - a) || */
             normal = Gs::Cross(b - a, c - a);
             normal.Normalize();
-            distance = Gs::Dot(normal, a);
+            UpdateDistance(a);
         }
 
+        //! Updates the (signed) distance for the new specified member point.
+        void UpdateDistance(const Gs::Vector3T<T>& memberPoint)
+        {
+            distance = -Gs::Dot(normal, memberPoint);
+        }
+
+        //! Normalizes the normal vector and distance of this plane.
         void Normalize()
         {
             T len = normal.Length();
@@ -85,10 +94,13 @@ class PlaneT
             }
         }
 
-        //! Returns a point which lies onto this plane: normal * distance;
+        /**
+        \brief Returns a point which lies onto this plane: normal * distance;
+        \remarks This point is the closest point from the plane to the origin of the coordinate system.
+        */
         Gs::Vector3T<T> MemberPoint() const
         {
-            return normal * distance;
+            return normal * (-distance);
         }
 
         //! Flips this plane.
@@ -110,8 +122,8 @@ class PlaneT
             return PlaneT<C>(normal.Cast<C>(), static_cast<C>(distance));
         }
 
-        Gs::Vector3T<T> normal;
-        T               distance;
+        Gs::Vector3T<T> normal;     //!< Normal vector of the plane.
+        T               distance;   //!< Signed distance to the origin of the coordinate system.
 
 };
 
