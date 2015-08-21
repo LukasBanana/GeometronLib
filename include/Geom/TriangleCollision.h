@@ -13,6 +13,7 @@
 #include "PlaneCollision.h"
 
 #include <Gauss/Epsilon.h>
+#include <array>
 
 
 namespace Gm
@@ -99,23 +100,26 @@ PlaneRelation ClipTriangle(const Triangle3T<T>& triangle, const PlaneT<T>& clipP
         auto j = (i + 1) % 3;
         b = triangle[j];
 
-        /* Check for intersection with plane */
-        auto t = IntersectionWithPlaneInterp(plane, a, b - a);
-
-        if (rel[j] != PlaneRelation::Onto && t >= T(0) && t <= T(1))
+        if (rel[j] != PlaneRelation::Onto)
         {
-            /* Add barycentric coordinate of intersection */
-            switch (i)
+            /* Check for intersection with plane */
+            auto t = IntersectionWithPlaneInterp(clipPlane, a, b - a);
+
+            if (t >= T(0) && t <= T(1))
             {
-                case 0: // edge (a, b)
-                    AddVertex(Gs::Vector3T<T>(T(1) - t, t, T(0)), PlaneRelation::Onto);
-                    break;
-                case 1: // edge (b, c)
-                    AddVertex(Gs::Vector3T<T>(T(0), T(1) - t, t), PlaneRelation::Onto);
-                    break;
-                case 2: // edge (c, a)
-                    AddVertex(Gs::Vector3T<T>(t, T(0), T(1) - t), PlaneRelation::Onto);
-                    break;
+                /* Add barycentric coordinate of intersection */
+                switch (i)
+                {
+                    case 0: // edge (a, b)
+                        AddVertex(Gs::Vector3T<T>(T(1) - t, t, T(0)), PlaneRelation::Onto);
+                        break;
+                    case 1: // edge (b, c)
+                        AddVertex(Gs::Vector3T<T>(T(0), T(1) - t, t), PlaneRelation::Onto);
+                        break;
+                    case 2: // edge (c, a)
+                        AddVertex(Gs::Vector3T<T>(t, T(0), T(1) - t), PlaneRelation::Onto);
+                        break;
+                }
             }
         }
 

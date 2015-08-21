@@ -13,6 +13,7 @@
 #include "Triangle.h"
 
 #include <Gauss/Vector3.h>
+#include <Gauss/RotateVector.h>
 
 
 namespace Gm
@@ -126,6 +127,19 @@ class PlaneT
         T               distance;   //!< Signed distance to the origin of the coordinate system.
 
 };
+
+
+/* --- Global Functions --- */
+
+//! Transforms the specified plane with the 4x4 matrix.
+template <typename M, typename T>
+PlaneT<T> TransformPlane(const M& mat, const PlaneT<T>& plane)
+{
+    const auto member = Gs::TransformVector(mat, plane.MemberPoint());
+    const auto invMat = mat.Inverse().Transposed();
+    const auto normal = Gs::RotateVector(mat, plane.normal);
+    return PlaneT<T>(normal, Gs::Dot(normal, member));
+}
 
 
 /* --- Type Alias --- */

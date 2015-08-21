@@ -6,6 +6,7 @@
  */
 
 #include <Geom/TriangleMesh.h>
+#include <Geom/TriangleCollision.h>
 #include <Gauss/TransformVector.h>
 
 #ifdef GM_ENABLE_MULTI_THREADING
@@ -31,6 +32,12 @@ TriangleMesh& TriangleMesh::operator = (TriangleMesh&& rhs)
     return *this;
 }
 
+void TriangleMesh::Clear()
+{
+    vertices.clear();
+    triangles.clear();
+}
+
 std::size_t TriangleMesh::AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord)
 {
     auto idx = vertices.size();
@@ -41,6 +48,25 @@ std::size_t TriangleMesh::AddVertex(const Gs::Vector3& position, const Gs::Vecto
 void TriangleMesh::AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2)
 {
     triangles.push_back({ v0, v1, v2 });
+}
+
+TriangleMesh::Vertex TriangleMesh::Barycentric(std::size_t triangleIndex, Gs::Vector3& barycentricCoords) const
+{
+    GS_ASSERT(triangleIndex < triangles.size());
+
+    const auto& tri = triangles[triangleIndex];
+
+    const auto& a = vertices[tri.a];
+    const auto& b = vertices[tri.b];
+    const auto& c = vertices[tri.c];
+
+    Vertex v;
+
+    v.position  = a.position * barycentricCoords.x + b.position * barycentricCoords.y + c.position * barycentricCoords.z;
+    v.normal    = a.normal   * barycentricCoords.x + b.normal   * barycentricCoords.y + c.normal   * barycentricCoords.z;
+    v.texCoord  = a.texCoord * barycentricCoords.x + b.texCoord * barycentricCoords.y + c.texCoord * barycentricCoords.z;
+
+    return v;
 }
 
 std::vector<TriangleMesh::Edge> TriangleMesh::Edges() const
@@ -160,6 +186,80 @@ AABB3 TriangleMesh::BoundingBoxMultiThreaded(std::size_t threadCount) const
 }
 
 #endif
+
+void TriangleMesh::Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMesh& back) const
+{
+    /* Clear previous output meshes */
+    front.Clear();
+    back.Clear();
+
+    /* Clip each triangle against the clipping plane */
+    std::size_t triIdx = 0;
+
+    for (const auto& indices : triangles)
+    {
+        /* Setup triangle coordinates */
+        Triangle3 tri(
+            vertices[indices.a].position,
+            vertices[indices.b].position,
+            vertices[indices.c].position
+        );
+
+        /* Clip triangle against plane */
+        ClippedPolygon<Gs::Real> frontPoly, backPoly;
+        auto rel = ClipTriangle(tri, clipPlane, frontPoly, backPoly);
+
+        switch (rel)
+        {
+            case PlaneRelation::InFrontOf:
+            {
+                /* Add current triangle to front sided mesh */
+                auto count = front.vertices.size();
+                front.vertices.push_back(vertices[indices.a]);
+                front.vertices.push_back(vertices[indices.b]);
+                front.vertices.push_back(vertices[indices.c]);
+                front.AddTriangle(count, count + 1, count + 2);
+            }
+            break;
+
+            case PlaneRelation::Behind:
+            {
+                /* Add current triangle to back sided mesh */
+                auto count = back.vertices.size();
+                back.vertices.push_back(vertices[indices.a]);
+                back.vertices.push_back(vertices[indices.b]);
+                back.vertices.push_back(vertices[indices.c]);
+                back.AddTriangle(count, count + 1, count + 2);
+            }
+            break;
+
+            case PlaneRelation::Clipped:
+            {
+                auto count = front.vertices.size();
+                for (unsigned char i = 0; i < frontPoly.count; ++i)
+                {
+                    front.vertices.push_back(Barycentric(triIdx, frontPoly.vertices[i]));
+                    if (i >= 2)
+                        front.AddTriangle(count, count + i - 1, count + i);
+                }
+
+                count = back.vertices.size();
+                for (unsigned char i = 0; i < backPoly.count; ++i)
+                {
+                    back.vertices.push_back(Barycentric(triIdx, backPoly.vertices[i]));
+                    if (i >= 2)
+                        back.AddTriangle(count, count + i - 1, count + i);
+                }
+            }
+            break;
+        }
+
+        /* Track triangle index */
+        ++triIdx;
+    }
+
+
+}
 
 
 } // /namespace Gm

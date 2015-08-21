@@ -12,6 +12,7 @@
 #include "Config.h"
 #include "Line.h"
 #include "Triangle.h"
+#include "Plane.h"
 #include "AABB.h"
 
 #include <Gauss/Vector2.h>
@@ -24,7 +25,7 @@ namespace Gm
 {
 
 
-//! Base mesh class
+//! Triangle mesh base class.
 class TriangleMesh
 {
     
@@ -48,11 +49,17 @@ class TriangleMesh
         TriangleMesh& operator = (const TriangleMesh& rhs) = default;
         TriangleMesh& operator = (TriangleMesh&& rhs);
 
+        //! Clears all vertices and triangles.
+        void Clear();
+
         //! Adds a new vertex with the specified attributes.
         std::size_t AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord);
 
         //! Adds a new triangle with the specified three indices.
         void AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2);
+
+        //! Returns the vertex, interpolated from the triangle with the specified barycentric coordinates.
+        Vertex Barycentric(std::size_t triangleIndex, Gs::Vector3& barycentricCoords) const;
 
         //! Computes the set of all edges.
         std::vector<Edge> Edges() const;
@@ -73,6 +80,12 @@ class TriangleMesh
         AABB3 BoundingBoxMultiThreaded(std::size_t threadCount) const;
 
         #endif
+
+        /**
+        Clips this triangle mesh into a front- and back sided mesh by the specified clipping plane.
+        \see ClipTriangle
+        */
+        void Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMesh& back) const;
 
         std::vector<Vertex>     vertices;
         std::vector<Triangle>   triangles;

@@ -32,6 +32,7 @@
 #define DEG_TO_RAD(x) ((x)*pi/Gs::Real(180))
 
 #define TEST_PROJECTION_MORPHING
+#define TEST_MESH_CLIPPING
 
 
 // ----- STRUCTURES -----
@@ -60,6 +61,7 @@ std::vector<Model>      models;
 
 bool                    projMorphing        = false;
 bool                    projMorphingOrtho   = false;
+bool                    wireframeMode       = false;
 
 Gm::Spline2             spline;
 
@@ -160,6 +162,7 @@ void initGL()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_CULL_FACE);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     
@@ -198,20 +201,17 @@ void emitVertex(const Gm::TriangleMesh::Vertex& vert)
     glVertex3fv(vert.position.Ptr());
 }
 
-void drawModel(const Model& mdl)
+void drawMesh(const Gm::TriangleMesh& mesh, bool wireframe = false)
 {
-    // setup world-view matrix
-    auto modelView = (viewMatrix * mdl.transform.GetMatrix()).ToMatrix4();
-    glLoadMatrix_T(modelView.Ptr());
+    glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
-    // draw model
     glBegin(GL_TRIANGLES);
 
-    for (const auto& tri : mdl.mesh.triangles)
+    for (const auto& tri : mesh.triangles)
     {
-        const auto& v0 = mdl.mesh.vertices[tri.a];
-        const auto& v1 = mdl.mesh.vertices[tri.b];
-        const auto& v2 = mdl.mesh.vertices[tri.c];
+        const auto& v0 = mesh.vertices[tri.a];
+        const auto& v1 = mesh.vertices[tri.b];
+        const auto& v2 = mesh.vertices[tri.c];
 
         emitVertex(v0);
         emitVertex(v1);
@@ -219,6 +219,34 @@ void drawModel(const Model& mdl)
     }
 
     glEnd();
+}
+
+void drawModel(const Model& mdl)
+{
+    // setup world-view matrix
+    auto modelView = (viewMatrix * mdl.transform.GetMatrix()).ToMatrix4();
+    glLoadMatrix_T(modelView.Ptr());
+
+    #ifdef TEST_MESH_CLIPPING
+    
+    Gm::Plane clipPlane(
+        Gs::Vector3(1, 0, 0).Normalized(),
+        -0.3f
+    );
+    clipPlane = Gm::TransformPlane(modelView.Inverse(), clipPlane);
+
+    Gm::TriangleMesh front, back;
+    mdl.mesh.Clip(clipPlane, front, back);
+
+    drawMesh(front, wireframeMode);
+    drawMesh(back, wireframeMode);
+
+    #else
+
+    // draw model
+    drawMesh(mdl.mesh, wireframeMode);
+
+    #endif
 }
 
 void drawLine(const Gs::Vector3& a, const Gs::Vector3& b)
@@ -381,6 +409,10 @@ void keyboardCallback(unsigned char key, int x, int y)
     {
         case 27: // ESC
             exit(0);
+            break;
+
+        case '\t': // TAB
+            wireframeMode = !wireframeMode;
             break;
 
         case '\r': // ENTER

@@ -94,7 +94,7 @@ Gs::Vector3T<T> ClosestPointOnPlane(const PlaneT<T>& plane, const Gs::Vector3T<T
 template <typename T>
 T IntersectionWithPlaneInterp(const PlaneT<T>& plane, const Gs::Vector3T<T>& origin, const Gs::Vector3T<T>& direction)
 {
-    return (plane.distance - Gs::Dot(plane.normal, origin)) / Gs::Dot(plane.normal, direction);
+    return -(Gs::Dot(plane.normal, origin) + plane.distance) / Gs::Dot(plane.normal, direction);
 }
 
 //! Computes the intersection between the specified plane and ray.
