@@ -27,6 +27,7 @@
 #include "Transform3.h"
 
 #include "PlaneCollision.h"
+#include "TriangleCollision.h"
 
 
 #endif

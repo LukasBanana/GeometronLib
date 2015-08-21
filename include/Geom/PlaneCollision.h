@@ -166,17 +166,18 @@ bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, con
 
 /* --- Relation to Plane --- */
 
-//! Relations between a plane and an AABB.
-enum class PlaneAABBRelation
+//! Relations between a plane and another primitive (point, triangle, AABB etc.).
+enum class PlaneRelation
 {
-    InFrontOf,  //!< The AABB is in front of the plane.
-    Clipped,    //!< The AABB is clipped by the plane.
-    Behind,     //!< The AABB is behind the plane.
+    InFrontOf,  //!< The primitive is in front of the plane.
+    Clipped,    //!< The primitive is clipped by the plane.
+    Behind,     //!< The primitive is behind the plane.
+    Onto,       //!< The primitive is onto the plane.
 };
 
 //! Computes the relation between the specified plane and AABB.
 template <typename T>
-PlaneAABBRelation RelationToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
+PlaneRelation RelationToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
 {
     /* Compute near- and far points of the box to the plane */
     auto near = aabb.max;
@@ -200,14 +201,25 @@ PlaneAABBRelation RelationToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
 
     /* Determine where the near- and far points are located with respect to the plane */
     if (IsFrontFacingPlane(plane, near))
-        return PlaneAABBRelation::InFrontOf;
+        return PlaneRelation::InFrontOf;
     if (IsFrontFacingPlane(plane, far))
-        return PlaneAABBRelation::Clipped;
-    return PlaneAABBRelation::Behind;
+        return PlaneRelation::Clipped;
+    return PlaneRelation::Behind;
 }
 
+//! Computes the relation between the specified plane and point.
+template < typename T, class Eps = Gs::Epsilon<T> >
+PlaneRelation RelationToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point)
+{
+    const auto d = SgnDistanceToPlane(plane, point);
 
-/* --- Misc --- */
+    if (d > Eps::value)
+        return PlaneRelation::InFrontOf;
+    if (d < -Eps::value)
+        return PlaneRelation::Behind;
+
+    return PlaneRelation::Onto;
+}
 
 //! Returns true if the specified point is on the front side of the plane.
 template <typename T>

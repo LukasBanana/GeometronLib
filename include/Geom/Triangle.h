@@ -46,6 +46,18 @@ class Triangle
             // do nothing
         }
 
+        T& operator [] (std::size_t vertex)
+        {
+            GS_ASSERT(vertex < 3);
+            return *((&a) + vertex);
+        }
+
+        const T& operator [] (std::size_t vertex) const
+        {
+            GS_ASSERT(vertex < 3);
+            return *((&a) + vertex);
+        }
+
         T a, b, c;
 
 };
@@ -72,6 +84,18 @@ class Triangle< Gs::Vector2T<T> >
             c( Gs::UninitializeTag{} )
         {
             // do nothing
+        }
+
+        Gs::Vector2T<T>& operator [] (std::size_t vertex)
+        {
+            GS_ASSERT(vertex < 3);
+            return *((&a) + vertex);
+        }
+
+        const Gs::Vector2T<T>& operator [] (std::size_t vertex) const
+        {
+            GS_ASSERT(vertex < 3);
+            return *((&a) + vertex);
         }
 
         T Area() const
@@ -133,6 +157,18 @@ class Triangle< Gs::Vector3T<T> >
             c( Gs::UninitializeTag{} )
         {
             // do nothing
+        }
+
+        Gs::Vector3T<T>& operator [] (std::size_t vertex)
+        {
+            GS_ASSERT(vertex < 3);
+            return *((&a) + vertex);
+        }
+
+        const Gs::Vector3T<T>& operator [] (std::size_t vertex) const
+        {
+            GS_ASSERT(vertex < 3);
+            return *((&a) + vertex);
         }
 
         T Area() const
