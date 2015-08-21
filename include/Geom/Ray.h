@@ -17,7 +17,7 @@ namespace Gm
 {
 
 
-//! Base ray class.
+//! Ray base class.
 template <template <typename> class Vec, typename T>
 class Ray
 {

@@ -83,12 +83,26 @@ Gs::Vector3T<T> ClosestPointOnPlane(const PlaneT<T>& plane, const Gs::Vector3T<T
 
 /* --- Intersection with Plane --- */
 
+/**
+\brief Computes the interpolation factor for the intersection between the specified plane and ray.
+\param[in] plane Specifies the plane.
+\param[in] origin Specifies the ray origin.
+\param[in] direction Specifies the ray direction. This vector does not need to be normalized.
+\remarks This is the base function for the "IntersectionWithPlane" variantes.
+\see IntersectionWithPlane
+*/
+template <typename T>
+T IntersectionWithPlaneInterp(const PlaneT<T>& plane, const Gs::Vector3T<T>& origin, const Gs::Vector3T<T>& direction)
+{
+    return (plane.distance - Gs::Dot(plane.normal, origin)) / Gs::Dot(plane.normal, direction);
+}
+
 //! Computes the intersection between the specified plane and ray.
 template <typename T>
 bool IntersectionWithPlane(const PlaneT<T>& plane, const Ray3T<T>& ray, Gs::Vector3T<T>& intersection)
 {
     /* Compute interpolation factor */
-    const T t = (plane.distance - Gs::Dot(plane.normal, ray.origin)) / Gs::Dot(plane.normal, ray.direction);
+    const auto t = IntersectionWithPlaneInterp(plane, ray.origin, ray.direction);
 
     if (t >= T(0))
     {
@@ -104,14 +118,11 @@ template <typename T>
 bool IntersectionWithPlane(const PlaneT<T>& plane, const Line3T<T>& line, Gs::Vector3T<T>& intersection)
 {
     /* Compute interpolation factor */
-    const auto direction = line.Direction();
-    const T t = (plane.distance - Gs::Dot(plane.normal, line.a)) / Gs::Dot(plane.normal, direction);
+    const auto t = IntersectionWithPlaneInterp(plane, line.a, line.Direction());
 
     if (t >= T(0) && t <= T(1))
     {
-        intersection = direction;
-        intersection *= t;
-        intersection += line.a;
+        intersection = line.Lerp(t);
         return true;
     }
 
