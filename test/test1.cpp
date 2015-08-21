@@ -144,6 +144,17 @@ static void planeTest1()
 
 }
 
+static void barycentricTest1()
+{
+    Triangle2 triA(
+        { 50, 25 }, { 150, 50 }, { 50, 200 }
+    );
+
+    auto triB = triA.Barycentric(
+        Triangle3({ 0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.5f, 0.5f })
+    );
+}
+
 int main()
 {
     std::cout << "GeometronLib Test 1" << std::endl;
@@ -154,6 +165,7 @@ int main()
     //meshTest1();
     //sphereTest1();
     planeTest1();
+    barycentricTest1();
 
     #ifdef _WIN32
     system("pause");

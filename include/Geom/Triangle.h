@@ -79,6 +79,34 @@ class Triangle< Gs::Vector2T<T> >
             return Gs::Cross(b - a, c - a)/T(2);
         }
 
+        /**
+        \brief Computes the cartesian coordinate by the specified barycentric coordinate with respect to this triangle.
+        \param[in] barycentricCoords Specifies the barycentric coordinates with respect to this triangle.
+        The sum of all components must be one, i.e. x+y+z = 1.
+        */
+        Gs::Vector2T<T> Barycentric(const Gs::Vector3T<T>& barycentricCoords) const
+        {
+            return Gs::Vector2T<T>(
+                a.x*barycentricCoords.x + b.x*barycentricCoords.y + c.x*barycentricCoords.z,
+                a.y*barycentricCoords.x + b.y*barycentricCoords.y + c.y*barycentricCoords.z
+            );
+        }
+
+        /**
+        \brief Computes the triangle with cartesian coordinates by the specified triangle with barycentric coordinates with respecti to this triangle.
+        \param[in] barycentricCoords Specifies the triangle with barycentric coordinates with respect to this triangle.
+        If this input parameter is { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }, the result is equal to this triangle.
+        The sum of all components must be one for each triangle vertex, i.e. x+y+z = 1.
+        */
+        Triangle< Gs::Vector2T<T> > Barycentric(const Triangle< Gs::Vector3T<T> >& barycentricCoords) const
+        {
+            return Triangle< Gs::Vector2T<T> >(
+                Barycentric(barycentricCoords.a),
+                Barycentric(barycentricCoords.b),
+                Barycentric(barycentricCoords.c)
+            );
+        }
+
         Gs::Vector2T<T> a, b, c;
 
 };
@@ -120,6 +148,35 @@ class Triangle< Gs::Vector3T<T> >
         Gs::Vector3T<T> UnitNormal() const
         {
             return Normal().Normalize();
+        }
+
+        /**
+        \brief Computes the cartesian coordinate by the specified barycentric coordinate with respect to this triangle.
+        \param[in] barycentricCoords Specifies the barycentric coordinates with respect to this triangle.
+        The sum of all components must be one, i.e. x+y+z = 1.
+        */
+        Gs::Vector3T<T> Barycentric(const Gs::Vector3T<T>& barycentricCoords) const
+        {
+            return Gs::Vector3T<T>(
+                a.x*barycentricCoords.x + b.x*barycentricCoords.y + c.x*barycentricCoords.z,
+                a.y*barycentricCoords.x + b.y*barycentricCoords.y + c.y*barycentricCoords.z,
+                a.z*barycentricCoords.x + b.z*barycentricCoords.y + c.z*barycentricCoords.z
+            );
+        }
+
+        /**
+        \brief Computes the triangle with cartesian coordinates by the specified triangle with barycentric coordinates with respecti to this triangle.
+        \param[in] barycentricCoords Specifies the triangle with barycentric coordinates with respect to this triangle.
+        If this input parameter is { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }, the result is equal to this triangle.
+        The sum of all components must be one for each triangle vertex, i.e. x+y+z = 1.
+        */
+        Triangle< Gs::Vector3T<T> > Barycentric(const Triangle< Gs::Vector3T<T> >& barycentricCoords) const
+        {
+            return Triangle< Gs::Vector3T<T> >(
+                Barycentric(barycentricCoords.a),
+                Barycentric(barycentricCoords.b),
+                Barycentric(barycentricCoords.c)
+            );
         }
 
         Gs::Vector3T<T> a, b, c;
