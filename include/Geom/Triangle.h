@@ -18,7 +18,7 @@ namespace Gm
 {
 
 
-//! Base sphere class.
+//! Triangle base class.
 template <typename T>
 class Triangle
 {
@@ -62,6 +62,7 @@ class Triangle
 
 };
 
+//! Template specializationn for 2D triangles.
 template <typename T>
 class Triangle< Gs::Vector2T<T> >
 {
@@ -131,10 +132,20 @@ class Triangle< Gs::Vector2T<T> >
             );
         }
 
+        //! Returns the angle (in radians) of the specified triangle vertex (0, 1, or 2).
+        T Angle(std::size_t vertex) const
+        {
+            return Gs::Angle(
+                (*this)[(vertex + 1) % 3] - (*this)[vertex],
+                (*this)[(vertex + 2) % 3] - (*this)[vertex],
+            );
+        }
+
         Gs::Vector2T<T> a, b, c;
 
 };
 
+//! Template specializationn for 3D triangles.
 template <typename T>
 class Triangle< Gs::Vector3T<T> >
 {
@@ -212,6 +223,15 @@ class Triangle< Gs::Vector3T<T> >
                 Barycentric(barycentricCoords.a),
                 Barycentric(barycentricCoords.b),
                 Barycentric(barycentricCoords.c)
+            );
+        }
+
+        //! Returns the angle (in radians) of the specified triangle vertex (0, 1, or 2).
+        T Angle(std::size_t vertex) const
+        {
+            return Gs::Angle(
+                (*this)[(vertex + 1) % 3] - (*this)[vertex],
+                (*this)[(vertex + 2) % 3] - (*this)[vertex],
             );
         }
 
