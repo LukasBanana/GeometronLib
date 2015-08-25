@@ -15,6 +15,7 @@
 #include <Gauss/Quaternion.h>
 #include <Gauss/AffineMatrix4.h>
 #include <Gauss/Conversions.h>
+#include <Gauss/Scale.h>
 
 
 namespace Gm
