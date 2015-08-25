@@ -86,6 +86,33 @@ template <typename T> class Transform3T
             return matrix_;
         }
 
+        //! Moves this transformation into the specified direction.
+        void MoveGlobal(const Gs::Vector3T<T>& direction)
+        {
+            position_ += direction;
+            hasChanged_ = true;
+        }
+
+        //! Moves this transformation into the specified direction with respect to the current rotation.
+        void MoveLocal(const Gs::Vector3T<T>& direction)
+        {
+            MoveGlobal(GetRotation() * direction);
+        }
+
+        //! Turns this transformation with the specified (reltative) angles around the (global) pivot.
+        void Turn(const Gs::QuaternionT<T>& rotation, const Gs::Vector3T<T>& pivot)
+        {
+            /* Compute origin and movement offset */
+            const auto pivotOffset = GetPosition() - pivot;
+            const auto moveOffset = rotation * pivotOffset - pivotOffset;
+
+            /* Set new rotation and translate object */
+            position_ += moveOffset;
+            rotation_ *= rotation;
+
+            hasChanged_ = true;
+        }
+
     private:
         
         Gs::Vector3T<T>     position_;

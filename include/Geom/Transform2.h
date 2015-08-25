@@ -13,6 +13,7 @@
 
 #include <Gauss/Vector2.h>
 #include <Gauss/AffineMatrix3.h>
+#include <cmath>
 
 
 namespace Gm
@@ -81,6 +82,22 @@ template <typename T> class Transform2T
                 hasChanged_ = false;
             }
             return matrix_;
+        }
+
+        void Turn(const T& rotation, const Gs::Vector2T<T>& pivot)
+        {
+            /* Compute origin and movement offset */
+            const Gs::Vector2T<T> pivotOffset = GetPosition() - pivot;
+            const Gs::Vector2T<T> moveOffset(
+                std::sin(rotation) * pivotOffset.x - pivotOffset.x,
+                std::cos(rotation) * pivotOffset.y - pivotOffset.y
+            );
+
+            /* Set new rotation and translate object */
+            position_ += moveOffset;
+            rotation_ += rotation;
+
+            hasChanged_ = true;
         }
 
     private:
