@@ -77,6 +77,13 @@ class PlaneT
             UpdateDistance(a);
         }
 
+        //! Builds this plane with the specified normal and member point (which lies onto the plane).
+        void Build(const Gs::Vector3T<T>& normal, const Gs::Vector3T<T>& memberPoint)
+        {
+            this->normal = normal;
+            UpdateDistance(memberPoint);
+        }
+
         //! Updates the (signed) distance for the new specified member point.
         void UpdateDistance(const Gs::Vector3T<T>& memberPoint)
         {
