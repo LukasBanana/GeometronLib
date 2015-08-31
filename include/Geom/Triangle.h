@@ -137,7 +137,7 @@ class Triangle< Gs::Vector2T<T> >
         {
             return Gs::Angle(
                 (*this)[(vertex + 1) % 3] - (*this)[vertex],
-                (*this)[(vertex + 2) % 3] - (*this)[vertex],
+                (*this)[(vertex + 2) % 3] - (*this)[vertex]
             );
         }
 
@@ -231,7 +231,7 @@ class Triangle< Gs::Vector3T<T> >
         {
             return Gs::Angle(
                 (*this)[(vertex + 1) % 3] - (*this)[vertex],
-                (*this)[(vertex + 2) % 3] - (*this)[vertex],
+                (*this)[(vertex + 2) % 3] - (*this)[vertex]
             );
         }
 

@@ -40,14 +40,14 @@ class FrustumT : private ConvexHullT<T>
     public:
         
         FrustumT() :
-            ConvexHullT( 6 )
+            ConvexHullT<T>( 6 )
         {
         }
 
         explicit FrustumT(const Gs::Matrix4T<T>& m) :
             FrustumT()
         {
-            SetFromMatrix(matrix);
+            SetFromMatrix(m);
         }
 
         void SetFromMatrix(const Gs::Matrix4T<T>& m)
@@ -102,7 +102,7 @@ class FrustumT : private ConvexHullT<T>
             };
 
             /* Normalize plane normal vectors */
-            Normalize();
+            ConvexHullT<T>::Normalize();
         }
 
         //! Returns the left-top corner on the far plane.
@@ -140,13 +140,13 @@ class FrustumT : private ConvexHullT<T>
         //! Returns the specified plane of this frustum.
         const PlaneT<T>& GetPlane(const FrustumPlane plane) const
         {
-            return planes[static_cast<std::size_t>(plane)];
+            return ConvexHullT<T>::planes[static_cast<std::size_t>(plane)];
         }
 
         //! Returns the specified plane of this frustum.
         PlaneT<T>& GetPlane(const FrustumPlane plane)
         {
-            return planes[static_cast<std::size_t>(plane)];
+            return ConvexHullT<T>::planes[static_cast<std::size_t>(plane)];
         }
 
         //! Computes the bounding box of this frustum with the specified origin of the frustum.

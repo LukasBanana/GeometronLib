@@ -14,6 +14,7 @@
 
 #include <Gauss/Vector3.h>
 #include <Gauss/RotateVector.h>
+#include <Gauss/TransformVector.h>
 
 
 namespace Gm
@@ -21,11 +22,11 @@ namespace Gm
 
 
 /**
-\brief Base plane class with components: normal and distance.
+\brief Plane base class with components: 'normal' and 'distance'.
 \tparam T Specifies the data type of the vector components.
 This should be a primitive data type such as float or double.
 \remarks The plane equation is: ax + by + cz + d = 0,
-where (a, b, c) is a point on the plane, (x, y, z) is the normal vector and d is the (signed) distance.
+where (a, b, c) is a point on the plane, (x, y, z) is the normal vector and d is the (signed) distance to the origin.
 */
 template <typename T>
 class PlaneT

@@ -62,12 +62,12 @@ T DistanceToPlane(const PlaneT<T>& plane, const OBB3T<T>& obb)
 {
     /* Compute the projection interval radius of the box */
     const T radius =
-        box.halfSize.x * std::abs(Gs::Dot(plane.normal, box.axes.x)) +
-        box.halfSize.y * std::abs(Gs::Dot(plane.normal, box.axes.y)) +
-        box.halfSize.z * std::abs(Gs::Dot(plane.normal, box.axes.z));
+        obb.halfSize.x * std::abs(Gs::Dot(plane.normal, obb.axes.x)) +
+        obb.halfSize.y * std::abs(Gs::Dot(plane.normal, obb.axes.y)) +
+        obb.halfSize.z * std::abs(Gs::Dot(plane.normal, obb.axes.z));
 
     /* Compute distance of box center to plane and subtract interval radius */
-    return DistanceToPlane(plane, center) - radius;
+    return DistanceToPlane(plane, obb.center) - radius;
 }
 
 
@@ -77,7 +77,7 @@ T DistanceToPlane(const PlaneT<T>& plane, const OBB3T<T>& obb)
 template <typename T>
 Gs::Vector3T<T> ClosestPointOnPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point)
 {
-    return point - plane.normal * SgnDistanceToPlane(plane, normal);
+    return point - plane.normal * SgnDistanceToPlane(plane, plane.normal);
 }
 
 
