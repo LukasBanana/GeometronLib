@@ -6,6 +6,7 @@
  */
 
 #include <Gauss/Gauss.h>
+#include <Gauss/DefConsts.h>
 #include <Geom/Geom.h>
 #include <iostream>
 #include <fstream>

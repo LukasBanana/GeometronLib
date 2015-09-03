@@ -12,6 +12,7 @@
 
 #include <Gauss/Gauss.h>
 #include <Gauss/GLSLTypes.h>
+#include <Gauss/DefConsts.h>
 #include <Geom/Geom.h>
 
 #ifdef WIN32
@@ -29,7 +30,7 @@
 #   define glLoadMatrix_T(p) glLoadMatrixf(p)
 #endif
 
-#define DEG_TO_RAD(x) ((x)*pi/Gs::Real(180))
+#define DEG_TO_RAD(x) ((x)*Gs::pi/Gs::Real(180))
 
 #define TEST_PROJECTION_MORPHING
 #define TEST_MESH_CLIPPING
@@ -46,8 +47,6 @@ struct Model
 
 
 // ----- VARIABLES -----
-
-static const Gs::Real pi = Gs::Real(3.141592654);
 
 Gs::Vector2i            resolution;
 Gs::ProjectionMatrix4   projection;
@@ -307,12 +306,12 @@ void drawSpline(const Gm::Spline2& spline, Gs::Real a, Gs::Real b, std::size_t d
 
 void updateScene()
 {
+    static const auto motion = Gs::Real(0.002);
+
     auto& trans = models[0].transform;
 
     auto rotation = trans.GetRotation().ToMatrix3();
-    const auto motion = Gs::Real(0.002);
-
-    Gs::RotateFree(rotation, Gs::Vector3(1, 1, 1).Normalized(), pi*motion);
+    Gs::RotateFree(rotation, Gs::Vector3(1, 1, 1).Normalized(), Gs::pi*motion);
     trans.SetRotation(Gs::Quaternion(rotation));
 }
 
