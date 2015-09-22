@@ -145,13 +145,22 @@ class ProjectionT
         {
             if (hasChanged_)
             {
-                if (isOrtho_)
-                    Gs::ProjectionMatrix4T<T>::Perspective(matrix_, aspect_, near_, far_, fov_, flags_);
-                else
-                    Gs::ProjectionMatrix4T<T>::Orthogonal(matrix_, orthoSize_.x, orthoSize_.y, near_, far_, flags_);
+                GetMatrix(matrix_, flags_);
                 hasChanged_ = false;
             }
             return matrix_;
+        }
+
+        /**
+        \brief Returns the projection matrix with the specified flags.
+        \see Gs::ProjectionFlags
+        */
+        void GetMatrix(MatrixType& matrix, int flags) const
+        {
+            if (isOrtho_)
+                return Gs::ProjectionMatrix4T<T>::Perspective(matrix, aspect_, near_, far_, fov_, flags);
+            else
+                return Gs::ProjectionMatrix4T<T>::Orthogonal(matrix, orthoSize_.x, orthoSize_.y, near_, far_, flags);
         }
 
     private:
