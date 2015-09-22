@@ -23,10 +23,11 @@ namespace Gm
 
 
 /**
-3D transformation class.
+\brief 3D transformation class.
 \note This class can not be used with multi-threading!
 */
-template <typename T> class Transform3T
+template <typename T>
+class Transform3T
 {
     
     public:

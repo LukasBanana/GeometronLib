@@ -21,10 +21,11 @@ namespace Gm
 
 
 /**
-2D transformation class.
+\brief 2D transformation class.
 \note This class can not be used with multi-threading!
 */
-template <typename T> class Transform2T
+template <typename T>
+class Transform2T
 {
     
     public:
