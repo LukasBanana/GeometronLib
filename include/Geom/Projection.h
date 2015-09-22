@@ -33,12 +33,6 @@ class ProjectionT
 
         using MatrixType = Gs::ProjectionMatrix4T<T>;
 
-        ProjectionT() :
-            scale_      ( T(1) ),
-            hasChanged_ ( true )
-        {
-        }
-
         //! Sets the near clipping plane.
         void SetNear(const T& near)
         {
@@ -171,16 +165,16 @@ class ProjectionT
         Gs::Vector2T<T>     orthoSize_;
 
         mutable MatrixType  matrix_;
-        mutable bool        hasChanged_;
+        mutable bool        hasChanged_ = true;
 
 };
 
 
 /* --- Type Alias --- */
 
-using Transform3  = Transform3T<Gs::Real>;
-using Transform3f = Transform3T<float>;
-using Transform3d = Transform3T<double>;
+using Projection    = ProjectionT<Gs::Real>;
+using Projectionf   = ProjectionT<float>;
+using Projectiond   = ProjectionT<double>;
 
 
 } // /namespace Gm
