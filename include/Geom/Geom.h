@@ -25,6 +25,7 @@
 
 #include "Transform2.h"
 #include "Transform3.h"
+#include "Projection.h"
 
 #include "PlaneCollision.h"
 #include "TriangleCollision.h"

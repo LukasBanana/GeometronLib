@@ -354,7 +354,7 @@ void drawScene3D()
     }
 }
 
-void drawSceen2D()
+void drawScene2D()
 {
     // setup projection
     glMatrixMode(GL_PROJECTION);
@@ -378,7 +378,7 @@ void displayCallback()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     {
         drawScene3D();
-        //drawSceen2D();
+        //drawScene2D();
     }
     glutSwapBuffers();
 }
