@@ -194,7 +194,7 @@ class Triangle< Gs::Vector3T<T> >
 
         Gs::Vector3T<T> UnitNormal() const
         {
-            return Normal().Normalize();
+            return Normal().Normalized();
         }
 
         /**
