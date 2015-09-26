@@ -156,6 +156,19 @@ static void barycentricTest1()
     );
 }
 
+static void uniformSplineTest1()
+{
+    UniformSpline2 spline;
+
+    auto points = std::vector<Gs::Vector2>{ { 0, 0 }, { 10, 25 }, { -20, 50 } };
+    spline.Build(points);
+
+    std::cout << "uniform spline evaluation:" << std::endl;
+
+    for (float t = 0.0f; t <= 1.0001f; t += 0.05f)
+        std::cout << "spline(" << t << ") = " << spline(t) << std::endl;
+}
+
 int main()
 {
     std::cout << "GeometronLib Test 1" << std::endl;
@@ -165,8 +178,9 @@ int main()
     //triangleTest1();
     //meshTest1();
     //sphereTest1();
-    planeTest1();
-    barycentricTest1();
+    //planeTest1();
+    //barycentricTest1();
+    uniformSplineTest1();
 
     #ifdef _WIN32
     system("pause");

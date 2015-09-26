@@ -18,6 +18,7 @@
 #include "Ray.h"
 #include "Sphere.h"
 #include "Spline.h"
+#include "UniformSpline.h"
 #include "Triangle.h"
 
 #include "TriangleMesh.h"
