@@ -252,6 +252,9 @@ void TriangleMesh::Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMes
                 }
             }
             break;
+                
+            default:
+            break;
         }
 
         /* Track triangle index */

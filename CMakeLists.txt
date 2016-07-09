@@ -34,10 +34,11 @@ include_directories(${GaussianLib_INCLUDE_DIR})
 
 add_library(geomlib STATIC ${FilesAll})
 set_target_properties(geomlib PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
+target_compile_features(geomlib PRIVATE cxx_strong_enums cxx_constexpr cxx_auto_type)
 
 add_executable(test1 "${PROJECT_TEST_DIR}/test1.cpp")
 set_target_properties(test1 PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
-
+target_compile_features(test1 PRIVATE cxx_strong_enums cxx_constexpr cxx_auto_type)
 target_link_libraries(test1 geomlib)
 
 find_package(OpenGL)
@@ -46,6 +47,7 @@ if(OpenGL_FOUND AND GLUT_FOUND)
 	include_directories(${GLUT_INCLUDE_DIR})
 	add_executable(test2 "${PROJECT_TEST_DIR}/test2.cpp")
 	set_target_properties(test2 PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
+	target_compile_features(test2 PRIVATE cxx_strong_enums cxx_constexpr cxx_auto_type)
 	target_link_libraries(test2 ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} geomlib)
 else()
 	message("excluded optional project 'test2' (OpenGL and GLUT required)")

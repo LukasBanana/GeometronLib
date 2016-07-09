@@ -75,6 +75,8 @@ PlaneRelation ClipTriangle(const Triangle3T<T>& triangle, const PlaneT<T>& clipP
             case PlaneRelation::Behind:
                 back.AddVertex(coord);
                 break;
+            default:
+                break;
         }
     };
 

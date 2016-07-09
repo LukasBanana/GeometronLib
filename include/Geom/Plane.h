@@ -128,7 +128,8 @@ class PlaneT
         template <typename C>
         PlaneT<C> Cast() const
         {
-            return PlaneT<C>(normal.Cast<C>(), static_cast<C>(distance));
+            // Hint: "template" keyword is required here for clang and g++
+            return PlaneT<C>(normal.template Cast<C>(), static_cast<C>(distance));
         }
 
         Gs::Vector3T<T> normal;     //!< Normal vector of the plane.

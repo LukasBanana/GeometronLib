@@ -144,7 +144,8 @@ TriangleMesh Cuboid(const CuboidDescription& desc)
         desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ, desc.uvScale.x, desc.uvScale.z, desc.alternateGrid
     );
 
-    return std::move(mesh);
+    //return std::move(mesh);
+    return mesh;
 }
 
 

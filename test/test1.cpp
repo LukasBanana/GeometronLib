@@ -5,14 +5,14 @@
  * See "LICENSE.txt" for license information.
  */
 
-#include <Gauss/Gauss.h>
 #include <Gauss/DefConsts.h>
+#include <Gauss/Gauss.h>
 #include <Geom/Geom.h>
 #include <iostream>
 #include <fstream>
 
 #ifdef _WIN32
-#include <Windows.h>
+#   include <Windows.h>
 #endif
 
 

@@ -10,16 +10,17 @@
 //#define GS_HIGH_PRECISION_FLOAT
 //#define GS_ROW_VECTORS
 
+#include <Gauss/DefConsts.h>
 #include <Gauss/Gauss.h>
 #include <Gauss/GLSLTypes.h>
-#include <Gauss/DefConsts.h>
 #include <Geom/Geom.h>
 
-#ifdef WIN32
-#include <Windows.h>
+#if defined(_WIN32)
+#   include <Windows.h>
+#   include <gl/glut.h>
+#elif defined(__APPLE__)
+#   include <GLUT/GLUT.h>
 #endif
-
-#include <gl/glut.h>
 
 
 // ----- MACROS -----
