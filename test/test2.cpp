@@ -10,7 +10,6 @@
 //#define GS_HIGH_PRECISION_FLOAT
 //#define GS_ROW_VECTORS
 
-#include <Gauss/DefConsts.h>
 #include <Gauss/Gauss.h>
 #include <Gauss/GLSLTypes.h>
 #include <Geom/Geom.h>
@@ -67,7 +66,9 @@ Gm::Spline2             spline;
 
 Gm::Frustum             frustum;
 
-static const Gs::Real   epsilon             = Gs::Epsilon<Gs::Real>::value;
+const Gs::Real          epsilon             = Gs::Epsilon<Gs::Real>();
+
+int                     showScene           = 0;
 
 
 // ----- FUNCTIONS -----
@@ -378,8 +379,15 @@ void displayCallback()
     // draw frame
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     {
-        drawScene3D();
-        //drawScene2D();
+        switch (showScene)
+        {
+            case 0:
+                drawScene3D();
+                break;
+            case 1:
+                drawScene2D();
+                break;
+        }
     }
     glutSwapBuffers();
 }
@@ -419,6 +427,14 @@ void keyboardCallback(unsigned char key, int x, int y)
             projMorphing = true;
             projMorphingOrtho = !projMorphingOrtho;
             break;
+
+        case '1':
+            showScene = 0;
+            break;
+
+        case '2':
+            showScene = 1;
+            break;
     }
 }
 
@@ -440,6 +456,11 @@ void specialCallback(int key, int x, int y)
 
 int main(int argc, char* argv[])
 {
+    std::cout << "Press 1 to show 3D scene" << std::endl;
+    std::cout << "Press 2 to show 2D scene" << std::endl;
+    std::cout << "Press Enter to switch between perspective and orthographic view" << std::endl;
+    std::cout << "Press Tab to switch between solid and wireframe mode" << std::endl;
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 

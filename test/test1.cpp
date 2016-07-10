@@ -5,7 +5,6 @@
  * See "LICENSE.txt" for license information.
  */
 
-#include <Gauss/DefConsts.h>
 #include <Gauss/Gauss.h>
 #include <Geom/Geom.h>
 #include <iostream>

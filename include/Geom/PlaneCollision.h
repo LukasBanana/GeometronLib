@@ -130,8 +130,8 @@ bool IntersectionWithPlane(const PlaneT<T>& plane, const Line3T<T>& line, Gs::Ve
 }
 
 //! Computes the intersection between the specified two planes. The result is a ray.
-template < typename T, class Eps = Gs::Epsilon<T> >
-bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray3T<T>& intersection)
+template <typename T>
+bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray3T<T>& intersection, T epsilon = Gs::Epsilon<T>())
 {
     /* Compute direction of intersection */
     intersection.direction = Gs::Cross(planeA.normal, planeB.normal);
@@ -139,7 +139,7 @@ bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray
     /* Compute denominator, if zero => planes are parallel (and separated) */
     const T denom = Gs::Dot(intersection.direction, intersection.direction);
 
-    if (denom <= Eps::value)
+    if (denom <= epsilon)
         return false;
 
     /* Compute point on intersection ray: p = ((Na*Db - Nb*Da) x R) / denom */
@@ -153,12 +153,12 @@ bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray
 }
 
 //! Computes the intersection between the specified three planes. The result is a point.
-template < typename T, class Eps = Gs::Epsilon<T> >
-bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, const PlaneT<T>& planeC, Gs::Vector3T<T>& intersection)
+template <typename T>
+bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, const PlaneT<T>& planeC, Gs::Vector3T<T>& intersection, T epsilon = Gs::Epsilon<T>())
 {
     /* Make two interleaved intersection tests */
     Ray3T<T> ray;
-    if (IntersectionWithPlane<T, Eps>(planeA, planeB, ray))
+    if (IntersectionWithPlane<T>(planeA, planeB, ray, epsilon))
         return IntersectionWithPlane<T>(planeC, ray, intersection);
     return false;
 }
@@ -208,14 +208,14 @@ PlaneRelation RelationToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
 }
 
 //! Computes the relation between the specified plane and point.
-template < typename T, class Eps = Gs::Epsilon<T> >
-PlaneRelation RelationToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point)
+template <typename T>
+PlaneRelation RelationToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point, T epsilon = Gs::Epsilon<T>())
 {
     const auto d = SgnDistanceToPlane(plane, point);
 
-    if (d > Eps::value)
+    if (d > epsilon)
         return PlaneRelation::InFrontOf;
-    if (d < -Eps::value)
+    if (d < -epsilon)
         return PlaneRelation::Behind;
 
     return PlaneRelation::Onto;

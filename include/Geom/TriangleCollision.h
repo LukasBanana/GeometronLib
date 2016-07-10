@@ -48,8 +48,8 @@ If the return value is not PlaneRelation::Clipped, this output parameter is not 
 \return The plane relation after clipping. This is either PlaneRelation::InFrontOf, PlaneRelation::Behind, or PlaneRelation::Clipped.
 If the return value is not PlaneRelation::Clipped, the triangle has not changed.
 */
-template < typename T, class Eps = Gs::Epsilon<T> >
-PlaneRelation ClipTriangle(const Triangle3T<T>& triangle, const PlaneT<T>& clipPlane, ClippedPolygon<T>& front, ClippedPolygon<T>& back)
+template <typename T>
+PlaneRelation ClipTriangle(const Triangle3T<T>& triangle, const PlaneT<T>& clipPlane, ClippedPolygon<T>& front, ClippedPolygon<T>& back, T epsilon = Gs::Epsilon<T>())
 {
     static const Gs::Vector3T<T> barycentrics[3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
@@ -81,9 +81,9 @@ PlaneRelation ClipTriangle(const Triangle3T<T>& triangle, const PlaneT<T>& clipP
     };
 
     /* Classify relations of triangle vertices to plane */
-    rel[0] = RelationToPlane<T, Eps>(clipPlane, triangle.a);
-    rel[1] = RelationToPlane<T, Eps>(clipPlane, triangle.b);
-    rel[2] = RelationToPlane<T, Eps>(clipPlane, triangle.c);
+    rel[0] = RelationToPlane<T>(clipPlane, triangle.a, epsilon);
+    rel[1] = RelationToPlane<T>(clipPlane, triangle.b, epsilon);
+    rel[2] = RelationToPlane<T>(clipPlane, triangle.c, epsilon);
 
     if (IsFront(0) && IsFront(1) && IsFront(2))
         return PlaneRelation::InFrontOf;

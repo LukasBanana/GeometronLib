@@ -207,7 +207,7 @@ void TriangleMesh::Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMes
 
         /* Clip triangle against plane */
         ClippedPolygon<Gs::Real> frontPoly, backPoly;
-        auto rel = ClipTriangle(tri, clipPlane, frontPoly, backPoly);
+        auto rel = ClipTriangle<Gs::Real>(tri, clipPlane, frontPoly, backPoly);
 
         switch (rel)
         {
