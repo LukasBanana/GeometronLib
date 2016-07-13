@@ -122,6 +122,7 @@ std::vector<TriangleMesh::Edge> TriangleMesh::SilhouetteEdges(Gs::Real tolerance
 {
     auto edges = Edges();
 
+    /* Adjust tolerance angle to sine-curve and absolute value */
     toleranceAngle = std::sin(std::abs(toleranceAngle));
 
     /* Search all edges that are not part of the silhouette */
@@ -135,6 +136,7 @@ std::vector<TriangleMesh::Edge> TriangleMesh::SilhouetteEdges(Gs::Real tolerance
             auto normalPattern = TriangleNormal(tris[0]);
             for (std::size_t i = 1; i < tris.size(); ++i)
             {
+                /* If the normals deviate too much, this edge must be a part of the silhouette */
                 if (std::abs(Gs::Dot(TriangleNormal(tris[i]), normalPattern) - Gs::Real(1)) >= Gs::Epsilon<Gs::Real>() + toleranceAngle)
                     return false;
             }
