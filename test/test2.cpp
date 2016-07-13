@@ -33,8 +33,9 @@
 #define DEG_TO_RAD(x) ((x)*Gs::pi/Gs::Real(180))
 
 #define TEST_PROJECTION_MORPHING
-#define TEST_MESH_CLIPPING
+//#define TEST_MESH_CLIPPING
 //#define TEST_SHOW_SPLIT
+#define TEST_TRIANGLE_NEIGHBORS
 
 
 // ----- STRUCTURES -----
@@ -62,6 +63,9 @@ std::vector<Model>      models;
 bool                    projMorphing        = false;
 bool                    projMorphingOrtho   = false;
 bool                    wireframeMode       = false;
+bool                    autoRotate          = true;
+Gs::Real                rotateModel         = 0.0;
+std::size_t             neighborSearchDepth = 1;
 
 Gm::Spline2             spline;
 
@@ -192,11 +196,8 @@ void initScene()
     spline.SetOrder(3);
 }
 
-void emitVertex(const Gm::TriangleMesh::Vertex& vert)
+void emitVertex(const Gm::TriangleMesh::Vertex& vert, const Gs::Vector4& color)
 {
-    // generate color from vertex data
-    Gs::Vector4 color(vert.texCoord.x, vert.texCoord.y, 0.5f, 1);
-
     // emit vertex data
     glNormal3fv(vert.normal.Ptr());
     glTexCoord2fv(vert.texCoord.Ptr());
@@ -204,21 +205,58 @@ void emitVertex(const Gm::TriangleMesh::Vertex& vert)
     glVertex3fv(vert.position.Ptr());
 }
 
+void emitVertex(const Gm::TriangleMesh::Vertex& vert)
+{
+    // generate color from vertex data
+    Gs::Vector4 color(vert.texCoord.x, vert.texCoord.y, 0.5f, 1);
+    emitVertex(vert, color);
+}
+
 void drawMesh(const Gm::TriangleMesh& mesh, bool wireframe = false)
 {
+    #ifdef TEST_TRIANGLE_NEIGHBORS
+    auto neighbors = mesh.TriangleNeighbors({ 4, 5 }, neighborSearchDepth, false, true);
+    #endif
+
     glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
     glBegin(GL_TRIANGLES);
 
-    for (const auto& tri : mesh.triangles)
+    for (std::size_t i = 0; i < mesh.triangles.size(); ++i)
     {
+        const auto& tri = mesh.triangles[i];
+
         const auto& v0 = mesh.vertices[tri.a];
         const auto& v1 = mesh.vertices[tri.b];
         const auto& v2 = mesh.vertices[tri.c];
 
+        #ifdef TEST_TRIANGLE_NEIGHBORS
+
+        // Highlight test triangle and its neighbors
+        int c = 0;
+
+        for (auto t : neighbors)
+        {
+            if (t == i)
+            {
+                c = 2;
+                break;
+            }
+        }
+
+        Gs::Vector4 colors[] = { Gs::Vector4(1, 0, 0, 1), Gs::Vector4(0, 1, 0, 1), Gs::Vector4(0, 0, 1, 1) };
+
+        emitVertex(v0, colors[c]);
+        emitVertex(v1, colors[c]);
+        emitVertex(v2, colors[c]);
+
+        #else
+
         emitVertex(v0);
         emitVertex(v1);
         emitVertex(v2);
+
+        #endif
     }
 
     glEnd();
@@ -318,7 +356,7 @@ void drawSpline(const Gm::Spline2& spline, Gs::Real a, Gs::Real b, std::size_t d
 
 void updateScene()
 {
-    static const auto motion = Gs::Real(0.002);
+    const auto motion = (autoRotate ? Gs::Real(0.002) : rotateModel);
 
     auto& trans = models[0].transform;
 
@@ -400,6 +438,9 @@ void displayCallback()
         }
     }
     glutSwapBuffers();
+
+    // reset states
+    rotateModel = 0.0;
 }
 
 void idleCallback()
@@ -444,6 +485,28 @@ void keyboardCallback(unsigned char key, int x, int y)
 
         case '2':
             showScene = 1;
+            break;
+
+        case '3':
+            autoRotate = !autoRotate;
+            break;
+
+        case '4':
+            rotateModel = 0.1;
+            break;
+
+        case '5':
+            rotateModel = -0.1;
+            break;
+
+        case '6':
+            if (neighborSearchDepth > 0)
+                --neighborSearchDepth;
+            break;
+
+        case '7':
+            if (neighborSearchDepth < 8)
+                ++neighborSearchDepth;
             break;
     }
 }

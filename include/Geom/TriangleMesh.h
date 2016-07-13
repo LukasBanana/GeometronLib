@@ -19,6 +19,7 @@
 #include <Gauss/Vector3.h>
 #include <Gauss/AffineMatrix4.h>
 #include <algorithm>
+#include <set>
 
 
 namespace Gm
@@ -67,8 +68,22 @@ class TriangleMesh
         //! Computes the set of all triangle edges.
         std::vector<Edge> Edges() const;
 
-        //! Computes the list of all neighbors of the specified triangle.
-        std::vector<TriangleIndex> TriangleNeighbors(TriangleIndex triangleIndex, bool edgeBondOnly = false) const;
+        /**
+        \brief Computes the list of all neighbors of the specified triangle.
+        \param[in] triangleIndices Specifies the indices of the root triangles to search for neighbors.
+        \param[in] searchDepth Specifies the number of iterations 
+        \param[in] edgeBondOnly Specifies whether to only search triangles that are
+        connected at their edges and not only at their corners. By default false.
+        \param[in] searchViaPosition Specifies whether to search triangles via the position of
+        their vertices (true), or only search via the index of their vertices (false). By default false.
+        \return Set of triangle indices of the neighbor search result including the input triangle indices.
+        */
+        std::set<TriangleIndex> TriangleNeighbors(
+            std::set<TriangleIndex> triangleIndices,
+            std::size_t searchDepth = 1,
+            bool edgeBondOnly = false,
+            bool searchViaPosition = false
+        ) const;
 
         //! Computes the axis-aligned bounding-box of this mesh.
         AABB3 BoundingBox() const;

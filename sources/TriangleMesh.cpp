@@ -8,6 +8,7 @@
 #include <Geom/TriangleMesh.h>
 #include <Geom/TriangleCollision.h>
 #include <Gauss/TransformVector.h>
+#include <Gauss/Equals.h>
 
 #ifdef GM_ENABLE_MULTI_THREADING
 #   include <thread>
@@ -117,13 +118,75 @@ std::vector<TriangleMesh::Edge> TriangleMesh::Edges() const
     return edges;
 }
 
-std::vector<TriangleMesh::TriangleIndex> TriangleMesh::TriangleNeighbors(TriangleIndex triangleIndex, bool edgeBondOnly) const
+std::set<TriangleMesh::TriangleIndex> TriangleMesh::TriangleNeighbors(
+    std::set<TriangleIndex> triangleIndices, std::size_t searchDepth, bool edgeBondOnly, bool searchViaPosition) const
 {
-    std::vector<TriangleIndex> neighbors;
+    #ifdef GS_ENABLE_ASSERT
+    for (auto i : triangleIndices)
+        GS_ASSERT(i < triangles.size());
+    #endif
 
-    //todo...
+    auto MatchVertex = [&](VertexIndex a, VertexIndex b)
+    {
+        return Gs::Equals(vertices[a].position, vertices[b].position);
+    };
 
-    return neighbors;
+    auto HasVertex = [&](const Triangle& tri, VertexIndex v)
+    {
+        if (searchViaPosition)
+            return (MatchVertex(v, tri.a) || MatchVertex(v, tri.b) || MatchVertex(v, tri.c));
+        return (v == tri.a || v == tri.b || v == tri.c);
+    };
+
+    // Repeat the search for the specified number.
+    std::set<TriangleIndex> neighbors;
+
+    for (; searchDepth > 0; --searchDepth)
+    {
+        // Iterate over all triangle which are currently not contained in the neighbor set
+        for (TriangleIndex i = 0; i < triangles.size(); ++i)
+        {
+            if (triangleIndices.find(i) == triangleIndices.end())
+            {
+                const auto& indices = triangles[i];
+
+                // Check if the current triangle (i) is a neighbor of the current triangle in the search set (j)
+                for (auto j : triangleIndices)
+                {
+                    const auto& tri = triangles[j];
+
+                    if (!edgeBondOnly)
+                    {
+                        // Check for corner bond
+                        if ( HasVertex(tri, indices.a) ||
+                             HasVertex(tri, indices.b) ||
+                             HasVertex(tri, indices.c) )
+                        {
+                            neighbors.insert(i);
+                        }
+                    }
+                    else
+                    {
+                        // Check for edge bond
+                        int n = 0;
+
+                        if (HasVertex(tri, indices.a)) ++n;
+                        if (HasVertex(tri, indices.b)) ++n;
+                        if (HasVertex(tri, indices.c)) ++n;
+
+                        if (n >= 2)
+                            neighbors.insert(i);
+                    }
+                }
+            }
+        }
+
+        // Take over new neighbors
+        triangleIndices.insert(neighbors.begin(), neighbors.end());
+        neighbors.clear();
+    }
+
+    return triangleIndices;
 }
 
 AABB3 TriangleMesh::BoundingBox() const
