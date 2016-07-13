@@ -118,6 +118,42 @@ std::vector<TriangleMesh::Edge> TriangleMesh::Edges() const
     return edges;
 }
 
+std::vector<TriangleMesh::Edge> TriangleMesh::SilhouetteEdges(Gs::Real toleranceAngle) const
+{
+    auto edges = Edges();
+
+    toleranceAngle = std::sin(std::abs(toleranceAngle));
+
+    /* Search all edges that are not part of the silhouette */
+    auto PartOfSilh = [&](const Edge& edge)
+    {
+        /* Find all triangles that are connected to this edge and compare their normal of equality */
+        auto tris = FindTriangles(edge);
+
+        if (tris.size() >= 2)
+        {
+            auto normalPattern = TriangleNormal(tris[0]);
+            for (std::size_t i = 1; i < tris.size(); ++i)
+            {
+                if (std::abs(Gs::Dot(TriangleNormal(tris[i]), normalPattern) - Gs::Real(1)) >= Gs::Epsilon<Gs::Real>() + toleranceAngle)
+                    return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    };
+
+    /* Remove respective edges from the result */
+    edges.erase(
+        std::remove_if(std::begin(edges), std::end(edges), PartOfSilh),
+        edges.end()
+    );
+
+    return edges;
+}
+
 std::set<TriangleMesh::TriangleIndex> TriangleMesh::TriangleNeighbors(
     std::set<TriangleIndex> triangleIndices, std::size_t searchDepth, bool edgeBondOnly, bool searchViaPosition) const
 {
@@ -138,26 +174,26 @@ std::set<TriangleMesh::TriangleIndex> TriangleMesh::TriangleNeighbors(
         return (v == tri.a || v == tri.b || v == tri.c);
     };
 
-    // Repeat the search for the specified number.
+    /* Repeat the search for the specified number. */
     std::set<TriangleIndex> neighbors;
 
     for (; searchDepth > 0; --searchDepth)
     {
-        // Iterate over all triangle which are currently not contained in the neighbor set
+        /* Iterate over all triangle which are currently not contained in the neighbor set */
         for (TriangleIndex i = 0; i < triangles.size(); ++i)
         {
             if (triangleIndices.find(i) == triangleIndices.end())
             {
                 const auto& indices = triangles[i];
 
-                // Check if the current triangle (i) is a neighbor of the current triangle in the search set (j)
+                /* Check if the current triangle (i) is a neighbor of the current triangle in the search set (j) */
                 for (auto j : triangleIndices)
                 {
                     const auto& tri = triangles[j];
 
                     if (!edgeBondOnly)
                     {
-                        // Check for corner bond
+                        /* Check for corner bond */
                         if ( HasVertex(tri, indices.a) ||
                              HasVertex(tri, indices.b) ||
                              HasVertex(tri, indices.c) )
@@ -167,7 +203,7 @@ std::set<TriangleMesh::TriangleIndex> TriangleMesh::TriangleNeighbors(
                     }
                     else
                     {
-                        // Check for edge bond
+                        /* Check for edge bond */
                         int n = 0;
 
                         if (HasVertex(tri, indices.a)) ++n;
@@ -181,12 +217,61 @@ std::set<TriangleMesh::TriangleIndex> TriangleMesh::TriangleNeighbors(
             }
         }
 
-        // Take over new neighbors
+        /* Take over new neighbors */
         triangleIndices.insert(neighbors.begin(), neighbors.end());
         neighbors.clear();
     }
 
     return triangleIndices;
+}
+
+std::vector<TriangleMesh::TriangleIndex> TriangleMesh::FindTriangles(VertexIndex vertexIndex) const
+{
+    std::vector<TriangleIndex> result;
+
+    for (TriangleIndex i = 0; i < triangles.size(); ++i)
+    {
+        const auto& tri = triangles[i];
+        if (tri.a == vertexIndex || tri.b == vertexIndex || tri.b == vertexIndex)
+            result.push_back(i);
+    }
+
+    return result;
+}
+
+std::vector<TriangleMesh::TriangleIndex> TriangleMesh::FindTriangles(const Edge& edge) const
+{
+    std::vector<TriangleIndex> result;
+
+    auto HasEdge = [](const Triangle& tri, VertexIndex v0, VertexIndex v1)
+    {
+        return
+            ( tri.a == v0 && tri.b == v1 ) ||
+            ( tri.b == v0 && tri.c == v1 ) ||
+            ( tri.c == v0 && tri.a == v1 );
+    };
+
+    for (TriangleIndex i = 0; i < triangles.size(); ++i)
+    {
+        const auto& tri = triangles[i];
+        if (HasEdge(tri, edge.a, edge.b) || HasEdge(tri, edge.b, edge.a))
+            result.push_back(i);
+    }
+
+    return result;
+}
+
+Gs::Vector3 TriangleMesh::TriangleNormal(TriangleIndex triangleIndex) const
+{
+    GS_ASSERT(triangleIndex < triangles.size());
+
+    const auto& tri = triangles[triangleIndex];
+
+    const auto& a = vertices[tri.a];
+    const auto& b = vertices[tri.b];
+    const auto& c = vertices[tri.c];
+
+    return Gs::Cross(b.position - a.position, c.position - a.position).Normalized();
 }
 
 AABB3 TriangleMesh::BoundingBox() const

@@ -36,6 +36,8 @@
 //#define TEST_MESH_CLIPPING
 //#define TEST_SHOW_SPLIT
 #define TEST_TRIANGLE_NEIGHBORS
+#define TEST_SHOW_EDGES
+#define TEST_BLOATED_CUBE
 
 
 // ----- STRUCTURES -----
@@ -177,9 +179,23 @@ void initGL()
 
     // create model
     Gm::MeshGenerator::CuboidDescription mdlDesc;
+
+    #ifdef TEST_BLOATED_CUBE
+    
+    mdlDesc.segments = { 5, 5, 5 };
+    mdlDesc.size = { 1, 1, 1 };
+    auto mdl = createCuboidModel(mdlDesc);
+
+    for (auto& v : mdl->mesh.vertices)
+        v.position = Gs::Lerp(v.position, v.position.Normalized(), 0.5f);
+
+    #else
+
     mdlDesc.segments = { 1, 2, 3 };
     mdlDesc.size = { 1, 1.5f, 0.5f };
     auto mdl = createCuboidModel(mdlDesc);
+
+    #endif
 
     mdl->transform.SetPosition({ 0, 0, -2 });
 }
@@ -262,6 +278,30 @@ void drawMesh(const Gm::TriangleMesh& mesh, bool wireframe = false)
     glEnd();
 }
 
+void drawMeshEdges(const Gm::TriangleMesh& mesh)
+{
+    auto edges = mesh.SilhouetteEdges(Gs::pi*0.01);
+
+    const auto color = Gs::Vector4(1, 1, 0, 1);
+
+    glLineWidth(5);
+
+    glBegin(GL_LINES);
+    {
+        for (const auto& edge : edges)
+        {
+            const auto& v0 = mesh.vertices[edge.a];
+            const auto& v1 = mesh.vertices[edge.b];
+
+            emitVertex(v0, color);
+            emitVertex(v1, color);
+        }
+    }
+    glEnd();
+
+    glLineWidth(1);
+}
+
 void drawModel(const Model& mdl)
 {
     // setup world-view matrix
@@ -294,6 +334,13 @@ void drawModel(const Model& mdl)
 
     // draw model
     drawMesh(mdl.mesh, wireframeMode);
+
+    #endif
+
+    #ifdef TEST_SHOW_EDGES
+
+    // draw edges
+    drawMeshEdges(mdl.mesh);
 
     #endif
 }

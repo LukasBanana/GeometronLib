@@ -18,6 +18,7 @@
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>
 #include <Gauss/AffineMatrix4.h>
+#include <Gauss/Epsilon.h>
 #include <algorithm>
 #include <set>
 
@@ -69,6 +70,13 @@ class TriangleMesh
         std::vector<Edge> Edges() const;
 
         /**
+        \brief Computes the set of all triangle edges which are part of the silhouette.
+        \param[in] toleranceAngle Specifies the tolerance angle (in radians) to reject edges. Must be in the range [0, pi].
+        \see Edges
+        */
+        std::vector<Edge> SilhouetteEdges(Gs::Real toleranceAngle = Gs::Real(0)) const;
+
+        /**
         \brief Computes the list of all neighbors of the specified triangle.
         \param[in] triangleIndices Specifies the indices of the root triangles to search for neighbors.
         \param[in] searchDepth Specifies the number of iterations 
@@ -84,6 +92,15 @@ class TriangleMesh
             bool edgeBondOnly = false,
             bool searchViaPosition = false
         ) const;
+
+        //! Computes the list of all triangles that are connected to the specified vertex.
+        std::vector<TriangleIndex> FindTriangles(VertexIndex vertexIndex) const;
+
+        //! Computes the list of all triangles that are connected to the specified edge.
+        std::vector<TriangleIndex> FindTriangles(const Edge& edge) const;
+
+        //! Returns the normal vector of the specified triangle (in unit length of 1.0).
+        Gs::Vector3 TriangleNormal(TriangleIndex triangleIndex) const;
 
         //! Computes the axis-aligned bounding-box of this mesh.
         AABB3 BoundingBox() const;
@@ -108,11 +125,8 @@ class TriangleMesh
         */
         void Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMesh& back) const;
 
-        //! Vertex array list.
-        std::vector<Vertex> vertices;
-
-        //! Triangle array list. Make sure that all triangle indices are less than the number of vertices of this mesh!
-        std::vector<Triangle>   triangles;
+        std::vector<Vertex>     vertices;   //!< Vertex array list.
+        std::vector<Triangle>   triangles;  //!< Triangle array list. Make sure that all triangle indices are less than the number of vertices of this mesh!
 
 };
 

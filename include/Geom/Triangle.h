@@ -182,16 +182,23 @@ class Triangle< Gs::Vector3T<T> >
             return *((&a) + vertex);
         }
 
+        //! Returns the area of this triangle.
         T Area() const
         {
             return Gs::Cross(b - a, c - a)/T(2);
         }
 
+        /**
+        \brief Returns the normal vector of this triangle.
+        \remarks This normal vector is not guaranteed to have a unit length of 1.0! To get a normal vector of unit length use "UnitNormal".
+        \see UnitNormal
+        */
         Gs::Vector3T<T> Normal() const
         {
             return Gs::Cross(b - a, c - a);
         }
 
+        //! Returns the normal vector of this triangle in unit length (length = 1.0).
         Gs::Vector3T<T> UnitNormal() const
         {
             return Normal().Normalized();
