@@ -1,6 +1,6 @@
 /*
  * test2.cpp
- * 
+ *
  * This file is part of the "GeometronLib" project (Copyright (c) 2015 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
  */
@@ -19,6 +19,8 @@
 #   include <gl/glut.h>
 #elif defined(__APPLE__)
 #   include <GLUT/GLUT.h>
+#elif defined(__linux__)
+#   include <GL/glut.h>
 #endif
 
 
@@ -173,7 +175,7 @@ void initGL()
     glEnable(GL_CULL_FACE);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    
+
     // initialize projection
     updateProjection();
 
@@ -181,7 +183,7 @@ void initGL()
     Gm::MeshGenerator::CuboidDescription mdlDesc;
 
     #ifdef TEST_BLOATED_CUBE
-    
+
     mdlDesc.segments = { 5, 5, 5 };
     mdlDesc.size = { 1, 1, 1 };
     auto mdl = createCuboidModel(mdlDesc);
@@ -309,7 +311,7 @@ void drawModel(const Model& mdl)
     glLoadMatrix_T(modelView.Ptr());
 
     #ifdef TEST_MESH_CLIPPING
-    
+
     Gm::Plane clipPlane(
         Gs::Vector3(1, 0, 0).Normalized(),
         -0.3f
@@ -320,14 +322,14 @@ void drawModel(const Model& mdl)
     mdl.mesh.Clip(clipPlane, front, back);
 
     drawMesh(front, wireframeMode);
-    
+
     #ifdef TEST_SHOW_SPLIT
     auto trans2 = mdl.transform;
     trans2.MoveGlobal({ -0.1f, 0, 0 });
     modelView = (viewMatrix * trans2.GetMatrix()).ToMatrix4();
     glLoadMatrix_T(modelView.Ptr());
     #endif
-    
+
     drawMesh(back, wireframeMode);
 
     #else
@@ -587,7 +589,7 @@ int main(int argc, char* argv[])
     glutInitWindowSize(800, 600);
     glutInitWindowPosition(350, 250);
     glutCreateWindow("GeometronLib Test 2 (OpenGL, GLUT)");
-    
+
     glutDisplayFunc(displayCallback);
     glutReshapeFunc(reshapeCallback);
     glutIdleFunc(idleCallback);
