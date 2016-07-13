@@ -34,6 +34,7 @@
 
 #define TEST_PROJECTION_MORPHING
 #define TEST_MESH_CLIPPING
+#define TEST_SHOW_SPLIT
 
 
 // ----- STRUCTURES -----
@@ -240,6 +241,14 @@ void drawModel(const Model& mdl)
     mdl.mesh.Clip(clipPlane, front, back);
 
     drawMesh(front, wireframeMode);
+    
+    #ifdef TEST_SHOW_SPLIT
+    auto trans2 = mdl.transform;
+    trans2.MoveGlobal({ -0.1f, 0, 0 });
+    modelView = (viewMatrix * trans2.GetMatrix()).ToMatrix4();
+    glLoadMatrix_T(modelView.Ptr());
+    #endif
+    
     drawMesh(back, wireframeMode);
 
     #else
