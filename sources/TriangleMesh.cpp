@@ -50,7 +50,7 @@ void TriangleMesh::AddTriangle(const std::size_t& v0, const std::size_t& v1, con
     triangles.push_back({ v0, v1, v2 });
 }
 
-TriangleMesh::Vertex TriangleMesh::Barycentric(std::size_t triangleIndex, Gs::Vector3& barycentricCoords) const
+TriangleMesh::Vertex TriangleMesh::Barycentric(std::size_t triangleIndex, const Gs::Vector3& barycentricCoords) const
 {
     GS_ASSERT(triangleIndex < triangles.size());
 

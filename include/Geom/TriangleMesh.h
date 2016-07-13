@@ -59,7 +59,7 @@ class TriangleMesh
         void AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2);
 
         //! Returns the vertex, interpolated from the triangle with the specified barycentric coordinates.
-        Vertex Barycentric(std::size_t triangleIndex, Gs::Vector3& barycentricCoords) const;
+        Vertex Barycentric(std::size_t triangleIndex, const Gs::Vector3& barycentricCoords) const;
 
         //! Computes the set of all edges.
         std::vector<Edge> Edges() const;
