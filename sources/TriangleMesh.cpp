@@ -38,19 +38,21 @@ void TriangleMesh::Clear()
     triangles.clear();
 }
 
-std::size_t TriangleMesh::AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord)
+TriangleMesh::VertexIndex TriangleMesh::AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord)
 {
     auto idx = vertices.size();
     vertices.push_back({ position, normal, texCoord });
     return idx;
 }
 
-void TriangleMesh::AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2)
+TriangleMesh::TriangleIndex TriangleMesh::AddTriangle(VertexIndex v0, VertexIndex v1, VertexIndex v2)
 {
+    auto idx = triangles.size();
     triangles.push_back({ v0, v1, v2 });
+    return idx;
 }
 
-TriangleMesh::Vertex TriangleMesh::Barycentric(std::size_t triangleIndex, const Gs::Vector3& barycentricCoords) const
+TriangleMesh::Vertex TriangleMesh::Barycentric(TriangleIndex triangleIndex, const Gs::Vector3& barycentricCoords) const
 {
     GS_ASSERT(triangleIndex < triangles.size());
 
@@ -73,7 +75,7 @@ std::vector<TriangleMesh::Edge> TriangleMesh::Edges() const
 {
     std::vector<Edge> edges;
 
-    auto AddEdge = [&edges](const std::size_t& a, const std::size_t& b)
+    auto AddEdge = [&edges](VertexIndex a, VertexIndex b)
     {
         if (a < b)
             edges.push_back({ a, b });
@@ -113,6 +115,15 @@ std::vector<TriangleMesh::Edge> TriangleMesh::Edges() const
     edges.erase(last, edges.end());
 
     return edges;
+}
+
+std::vector<TriangleMesh::TriangleIndex> TriangleMesh::TriangleNeighbors(TriangleIndex triangleIndex, bool edgeBondOnly) const
+{
+    std::vector<TriangleIndex> neighbors;
+
+    //todo...
+
+    return neighbors;
 }
 
 AABB3 TriangleMesh::BoundingBox() const
@@ -194,7 +205,7 @@ void TriangleMesh::Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMes
     back.Clear();
 
     /* Clip each triangle against the clipping plane */
-    std::size_t triIdx = 0;
+    TriangleIndex triIdx = 0;
 
     for (const auto& indices : triangles)
     {

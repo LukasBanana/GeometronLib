@@ -131,7 +131,7 @@ bool IntersectionWithPlane(const PlaneT<T>& plane, const Line3T<T>& line, Gs::Ve
 
 //! Computes the intersection between the specified two planes. The result is a ray.
 template <typename T>
-bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray3T<T>& intersection, T epsilon = Gs::Epsilon<T>())
+bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray3T<T>& intersection, const T& epsilon = Gs::Epsilon<T>())
 {
     /* Compute direction of intersection */
     intersection.direction = Gs::Cross(planeA.normal, planeB.normal);
@@ -154,7 +154,7 @@ bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray
 
 //! Computes the intersection between the specified three planes. The result is a point.
 template <typename T>
-bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, const PlaneT<T>& planeC, Gs::Vector3T<T>& intersection, T epsilon = Gs::Epsilon<T>())
+bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, const PlaneT<T>& planeC, Gs::Vector3T<T>& intersection, const T& epsilon = Gs::Epsilon<T>())
 {
     /* Make two interleaved intersection tests */
     Ray3T<T> ray;
@@ -209,7 +209,7 @@ PlaneRelation RelationToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
 
 //! Computes the relation between the specified plane and point.
 template <typename T>
-PlaneRelation RelationToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point, T epsilon = Gs::Epsilon<T>())
+PlaneRelation RelationToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point, const T& epsilon = Gs::Epsilon<T>())
 {
     const auto d = SgnDistanceToPlane(plane, point);
 

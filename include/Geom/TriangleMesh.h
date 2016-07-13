@@ -39,8 +39,11 @@ class TriangleMesh
             Gs::Vector2 texCoord;
         };
 
-        using Edge      = Gm::Line<std::size_t>;
-        using Triangle  = Gm::Triangle<std::size_t>;
+        using VertexIndex   = std::size_t;
+        using TriangleIndex = std::size_t;
+
+        using Edge          = Gm::Line<VertexIndex>;
+        using Triangle      = Gm::Triangle<VertexIndex>;
 
         TriangleMesh() = default;
 
@@ -52,17 +55,20 @@ class TriangleMesh
         //! Clears all vertices and triangles.
         void Clear();
 
-        //! Adds a new vertex with the specified attributes.
-        std::size_t AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord);
+        //! Adds a new vertex with the specified attributes and returns the index of the new vertex.
+        VertexIndex AddVertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord);
 
-        //! Adds a new triangle with the specified three indices.
-        void AddTriangle(const std::size_t& v0, const std::size_t& v1, const std::size_t& v2);
+        //! Adds a new triangle with the specified three indices and returns the index of the new triangle.
+        TriangleIndex AddTriangle(VertexIndex v0, VertexIndex v1, VertexIndex v2);
 
         //! Returns the vertex, interpolated from the triangle with the specified barycentric coordinates.
-        Vertex Barycentric(std::size_t triangleIndex, const Gs::Vector3& barycentricCoords) const;
+        Vertex Barycentric(TriangleIndex triangleIndex, const Gs::Vector3& barycentricCoords) const;
 
-        //! Computes the set of all edges.
+        //! Computes the set of all triangle edges.
         std::vector<Edge> Edges() const;
+
+        //! Computes the list of all neighbors of the specified triangle.
+        std::vector<TriangleIndex> TriangleNeighbors(TriangleIndex triangleIndex, bool edgeBondOnly = false) const;
 
         //! Computes the axis-aligned bounding-box of this mesh.
         AABB3 BoundingBox() const;
@@ -87,7 +93,10 @@ class TriangleMesh
         */
         void Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMesh& back) const;
 
-        std::vector<Vertex>     vertices;
+        //! Vertex array list.
+        std::vector<Vertex> vertices;
+
+        //! Triangle array list. Make sure that all triangle indices are less than the number of vertices of this mesh!
         std::vector<Triangle>   triangles;
 
 };

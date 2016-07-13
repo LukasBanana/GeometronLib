@@ -49,7 +49,7 @@ If the return value is not PlaneRelation::Clipped, this output parameter is not 
 If the return value is not PlaneRelation::Clipped, the triangle has not changed.
 */
 template <typename T>
-PlaneRelation ClipTriangle(const Triangle3T<T>& triangle, const PlaneT<T>& clipPlane, ClippedPolygon<T>& front, ClippedPolygon<T>& back, T epsilon = Gs::Epsilon<T>())
+PlaneRelation ClipTriangle(const Triangle3T<T>& triangle, const PlaneT<T>& clipPlane, ClippedPolygon<T>& front, ClippedPolygon<T>& back, const T& epsilon = Gs::Epsilon<T>())
 {
     static const Gs::Vector3T<T> barycentrics[3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 

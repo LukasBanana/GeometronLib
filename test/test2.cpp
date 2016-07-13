@@ -34,7 +34,7 @@
 
 #define TEST_PROJECTION_MORPHING
 #define TEST_MESH_CLIPPING
-#define TEST_SHOW_SPLIT
+//#define TEST_SHOW_SPLIT
 
 
 // ----- STRUCTURES -----
@@ -173,6 +173,7 @@ void initGL()
 
     // create model
     Gm::MeshGenerator::CuboidDescription mdlDesc;
+    mdlDesc.segments = { 1, 2, 3 };
     mdlDesc.size = { 1, 1.5f, 0.5f };
     auto mdl = createCuboidModel(mdlDesc);
 
