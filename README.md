@@ -12,7 +12,7 @@ Overview
 Dependencies
 ------------
 
-This library requires the [GaussianLib](https://github.com/LukasBanana/GaussianLib)
+Using this library requires the [GaussianLib](https://github.com/LukasBanana/GaussianLib)
 
 
 Example
