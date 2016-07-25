@@ -1,20 +1,19 @@
 GeometronLib - A basic geometry C++ library for 2D and 3D applications
 ======================================================================
 
-License
+Overview
 -------
 
-[3-Clause BSD License](https://github.com/LukasBanana/GaussianLib/blob/master/LICENSE.txt)
+* **Version**: 1.00 Alpha
+* **License**: [3-Clause BSD License](https://github.com/LukasBanana/GaussianLib/blob/master/LICENSE.txt)
+* **Documentation**: [GeometronLib Docu.pdf](https://github.com/LukasBanana/GeometronLib/blob/master/docu/GeometronLib%20Docu.pdf)
 
-Status
-------
-
-**Alpha**
 
 Dependencies
 ------------
 
 This library requires the [GaussianLib](https://github.com/LukasBanana/GaussianLib)
+
 
 Example
 -------
