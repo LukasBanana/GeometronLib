@@ -32,6 +32,33 @@
 #include "TriangleCollision.h"
 
 
+/**
+\mainpage GeometronLib 1.00 Alpha Documentation
+
+The GeometronLib provides basic functionality for 2D and 3D geometrical objects,
+such as mesh generation, basic collision detection, and respective data structures for lines, rays, spheres etc.
+
+Prerequisites:
+- <a href="https://github.com/LukasBanana/GaussianLib">GaussianLib</a> header files
+
+Features:
+- \b AABB (Axis-Aligned Bounding-Box)
+- \b OBB (Oriented Bounding-Box)
+- \b Line
+- \b Ray
+- \b Transform2 (3x3 Matrix Manager for 2D Transformations)
+- \b Transform3 (4x4 Matrix Manager for 3D Transformations)
+- \b Frustum (Frustum of Pyramid)
+- \b Projection (4x4 Projection Matrix Manager)
+- \b Sphere
+- \b Spline
+- \b TriangleMesh
+- \b MeshGenerator
+- \b BezierCurve
+- \b BezierTriangle
+*/
+
+
 #endif
 
 

@@ -17,6 +17,7 @@
 namespace Gm
 {
 
+//! Namespace with all mesh generation functions.
 namespace MeshGenerator
 {
 

@@ -27,7 +27,11 @@ namespace Gm
 {
 
 
-//! Triangle mesh base class.
+/**
+\brief Triangle mesh base class.
+\remarks This class is used for generation and modification of all triangle meshes.
+However, it is only meant to be used to operate with this library, but not to use it within the graphics engine of your project.
+*/
 class TriangleMesh
 {
     
