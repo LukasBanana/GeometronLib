@@ -54,7 +54,7 @@ struct Model
 
 // ----- VARIABLES -----
 
-Gs::Vector2i            resolution;
+Gs::Vector2i            resolution(800, 600);
 Gs::ProjectionMatrix4   projection;
 
 Gm::Transform3          cameraTransform;
@@ -586,8 +586,11 @@ int main(int argc, char* argv[])
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 
-    glutInitWindowSize(800, 600);
-    glutInitWindowPosition(350, 250);
+    auto sx = glutGet(GLUT_SCREEN_WIDTH);
+    auto sy = glutGet(GLUT_SCREEN_HEIGHT);
+
+    glutInitWindowSize(resolution.x, resolution.y);
+    glutInitWindowPosition(sx/2 - resolution.x/2, sy/2 - resolution.y/2);
     glutCreateWindow("GeometronLib Test 2 (OpenGL, GLUT)");
 
     glutDisplayFunc(displayCallback);
