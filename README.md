@@ -1,5 +1,5 @@
-GeometronLib - A basic geometry C++ library for 2D and 3D applications
-======================================================================
+GeometronLib - Basic Geometry Library for 2D/3D Apps in modern C++
+==================================================================
 
 Overview
 --------
