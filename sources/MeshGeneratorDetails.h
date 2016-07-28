@@ -28,6 +28,16 @@ static const auto pi_0_5    = pi*Gs::Real(0.5);
 using VertexIndex = TriangleMesh::VertexIndex;
 
 
+void AddTriangulatedQuad(
+    TriangleMesh& mesh,
+    bool alternateGrid,
+    unsigned int u, unsigned int v,
+    VertexIndex v0, VertexIndex v1,
+    VertexIndex v2, VertexIndex v3,
+    VertexIndex indexOffset = 0
+);
+
+
 } // /namespace MeshGenerator
 
 } // /namespace Gm

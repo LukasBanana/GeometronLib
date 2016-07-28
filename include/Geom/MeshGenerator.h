@@ -42,16 +42,19 @@ struct CuboidDescriptor
 struct EllipsoidDescriptor
 {
     //! Radius in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
-    Gs::Vector3     radius      = Gs::Vector3(Gs::Real(0.5));
+    Gs::Vector3     radius          = Gs::Vector3(Gs::Real(0.5));
 
     //! Ellpsoid texture UV scaling. By default (1, 1).
-    Gs::Vector2     uvScale     = Gs::Vector2(1, 1);
+    Gs::Vector2     uvScale         = Gs::Vector2(1, 1);
 
     /**
     Segmentation in U (x component), and V (y component) direction.
     Each component will be clamped to [3, +inf). By default (20, 10).
     */
-    Gs::Vector2ui   segments    = Gs::Vector2ui(20, 10);
+    Gs::Vector2ui   segments        = Gs::Vector2ui(20, 10);
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default true.
+    bool            alternateGrid   = true;
 };
 
 struct IcoSphereDescriptor

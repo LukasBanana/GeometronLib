@@ -53,22 +53,19 @@ TriangleMesh Ellipsoid(const EllipsoidDescriptor& desc)
     }
 
     /* Generate indices */
-    VertexIndex i0, i1, i2, i3;
-
     for (unsigned int v = 0; v < segsV; ++v)
     {
         for (unsigned int u = 0; u < segsU; ++u)
         {
             /* Compute indices for current face */
-            i0 = v*(segsU + 1) + u;
-            i1 = v*(segsU + 1) + (u + 1);
+            auto i0 = v*(segsU + 1) + u;
+            auto i1 = v*(segsU + 1) + (u + 1);
 
-            i2 = (v + 1)*(segsU + 1) + (u + 1);
-            i3 = (v + 1)*(segsU + 1) + u;
+            auto i2 = (v + 1)*(segsU + 1) + (u + 1);
+            auto i3 = (v + 1)*(segsU + 1) + u;
 
             /* Add new indices */
-            mesh.AddTriangle(i0, i1, i2);
-            mesh.AddTriangle(i0, i2, i3);
+            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
         }
     }
 
