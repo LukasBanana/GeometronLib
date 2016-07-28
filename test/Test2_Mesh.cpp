@@ -1,5 +1,5 @@
 /*
- * test2.cpp
+ * Test2_Mesh.cpp
  *
  * This file is part of the "GeometronLib" project (Copyright (c) 2015 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.

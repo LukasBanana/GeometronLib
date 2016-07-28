@@ -14,6 +14,16 @@ set(PROJECT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 set(PROJECT_TEST_DIR "${PROJECT_SOURCE_DIR}/test")
 
 
+# === Preprocessor definitions ===
+
+macro(ADD_TEST_PROJECT TEST_NAME TEST_FILES)
+	add_executable(${TEST_NAME} ${TEST_FILES})
+	target_link_libraries(${TEST_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} geomlib)
+	set_target_properties(${TEST_NAME} PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
+	target_compile_features(${TEST_NAME} PRIVATE cxx_range_for)
+endmacro()
+
+
 # === Global files ===
 
 file(GLOB_RECURSE HeadersAll "${PROJECT_SOURCE_DIR}/include/*.*")
@@ -36,21 +46,19 @@ add_library(geomlib STATIC ${FilesAll})
 set_target_properties(geomlib PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
 target_compile_features(geomlib PRIVATE cxx_strong_enums cxx_auto_type)
 
-add_executable(test1 "${PROJECT_TEST_DIR}/test1.cpp")
-set_target_properties(test1 PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
-target_compile_features(test1 PRIVATE cxx_strong_enums cxx_auto_type)
-target_link_libraries(test1 geomlib)
+add_executable(Test1_Primitives "${PROJECT_TEST_DIR}/Test1_Primitives.cpp")
+set_target_properties(Test1_Primitives PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
+target_compile_features(Test1_Primitives PRIVATE cxx_strong_enums cxx_auto_type)
+target_link_libraries(Test1_Primitives geomlib)
 
 find_package(OpenGL)
 find_package(GLUT)
 if(OpenGL_FOUND AND GLUT_FOUND)
 	include_directories(${GLUT_INCLUDE_DIR})
-	add_executable(test2 "${PROJECT_TEST_DIR}/test2.cpp")
-	set_target_properties(test2 PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
-	target_compile_features(test2 PRIVATE cxx_strong_enums cxx_auto_type)
-	target_link_libraries(test2 ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} geomlib)
+	ADD_TEST_PROJECT(Test2_Mesh "${PROJECT_TEST_DIR}/Test2_Mesh.cpp")
+	ADD_TEST_PROJECT(Test3_MeshGen "${PROJECT_TEST_DIR}/Test3_MeshGen.cpp")
 else()
-	message("excluded optional project 'test2' (OpenGL and GLUT required)")
+	message("OpenGL and GLUT missing -> Optional tests excluded from project")
 endif()
 
 
