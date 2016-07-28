@@ -37,6 +37,8 @@ std::vector<Model>      models;
 Model*                  showModel       = nullptr;
 
 bool                    wireframeMode   = false;
+bool                    showFaceNormals = false;
+bool                    showVertNormals = false;
 
 
 // ----- FUNCTIONS -----
@@ -69,7 +71,6 @@ void initGL()
     // setup GL configuration
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
-    glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHT0);
     glEnable(GL_CULL_FACE);
 
@@ -78,12 +79,8 @@ void initGL()
     glShadeModel(GL_SMOOTH);
 
     // setup lighting
-    GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat shininess[] = { 50.0 };
-    GLfloat lightPos[] = { 0.0, 0.0, -1.0, 0.0 };
-
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+    GLfloat lightPos[]  = { 0.0f, 0.0f, -1.0f, 0.0f };
+    
     glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
     // initialize projection
@@ -96,19 +93,33 @@ void addModelCuboid()
 
     Gm::MeshGenerator::CuboidDescription desc;
 
-    desc.segments       = { 1, 2, 3 };
     desc.size           = { 1, 0.75f, 1.25f };
     desc.uvScale        = { 1, 2, 3 };
+    desc.segments       = { 1, 2, 3 };
     desc.alternateGrid  = true;
 
     mdl->mesh = Gm::MeshGenerator::Cuboid(desc);
 }
 
+void addModelEllipsoid()
+{
+    auto mdl = addModel();
+
+    Gm::MeshGenerator::EllipsoidDescription desc;
+
+    desc.radius     = Gs::Vector3(1, 1.25f, 0.75f)*0.5f;
+    desc.uvScale    = { 1, 1 };
+    desc.segments   = { 20, 20 };
+
+    mdl->mesh = Gm::MeshGenerator::Ellipsoid(desc);
+}
+
 void initScene()
 {
-    viewTransform.SetPosition({ 0, 0, -4 });
+    viewTransform.SetPosition({ 0, 0, -3 });
 
     addModelCuboid();
+    addModelEllipsoid();
     //...
 
     if (!models.empty())
@@ -123,8 +134,33 @@ void emitVertex(const Gm::TriangleMesh::Vertex& vert)
     glVertex3fv(vert.position.Ptr());
 }
 
+void drawLine(const Gs::Vector3& a, const Gs::Vector3& b)
+{
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glVertex3fv(a.Ptr());
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glVertex3fv(b.Ptr());
+}
+
+void drawLine(const Gs::Vector3& a, const Gs::Vector3& b, const Gs::Vector4f& color)
+{
+    glColor4fv(color.Ptr());
+    glVertex3fv(a.Ptr());
+
+    glColor4fv(color.Ptr());
+    glVertex3fv(b.Ptr());
+}
+
 void drawMesh(const Gm::TriangleMesh& mesh, bool wireframe = false)
 {
+    Gs::Vector4 diffuse(0.8f, 0.8f, 0.8f, 1.0f);
+    Gs::Vector4 ambient(0.2f, 0.2f, 0.2f, 1.0f);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse.Ptr());
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient.Ptr());
+
+    glEnable(GL_LIGHTING);
+
     glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
     glBegin(GL_TRIANGLES);
@@ -143,27 +179,58 @@ void drawMesh(const Gm::TriangleMesh& mesh, bool wireframe = false)
     }
 
     glEnd();
+
+    glDisable(GL_LIGHTING);
+}
+
+void drawMeshNormals(const Gm::TriangleMesh& mesh, bool faceNormals, bool vertNormals, float normalLength = 0.1f)
+{
+    if (!vertNormals && !faceNormals)
+        return;
+
+    glEnable(GL_COLOR_MATERIAL);
+
+    glBegin(GL_LINES);
+
+    const Gs::Vector4 faceNormalColor(1, 1, 0, 1);
+    const Gs::Vector4 vertNormalColor(0.2, 0.2, 1, 1);
+
+    if (faceNormals)
+    {
+        for (std::size_t i = 0; i < mesh.triangles.size(); ++i)
+        {
+            const auto& tri = mesh.triangles[i];
+
+            const auto& v0 = mesh.vertices[tri.a];
+            const auto& v1 = mesh.vertices[tri.b];
+            const auto& v2 = mesh.vertices[tri.c];
+
+            auto triCenter = (v0.position + v1.position + v2.position)/3.0f;
+            auto normal = Gs::Cross(v1.position - v0.position, v2.position - v0.position).Normalized();
+            drawLine(triCenter, triCenter + normal * normalLength, faceNormalColor);
+        }
+    }
+
+    if (vertNormals)
+    {
+        for (const auto& v : mesh.vertices)
+            drawLine(v.position, v.position + v.normal * normalLength, vertNormalColor);
+    }
+
+    glEnd();
+
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 void drawModel(const Model& mdl)
 {
-    glEnable(GL_LIGHTING);
-
     // setup world-view matrix
     auto modelView = (viewMatrix * mdl.transform.GetMatrix()).ToMatrix4();
     glLoadMatrixf(modelView.Ptr());
 
     // draw model
     drawMesh(mdl.mesh, wireframeMode);
-}
-
-void drawLine(const Gs::Vector3& a, const Gs::Vector3& b)
-{
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    glVertex3fv(a.Ptr());
-
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    glVertex3fv(b.Ptr());
+    drawMeshNormals(mdl.mesh, showFaceNormals, showVertNormals);
 }
 
 void drawAABB(const Gm::AABB3& box)
@@ -281,6 +348,14 @@ void specialCallback(int key, int x, int y)
         case GLUT_KEY_DOWN:
             if (showModel)
                 showModel->turn(Gs::Vector3(1, 1, 1), -rotationSpeed);
+            break;
+
+        case GLUT_KEY_F1:
+            showFaceNormals = !showFaceNormals;
+            break;
+
+        case GLUT_KEY_F2:
+            showVertNormals = !showVertNormals;
             break;
     }
 }

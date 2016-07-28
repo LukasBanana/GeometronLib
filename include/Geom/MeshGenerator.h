@@ -29,7 +29,7 @@ struct CuboidDescription
     //! Cuboid size. By default (1, 1, 1).
     Gs::Vector3     size            = Gs::Vector3(Gs::Real(1.0));
 
-    //! Cuboid texture UV scaling (X, Y), (Z, Y), (X, Z).
+    //! Cuboid texture UV scaling (X, Y), (Z, Y), (X, Z). By default (1, 1, 1).
     Gs::Vector3     uvScale         = Gs::Vector3(Gs::Real(1.0));
 
     //! Cuboid segmentation. Each component will be clamped to [1, +inf). By default (1, 1, 1).
@@ -43,6 +43,9 @@ struct EllipsoidDescription
 {
     //! Radius in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
     Gs::Vector3     radius      = Gs::Vector3(Gs::Real(0.5));
+
+    //! Ellpsoid texture UV scaling. By default (1, 1).
+    Gs::Vector2     uvScale     = Gs::Vector2(1, 1);
 
     /**
     Segmentation in U (x component), and V (y component) direction.
@@ -167,7 +170,7 @@ struct SpiralDescription
 
 TriangleMesh Cuboid(const CuboidDescription& desc);
 
-//TriangleMesh Ellipsoid(const EllipsoidDescription& desc);
+TriangleMesh Ellipsoid(const EllipsoidDescription& desc);
 
 //TriangleMesh IcoSphere(const IcoSphereDescription& desc);
 

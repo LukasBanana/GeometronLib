@@ -1,5 +1,5 @@
 /*
- * MeshGenerator.cpp
+ * MeshGeneratorCuboid.cpp
  * 
  * This file is part of the "GeometronLib" project (Copyright (c) 2015 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
@@ -17,6 +17,8 @@ namespace MeshGenerator
 {
 
 
+using VertexIndex = TriangleMesh::VertexIndex;
+
 static void BuildFace(
     TriangleMesh& mesh, const Gs::Quaternion& rotation,
     Gs::Real sizeHorz, Gs::Real sizeVert, Gs::Real sizeOffsetZ,
@@ -31,7 +33,7 @@ static void BuildFace(
     auto idxOffset = mesh.vertices.size();
 
     auto AddQuad = [&](
-        unsigned int u, unsigned int v,
+        VertexIndex u, VertexIndex v,
         const std::size_t& v0, const std::size_t& v1,
         const std::size_t& v2, const std::size_t& v3)
     {
@@ -60,9 +62,9 @@ static void BuildFace(
     };
 
     /* Generate vertices */
-    for (unsigned int i = 0; i <= segsVert; ++i)
+    for (decltype(segsVert) i = 0; i <= segsVert; ++i)
     {
-        for (unsigned int j = 0; j <= segsHorz; ++j)
+        for (decltype(segsHorz) j = 0; j <= segsHorz; ++j)
         {
             auto u = invHorz * static_cast<Gs::Real>(j);
             auto v = invVert * static_cast<Gs::Real>(i);
@@ -81,9 +83,9 @@ static void BuildFace(
     /* Generate indices */
     const auto strideHorz = segsHorz + 1;
 
-    for (unsigned int i = 0; i < segsVert; ++i)
+    for (decltype(segsVert) i = 0; i < segsVert; ++i)
     {
-        for (unsigned int j = 0; j < segsHorz; ++j)
+        for (decltype(segsHorz) j = 0; j < segsHorz; ++j)
         {
             AddQuad(
                 i, j,
