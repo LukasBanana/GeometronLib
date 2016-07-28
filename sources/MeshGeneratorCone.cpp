@@ -17,7 +17,7 @@ namespace MeshGenerator
 
 using VertexIndex = TriangleMesh::VertexIndex;
 
-TriangleMesh Cone(const ConeDescription& desc)
+TriangleMesh Cone(const ConeDescriptor& desc)
 {
     TriangleMesh mesh;
     

@@ -220,7 +220,7 @@ void addModelCuboid()
 {
     auto mdl = addModel("Cuboid");
 
-    Gm::MeshGenerator::CuboidDescription desc;
+    Gm::MeshGenerator::CuboidDescriptor desc;
 
     desc.size           = { 1, 0.75f, 1.25f };
     desc.uvScale        = { 1, 1, 2 };
@@ -234,7 +234,7 @@ void addModelEllipsoid()
 {
     auto mdl = addModel("Ellipsoid");
 
-    Gm::MeshGenerator::EllipsoidDescription desc;
+    Gm::MeshGenerator::EllipsoidDescriptor desc;
 
     desc.radius     = Gs::Vector3(1, 1.25f, 0.75f)*0.5f;
     desc.uvScale    = { 1, 1 };
@@ -247,7 +247,7 @@ void addModelCone()
 {
     auto mdl = addModel("Cone");
 
-    Gm::MeshGenerator::ConeDescription desc;
+    Gm::MeshGenerator::ConeDescriptor desc;
 
     desc.radius         = Gs::Vector2{ 1, 0.75f }*0.5f;
     desc.height         = 1.0f;

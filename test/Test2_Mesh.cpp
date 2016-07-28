@@ -82,7 +82,7 @@ int                     showScene           = 0;
 
 // ----- FUNCTIONS -----
 
-Model* createCuboidModel(const Gm::MeshGenerator::CuboidDescription& desc)
+Model* createCuboidModel(const Gm::MeshGenerator::CuboidDescriptor& desc)
 {
     models.resize(models.size() + 1);
     auto mdl = &(models.back());
@@ -180,7 +180,7 @@ void initGL()
     updateProjection();
 
     // create model
-    Gm::MeshGenerator::CuboidDescription mdlDesc;
+    Gm::MeshGenerator::CuboidDescriptor mdlDesc;
 
     #ifdef TEST_BLOATED_CUBE
 

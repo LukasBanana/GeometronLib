@@ -81,7 +81,7 @@ static void writeOBJFile(const TriangleMesh& mesh, const std::string& filename)
 
 static void meshTest1()
 {
-    MeshGenerator::CuboidDescription cuboidDesc;
+    MeshGenerator::CuboidDescriptor cuboidDesc;
     {
         cuboidDesc.size             = { Real(4), Real(2), Real(10) };
         cuboidDesc.uvScale          = cuboidDesc.size;

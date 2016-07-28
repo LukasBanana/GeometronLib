@@ -17,7 +17,7 @@ namespace MeshGenerator
 {
 
 
-TriangleMesh Ellipsoid(const EllipsoidDescription& desc)
+TriangleMesh Ellipsoid(const EllipsoidDescriptor& desc)
 {
     TriangleMesh mesh;
     

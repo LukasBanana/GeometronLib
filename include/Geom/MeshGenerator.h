@@ -24,7 +24,7 @@ namespace MeshGenerator
 
 /* --- Descriptors --- */
 
-struct CuboidDescription
+struct CuboidDescriptor
 {
     //! Cuboid size. By default (1, 1, 1).
     Gs::Vector3     size            = Gs::Vector3(Gs::Real(1.0));
@@ -39,7 +39,7 @@ struct CuboidDescription
     bool            alternateGrid   = true;
 };
 
-struct EllipsoidDescription
+struct EllipsoidDescriptor
 {
     //! Radius in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
     Gs::Vector3     radius      = Gs::Vector3(Gs::Real(0.5));
@@ -54,7 +54,7 @@ struct EllipsoidDescription
     Gs::Vector2ui   segments    = Gs::Vector2ui(20, 10);
 };
 
-struct IcoSphereDescription
+struct IcoSphereDescriptor
 {
     //! Radius of the ico-sphere. By default 0.5
     Gs::Real        radius      = Gs::Real(0.5);
@@ -63,7 +63,7 @@ struct IcoSphereDescription
     unsigned char   segments    = 3;
 };
 
-struct ConeDescription
+struct ConeDescriptor
 {
     //! Cone radius in U (x component), and V (y component) direction. By default (0.5, 0.5).
     Gs::Vector2     radius          = Gs::Vector2(Gs::Real(0.5));
@@ -78,7 +78,7 @@ struct ConeDescription
     unsigned int    coverSegments   = 1;
 };
 
-struct CylinderDescription
+struct CylinderDescriptor
 {
     //! Cylinder radius in U (x component), and V (y component) direction. By default (0.5, 0.5).
     Gs::Vector2     radius          = Gs::Vector2(Gs::Real(0.5));
@@ -93,7 +93,7 @@ struct CylinderDescription
     unsigned int    coverSegments   = 1;
 };
 
-struct TubeDescription
+struct TubeDescriptor
 {
     //! Radius of the inner cylinder in U (x component), and V (y component) direction. By default (0.25, 0.25).
     Gs::Vector2     innerRadius     = Gs::Vector2(Gs::Real(0.25));
@@ -111,7 +111,7 @@ struct TubeDescription
     unsigned int    coverSegments   = 1;
 };
 
-struct CapsuleDescription
+struct CapsuleDescriptor
 {
     //! Radius of the top- and bottom half-ellipsoids in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
     Gs::Vector3     radius              = Gs::Vector3(Gs::Real(0.5));
@@ -129,7 +129,7 @@ struct CapsuleDescription
     unsigned int    ellipsoidSegments   = 10;
 };
 
-struct TorusDescription
+struct TorusDescriptor
 {
     //! Radius of the hole in X, and Y direction. By default (0.5, 0.5).
     Gs::Vector2     holeRadius  = Gs::Vector2(Gs::Real(0.5));
@@ -144,7 +144,7 @@ struct TorusDescription
     Gs::Vector2ui   segments    = Gs::Vector2ui(20, 10);
 };
 
-struct SpiralDescription
+struct SpiralDescriptor
 {
     //! Radius of the tube in U (x component), and V (y component) direction. By default (0.25, 0.25).
     Gs::Vector2     tubeRadius          = Gs::Vector2(Gs::Real(0.25));
@@ -168,23 +168,23 @@ struct SpiralDescription
 
 /* --- Global Functions --- */
 
-TriangleMesh Cuboid(const CuboidDescription& desc);
+TriangleMesh Cuboid(const CuboidDescriptor& desc);
 
-TriangleMesh Ellipsoid(const EllipsoidDescription& desc);
+TriangleMesh Ellipsoid(const EllipsoidDescriptor& desc);
 
-//TriangleMesh IcoSphere(const IcoSphereDescription& desc);
+//TriangleMesh IcoSphere(const IcoSphereDescriptor& desc);
 
-TriangleMesh Cone(const ConeDescription& desc);
+TriangleMesh Cone(const ConeDescriptor& desc);
 
-//TriangleMesh Cylinder(const CylinderDescription& desc);
+//TriangleMesh Cylinder(const CylinderDescriptor& desc);
 
-//TriangleMesh Tube(const TubeDescription& desc);
+//TriangleMesh Tube(const TubeDescriptor& desc);
 
-//TriangleMesh Capsule(const CapsuleDescription& desc);
+//TriangleMesh Capsule(const CapsuleDescriptor& desc);
 
-//TriangleMesh Torus(const TorusDescription& desc);
+//TriangleMesh Torus(const TorusDescriptor& desc);
 
-//TriangleMesh Spiral(const SpiralDescription& desc);
+//TriangleMesh Spiral(const SpiralDescriptor& desc);
 
 
 } // /namespace MeshGenerator

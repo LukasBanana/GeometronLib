@@ -95,7 +95,7 @@ static void BuildFace(
     }
 };
 
-TriangleMesh Cuboid(const CuboidDescription& desc)
+TriangleMesh Cuboid(const CuboidDescriptor& desc)
 {
     TriangleMesh mesh;
     
