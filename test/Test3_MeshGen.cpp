@@ -144,6 +144,8 @@ Model* addModel(const std::string& name)
     auto mdl = &(models.back());
     mdl->name = name;
 
+    std::cout << "Press " << models.size() << " to show the " << name << std::endl;
+
     return mdl;
 }
 
@@ -234,7 +236,9 @@ void showModel(size_t index)
     if (index < models.size())
     {
         selectedModel = &(models[index]);
-        std::cout << "\rModel: " << selectedModel->name << std::string(20, ' ');
+        std::cout << "\rModel: " << selectedModel->name;
+        if (selectedModel->name.size() < 20)
+            std::cout << std::string(20 - selectedModel->name.size(), ' ');
         std::flush(std::cout);
     }
 }
@@ -253,6 +257,7 @@ void initScene()
     //...
 
     // show first model
+    std::cout << std::endl;
     showModel(0);
 }
 
@@ -520,7 +525,6 @@ int main(int argc, char* argv[])
     std::cout << "GeometronLib: Test3 - MeshGenerators" << std::endl;
     std::cout << "------------------------------------" << std::endl;
     std::cout << "Click any mouse button and move the mouse to rotate the current 3D model" << std::endl;
-    std::cout << "Switch between 3D models by pressing 1, 2, 3, ..." << std::endl;
     std::cout << "Press Tab to switch between solid and wireframe mode" << std::endl;
     std::cout << "Press Enter or Space to switch between perspective and orthogonal projection" << std::endl;
     std::cout << "Press F1 to show/hide face normals" << std::endl;
