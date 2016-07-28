@@ -25,16 +25,17 @@ TriangleMesh Cone(const ConeDescriptor& desc)
     const auto segsVert = std::max(1u, desc.mantleSegments.y);
     const auto segsCov  = std::max(1u, desc.coverSegments);
 
-    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invHorz  = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert  = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invCov   = Gs::Real(1) / static_cast<Gs::Real>(segsCov);
 
     const auto angleSteps = invHorz * pi_2;
 
     const auto halfHeight = desc.height*Gs::Real(0.5);
 
-    /* Generate all vertices (for the mantle, top and bottom ) */
+    /* Generate mantle vertices */
     Gs::Vector3 coord, normal;
-    Gs::Vector2 texCoordMantle, texCoordCap;
+    Gs::Vector2 texCoord;
 
     const Gs::Vector3 tip(0, halfHeight, 0);
     coord.y = -halfHeight;
@@ -44,39 +45,70 @@ TriangleMesh Cone(const ConeDescriptor& desc)
     for (unsigned int u = 0; u <= segsHorz; ++u)
     {
         /* Compute X- and Z coordinates */
-        texCoordCap.x = std::sin(angle);
-        texCoordCap.y = std::cos(angle);
+        texCoord.x = std::sin(angle);
+        texCoord.y = std::cos(angle);
 
-        coord.x = texCoordCap.x * desc.radius.x;
-        coord.z = texCoordCap.y * desc.radius.y;
-
-        texCoordMantle.x = static_cast<Gs::Real>(u) * invHorz;
+        coord.x = texCoord.x * desc.radius.x;
+        coord.z = texCoord.y * desc.radius.y;
 
         /* Compute normal vector */
-        normal.x = coord.x;
-        normal.z = coord.z;
+        normal.x = texCoord.x;
+        normal.y = 0;
+        normal.z = texCoord.y;
         normal.Normalize();
 
-        /* Add top vertex */
-        texCoordMantle.y = 0.0f;
-
-        texCoordCap.x = texCoordCap.x*Gs::Real(0.5) + Gs::Real(0.5);
-        texCoordCap.y = texCoordCap.y*Gs::Real(0.5) + Gs::Real(0.5);
-
-        mesh.AddVertex(tip, { 0, 1, 0 }, texCoordMantle);
+        /* Add bottom vertex */
+        texCoord.x = static_cast<Gs::Real>(u) * invHorz;
 
         for (unsigned int v = 1; v <= segsVert; ++v)
         {
-            texCoordMantle.y = static_cast<Gs::Real>(v)/segsVert;
-            mesh.AddVertex(Gs::Lerp(tip, coord, texCoordMantle.y), normal, texCoordMantle);
+            texCoord.y = static_cast<Gs::Real>(v) * invVert;
+
+            mesh.AddVertex(
+                Gs::Lerp(tip, coord, texCoord.y),
+                Gs::Lerp(Gs::Vector3(0, 1, 0), normal, std::sqrt(texCoord.y)),
+                texCoord
+            );
         }
 
-        //mesh.AddVertex(tip, { 0, 1, 0 }, texCoordMantle);
+        /* Add top vertex */
+        if (u < segsHorz)
+        {
+            texCoord.y = 0.0f;
+            mesh.AddVertex(tip, { 0, 1, 0 }, texCoord);
+        }
 
-        /* Add bottom vertex */
-        //mesh.AddVertex(coord, normal, texCoordMantle);
+        /* Increase angle for the next iteration */
+        angle += angleSteps;
+    }
 
-        //mesh.AddVertex(coord, { 0, -1, 0 }, texCoordCap);
+    /* Generate cover vertices */
+    angle = Gs::Real(0);
+
+    /* Add centered bottom vertex */
+    const auto coverIndexOffset = mesh.AddVertex({ 0, -halfHeight, 0 }, { 0, -1, 0 }, { Gs::Real(0.5), Gs::Real(0.5) });
+
+    for (unsigned int u = 0; u <= segsHorz; ++u)
+    {
+        /* Compute X- and Z coordinates */
+        texCoord.x = std::sin(angle);
+        texCoord.y = std::cos(angle);
+
+        coord.x = texCoord.x * desc.radius.x;
+        coord.z = texCoord.y * desc.radius.y;
+
+        /* Add vertex around the bottom */
+        for (unsigned int v = 1; v <= segsCov; ++v)
+        {
+            auto texCoordRadius = static_cast<Gs::Real>(v) * invCov;
+            auto texCoordBottom = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * texCoordRadius;
+
+            mesh.AddVertex(
+                Gs::Lerp(Gs::Vector3(0, -halfHeight, 0), coord, texCoordRadius),
+                Gs::Vector3(0, -1, 0),
+                texCoordBottom
+            );
+        }
 
         /* Increase angle for the next iteration */
         angle += angleSteps;
@@ -87,14 +119,14 @@ TriangleMesh Cone(const ConeDescriptor& desc)
 
     for (unsigned int u = 0; u < segsHorz; ++u)
     {
-        mesh.AddTriangle(idxOffset, idxOffset + 1, idxOffset + 2 + segsVert);
+        mesh.AddTriangle(idxOffset + segsVert, idxOffset, idxOffset + 1 + segsVert);
         
         for (unsigned int v = 1; v < segsVert; ++v)
         {
-            auto i0 = idxOffset + v + 1 + segsVert;
-            auto i1 = idxOffset + v;
-            auto i2 = idxOffset + v + 1;
-            auto i3 = idxOffset + v + 2 + segsVert;
+            auto i0 = idxOffset + v + segsVert;
+            auto i1 = idxOffset + v - 1;
+            auto i2 = idxOffset + v;
+            auto i3 = idxOffset + v + 1 + segsVert;
 
             AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
         }
@@ -103,13 +135,24 @@ TriangleMesh Cone(const ConeDescriptor& desc)
     }
 
     /* Generate indices for the bottom */
-    idxOffset = 0;
+    idxOffset = coverIndexOffset + 1;
 
-    /*for (unsigned int i = 0; i + 2 < segsHorz; ++i)
+    for (unsigned int u = 0; u < segsHorz; ++u)
     {
-        mesh.AddTriangle(2, indexOffset + 8, indexOffset + 5);
-        indexOffset += 3;
-    }*/
+        mesh.AddTriangle(idxOffset + segsCov, idxOffset, coverIndexOffset);
+        
+        for (unsigned int v = 1; v < segsCov; ++v)
+        {
+            auto i1 = idxOffset + v - 1 + segsCov;
+            auto i0 = idxOffset + v - 1;
+            auto i3 = idxOffset + v;
+            auto i2 = idxOffset + v + segsCov;
+
+            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
+        }
+
+        idxOffset += segsCov;
+    }
 
     return mesh;
 }

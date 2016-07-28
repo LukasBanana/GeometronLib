@@ -35,8 +35,8 @@ struct CuboidDescriptor
     //! Cuboid segmentation. Each component will be clamped to [1, +inf). By default (1, 1, 1).
     Gs::Vector3ui   segments        = Gs::Vector3ui(1, 1, 1);
 
-    //! Specifies whether the face grids are to be alternating or uniform. By default true.
-    bool            alternateGrid   = true;
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid   = false;
 };
 
 struct EllipsoidDescriptor
@@ -53,8 +53,8 @@ struct EllipsoidDescriptor
     */
     Gs::Vector2ui   segments        = Gs::Vector2ui(20, 10);
 
-    //! Specifies whether the face grids are to be alternating or uniform. By default true.
-    bool            alternateGrid   = true;
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid   = false;
 };
 
 struct IcoSphereDescriptor
@@ -80,8 +80,8 @@ struct ConeDescriptor
     //! Segmentation of the bottom cover. By default 1.
     unsigned int    coverSegments   = 1;
 
-    //! Specifies whether the face grids are to be alternating or uniform. By default true.
-    bool            alternateGrid   = true;
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid   = false;
 };
 
 struct CylinderDescriptor

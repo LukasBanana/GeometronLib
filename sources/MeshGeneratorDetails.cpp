@@ -23,6 +23,11 @@ void AddTriangulatedQuad(
     VertexIndex i2, VertexIndex i3,
     VertexIndex indexOffset)
 {
+    auto Triangulate = [&mesh, indexOffset](VertexIndex a, VertexIndex b, VertexIndex c)
+    {
+        mesh.AddTriangle(indexOffset + a, indexOffset + b, indexOffset + c);
+    };
+
     if ( !alternateGrid || ( ( u % 2 == 0 && v % 2 == 0 ) || ( u % 2 == 1 && v % 2 == 1 ) ) )
     {
         /*
@@ -31,8 +36,8 @@ void AddTriangulatedQuad(
         | /   |
         0-----3
         */
-        mesh.AddTriangle(indexOffset + i0, indexOffset + i1, indexOffset + i2);
-        mesh.AddTriangle(indexOffset + i0, indexOffset + i2, indexOffset + i3);
+        Triangulate(i0, i1, i2);
+        Triangulate(i0, i2, i3);
     }
     else
     {
@@ -42,8 +47,8 @@ void AddTriangulatedQuad(
         |   \ |
         0-----3
         */
-        mesh.AddTriangle(indexOffset + i0, indexOffset + i1, indexOffset + i3);
-        mesh.AddTriangle(indexOffset + i1, indexOffset + i2, indexOffset + i3);
+        Triangulate(i0, i1, i3);
+        Triangulate(i1, i2, i3);
     }
 }
 

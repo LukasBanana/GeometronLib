@@ -219,6 +219,20 @@ void showModel(size_t index)
     }
 }
 
+long long countUnusedVertices(const Gm::TriangleMesh& mesh)
+{
+    std::set<Gm::TriangleMesh::VertexIndex> verts;
+
+    for (const auto& tri : mesh.triangles)
+    {
+        verts.insert(tri.a);
+        verts.insert(tri.b);
+        verts.insert(tri.c);
+    }
+
+    return (static_cast<long long>(mesh.vertices.size()) - verts.size());
+}
+
 void addModelCuboid()
 {
     auto mdl = addModel("Cuboid");
@@ -239,9 +253,10 @@ void addModelEllipsoid()
 
     Gm::MeshGenerator::EllipsoidDescriptor desc;
 
-    desc.radius     = Gs::Vector3(1, 1.25f, 0.75f)*0.5f;
-    desc.uvScale    = { 1, 1 };
-    desc.segments   = { 20, 20 };
+    desc.radius         = Gs::Vector3(1, 1.25f, 0.75f)*0.5f;
+    desc.uvScale        = { 1, 1 };
+    desc.segments       = { 20, 20 };
+    desc.alternateGrid  = true;
 
     mdl->mesh = Gm::MeshGenerator::Ellipsoid(desc);
 }
@@ -252,10 +267,10 @@ void addModelCone()
 
     Gm::MeshGenerator::ConeDescriptor desc;
 
-    desc.radius         = Gs::Vector2{ 1, 0.75f }*0.5f;
+    desc.radius         = Gs::Vector2{ 1, 0.5f }*0.5f;
     desc.height         = 1.0f;
-    desc.mantleSegments = { 20, 3 };
-    desc.coverSegments  = 4;
+    desc.mantleSegments = { 20, 5 };
+    desc.coverSegments  = 3;
 
     mdl->mesh = Gm::MeshGenerator::Cone(desc);
 }
@@ -274,9 +289,24 @@ void initScene()
     addModelCone();
     //...
 
+    // check for unused vertices in all models
+    for (auto it = models.begin(); it != models.end();)
+    {
+        auto n = countUnusedVertices(it->mesh);
+        if (n > 0)
+            std::cout << it->name << " has " << n << " unused vertices" << std::endl;
+        else if (n < 0)
+        {
+            std::cout << it->name << " has " << (-n) << " invalid vertices -> model removed from list" << std::endl;
+            it = models.erase(it);
+            continue;
+        }
+        ++it;
+    }
+
     // show first model
     std::cout << std::endl;
-    showModel(0);
+    showModel(models.size() - 1);
 }
 
 void emitVertex(const Gm::TriangleMesh::Vertex& vert)
