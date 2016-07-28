@@ -449,14 +449,20 @@ void reshapeCallback(GLsizei w, GLsizei h)
     displayCallback();
 }
 
+void quitApp()
+{
+    texture.reset();
+    glutDestroyWindow(winID);
+    std::cout << std::endl;
+    exit(0);
+}
+
 void keyboardCallback(unsigned char key, int x, int y)
 {
     switch (key)
     {
         case 27: // ESC
-            texture.reset();
-            glutDestroyWindow(winID);
-            exit(0);
+            quitApp();
             break;
 
         case '\t': // TAB
@@ -554,8 +560,6 @@ int main(int argc, char* argv[])
     initScene();
 
     glutMainLoop();
-
-    std::cout << std::endl;
 
     return 0;
 }
