@@ -40,6 +40,12 @@ find_path(GaussianLib_INCLUDE_DIR NAMES Gauss/Gauss.h)
 include_directories(${GaussianLib_INCLUDE_DIR})
 
 
+# === Source groups ===
+
+source_group("Include" FILES ${HeadersAll})
+source_group("Sources" FILES ${SourcesAll})
+
+
 # === Binaries ===
 
 add_library(geomlib STATIC ${FilesAll})

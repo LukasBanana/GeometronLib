@@ -204,6 +204,18 @@ void initGL()
     updateProjection();
 }
 
+void showModel(size_t index)
+{
+    if (index < models.size())
+    {
+        selectedModel = &(models[index]);
+        std::cout << "\rModel: " << selectedModel->name;
+        if (selectedModel->name.size() < 20)
+            std::cout << std::string(20 - selectedModel->name.size(), ' ');
+        std::flush(std::cout);
+    }
+}
+
 void addModelCuboid()
 {
     auto mdl = addModel("Cuboid");
@@ -231,16 +243,18 @@ void addModelEllipsoid()
     mdl->mesh = Gm::MeshGenerator::Ellipsoid(desc);
 }
 
-void showModel(size_t index)
+void addModelCone()
 {
-    if (index < models.size())
-    {
-        selectedModel = &(models[index]);
-        std::cout << "\rModel: " << selectedModel->name;
-        if (selectedModel->name.size() < 20)
-            std::cout << std::string(20 - selectedModel->name.size(), ' ');
-        std::flush(std::cout);
-    }
+    auto mdl = addModel("Cone");
+
+    Gm::MeshGenerator::ConeDescription desc;
+
+    desc.radius         = Gs::Vector2{ 1, 0.75f }*0.5f;
+    desc.height         = 1.0f;
+    desc.mantleSegments = { 20, 3 };
+    desc.coverSegments  = 4;
+
+    mdl->mesh = Gm::MeshGenerator::Cone(desc);
 }
 
 void initScene()
@@ -254,6 +268,7 @@ void initScene()
 
     addModelCuboid();
     addModelEllipsoid();
+    addModelCone();
     //...
 
     // show first model

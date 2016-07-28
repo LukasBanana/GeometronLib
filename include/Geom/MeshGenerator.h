@@ -74,8 +74,8 @@ struct ConeDescription
     //! Segmentation around the cone (x component), and height (y component). By default (20, 1).
     Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
 
-    //! Segmentation of the bottom cap. By default 1.
-    unsigned int    capSegments     = 1;
+    //! Segmentation of the bottom cover. By default 1.
+    unsigned int    coverSegments   = 1;
 };
 
 struct CylinderDescription
@@ -89,8 +89,8 @@ struct CylinderDescription
     //! Segmentation around the cylinder (x component), and height (y component). By default (20, 1).
     Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
 
-    //! Segmentation of the top- and bottom cap. By default 1.
-    unsigned int    capSegments     = 1;
+    //! Segmentation of the top- and bottom cover. By default 1.
+    unsigned int    coverSegments   = 1;
 };
 
 struct TubeDescription
@@ -107,8 +107,8 @@ struct TubeDescription
     //! Segmentation around the (inner and outer) cylinder (x component), and height (y component). By default (20, 1).
     Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
 
-    //! Segmentation of the top- and bottom cap. By default 1.
-    unsigned int    capSegments     = 1;
+    //! Segmentation of the top- and bottom cover. By default 1.
+    unsigned int    coverSegments   = 1;
 };
 
 struct CapsuleDescription
@@ -174,7 +174,7 @@ TriangleMesh Ellipsoid(const EllipsoidDescription& desc);
 
 //TriangleMesh IcoSphere(const IcoSphereDescription& desc);
 
-//TriangleMesh Cone(const ConeDescription& desc);
+TriangleMesh Cone(const ConeDescription& desc);
 
 //TriangleMesh Cylinder(const CylinderDescription& desc);
 

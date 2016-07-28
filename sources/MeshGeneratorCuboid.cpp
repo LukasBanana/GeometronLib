@@ -5,9 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#include <Geom/MeshGenerator.h>
+#include "MeshGeneratorDetails.h"
 #include <Gauss/Quaternion.h>
-#include <algorithm>
 
 
 namespace Gm
@@ -17,8 +16,6 @@ namespace MeshGenerator
 {
 
 
-using VertexIndex = TriangleMesh::VertexIndex;
-
 static void BuildFace(
     TriangleMesh& mesh, const Gs::Quaternion& rotation,
     Gs::Real sizeHorz, Gs::Real sizeVert, Gs::Real sizeOffsetZ,
@@ -27,15 +24,15 @@ static void BuildFace(
 {
     sizeOffsetZ /= 2;
 
-    const Gs::Real invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
-    const Gs::Real invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
     auto idxOffset = mesh.vertices.size();
 
     auto AddQuad = [&](
-        VertexIndex u, VertexIndex v,
-        const std::size_t& v0, const std::size_t& v1,
-        const std::size_t& v2, const std::size_t& v3)
+        unsigned int u, unsigned int v,
+        VertexIndex v0, VertexIndex v1,
+        VertexIndex v2, VertexIndex v3)
     {
         if ( !alternateGrid || ( ( u % 2 == 0 && v % 2 == 0 ) || ( u % 2 == 1 && v % 2 == 1 ) ) )
         {
@@ -62,9 +59,9 @@ static void BuildFace(
     };
 
     /* Generate vertices */
-    for (decltype(segsVert) i = 0; i <= segsVert; ++i)
+    for (unsigned int i = 0; i <= segsVert; ++i)
     {
-        for (decltype(segsHorz) j = 0; j <= segsHorz; ++j)
+        for (unsigned int j = 0; j <= segsHorz; ++j)
         {
             auto u = invHorz * static_cast<Gs::Real>(j);
             auto v = invVert * static_cast<Gs::Real>(i);
@@ -83,9 +80,9 @@ static void BuildFace(
     /* Generate indices */
     const auto strideHorz = segsHorz + 1;
 
-    for (decltype(segsVert) i = 0; i < segsVert; ++i)
+    for (unsigned int i = 0; i < segsVert; ++i)
     {
-        for (decltype(segsHorz) j = 0; j < segsHorz; ++j)
+        for (unsigned int j = 0; j < segsHorz; ++j)
         {
             AddQuad(
                 i, j,
@@ -100,9 +97,6 @@ static void BuildFace(
 
 TriangleMesh Cuboid(const CuboidDescription& desc)
 {
-    static const auto pi = Gs::pi;
-    static const auto pi_0_5 = pi*Gs::Real(0.5);
-
     TriangleMesh mesh;
     
     auto segsX = std::max(1u, desc.segments.x);
