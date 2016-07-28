@@ -29,9 +29,9 @@ static void BuildFace(
 
     auto idxOffset = mesh.vertices.size();
 
-    auto AddQuad = [&](unsigned int u, unsigned int v, VertexIndex v0, VertexIndex v1, VertexIndex v2, VertexIndex v3)
+    auto AddQuad = [&](unsigned int u, unsigned int v, VertexIndex i0, VertexIndex i1, VertexIndex i2, VertexIndex i3)
     {
-        AddTriangulatedQuad(mesh, alternateGrid, u, v, v0, v1, v2, v3, idxOffset);
+        AddTriangulatedQuad(mesh, alternateGrid, u, v, i0, i1, i2, i3, idxOffset);
     };
 
     /* Generate vertices */

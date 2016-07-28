@@ -79,6 +79,9 @@ struct ConeDescriptor
 
     //! Segmentation of the bottom cover. By default 1.
     unsigned int    coverSegments   = 1;
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default true.
+    bool            alternateGrid   = true;
 };
 
 struct CylinderDescriptor

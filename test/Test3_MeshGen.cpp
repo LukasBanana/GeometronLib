@@ -66,7 +66,7 @@ bool                        wireframeMode   = false;
 bool                        showFaceNormals = false;
 bool                        showVertNormals = false;
 bool                        orthoProj       = false;
-bool                        texturedMode    = true;
+bool                        texturedMode    = false;
 
 std::unique_ptr<Texture>    texture;
 
@@ -95,6 +95,7 @@ void Texture::unbind()
     glDisable(GL_TEXTURE_2D);
 }
 
+// generates a red/green image mask: red = x-coordinate, gren = y-coordinate
 void Texture::genImageMask(GLsizei w, GLsizei h, bool linearFilter)
 {
     bind();
@@ -117,7 +118,7 @@ void Texture::genImageMask(GLsizei w, GLsizei h, bool linearFilter)
             if (x == 0 || x + 1 == w || y == 0 || y + 1 == h)
                 color = Gs::Vector4f(0.1f, 0.2f, 0.8f, 1);
 
-            auto idx = (y*w + x)*4;
+            auto idx = ((h - y - 1)*w + x)*4;
             image[idx    ] = color.x;
             image[idx + 1] = color.y;
             image[idx + 2] = color.z;
@@ -132,6 +133,8 @@ void Texture::genImageMask(GLsizei w, GLsizei h, bool linearFilter)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (linearFilter ? GL_LINEAR : GL_NEAREST));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    unbind();
 }
 
 
