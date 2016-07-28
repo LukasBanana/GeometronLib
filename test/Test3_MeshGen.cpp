@@ -235,6 +235,7 @@ void showModel(size_t index)
     {
         selectedModel = &(models[index]);
         std::cout << "\rModel: " << selectedModel->name << std::string(20, ' ');
+        std::flush(std::cout);
     }
 }
 
@@ -549,6 +550,8 @@ int main(int argc, char* argv[])
     initScene();
 
     glutMainLoop();
+
+    std::cout << std::endl;
 
     return 0;
 }
