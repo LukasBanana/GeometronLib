@@ -55,7 +55,7 @@ TriangleMesh Cone(const ConeDescriptor& desc)
         normal.Normalize();
 
         /* Add bottom vertex */
-        texCoord.x = static_cast<Gs::Real>(u) * invHorz;
+        texCoord.x = static_cast<Gs::Real>(segsHorz - u) * invHorz;
 
         for (unsigned int v = 1; v <= segsVert; ++v)
         {
@@ -102,13 +102,13 @@ TriangleMesh Cone(const ConeDescriptor& desc)
             /* Add vertex around the bottom */
             for (unsigned int v = 1; v <= segsCov; ++v)
             {
-                auto texCoordRadius = static_cast<Gs::Real>(v) * invCov;
-                auto texCoordBottom = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * texCoordRadius;
+                auto interp = static_cast<Gs::Real>(v) * invCov;
+                auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
 
                 mesh.AddVertex(
-                    Gs::Lerp(Gs::Vector3(0, -halfHeight, 0), coord, texCoordRadius),
+                    Gs::Lerp(Gs::Vector3(0, -halfHeight, 0), coord, interp),
                     Gs::Vector3(0, -1, 0),
-                    texCoordBottom
+                    texCoordFinal
                 );
             }
 

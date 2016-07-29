@@ -51,11 +51,12 @@ TriangleMesh Cylinder(const CylinderDescriptor& desc)
         normal.Normalize();
 
         /* Add top and bottom vertex */
-        texCoord.x = static_cast<Gs::Real>(u) * invHorz;
+        texCoord.x = static_cast<Gs::Real>(segsHorz - u) * invHorz;
 
         for (unsigned int v = 0; v <= segsVert; ++v)
         {
-            coord.y = Gs::Lerp(halfHeight, -halfHeight, static_cast<Gs::Real>(v) * invVert);
+            texCoord.y = static_cast<Gs::Real>(v) * invVert;
+            coord.y = Gs::Lerp(halfHeight, -halfHeight, texCoord.y);
             mesh.AddVertex(coord, normal, texCoord);
         }
 
@@ -95,16 +96,19 @@ TriangleMesh Cylinder(const CylinderDescriptor& desc)
             coord.x = texCoord.x * desc.radius.x;
             coord.z = texCoord.y * desc.radius.y;
 
-            /* Add vertex around the bottom */
+            /* Add vertex around the top and bottom */
             for (unsigned int v = 1; v <= segsCov[i]; ++v)
             {
-                auto texCoordRadius = static_cast<Gs::Real>(v) * invCov;
-                auto texCoordBottom = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * texCoordRadius;
+                auto interp = static_cast<Gs::Real>(v) * invCov;
+                auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
+                
+                if (i == 1)
+                    texCoordFinal.y = Gs::Real(1) - texCoordFinal.y;
 
                 mesh.AddVertex(
-                    Gs::Lerp(Gs::Vector3(0, coord.y, 0), coord, texCoordRadius),
+                    Gs::Lerp(Gs::Vector3(0, coord.y, 0), coord, interp),
                     Gs::Vector3(0, coverSide[i], 0),
-                    texCoordBottom
+                    texCoordFinal
                 );
             }
 

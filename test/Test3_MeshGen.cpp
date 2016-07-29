@@ -315,6 +315,23 @@ void addModelCylinder()
     mdl->mesh = Gm::MeshGenerator::Cylinder(desc);
 }
 
+void addModelPipe()
+{
+    auto mdl = addModel("Pipe");
+
+    Gm::MeshGenerator::PipeDescriptor desc;
+
+    desc.innerRadius            = Gs::Vector2{ 0.75f, 0.35f }*0.5f;
+    desc.outerRadius            = Gs::Vector2{ 1, 1 }*0.5f;
+    desc.height                 = 1.0f;
+    desc.mantleSegments         = { 20, 3 };
+    desc.topCoverSegments       = 3;
+    desc.bottomCoverSegments    = 1;
+    desc.alternateGrid          = true;
+
+    mdl->mesh = Gm::MeshGenerator::Pipe(desc);
+}
+
 void initScene()
 {
     // generate texture
@@ -329,6 +346,7 @@ void initScene()
     addModelEllipsoid();
     addModelCone();
     addModelCylinder();
+    addModelPipe();
     //...
 
     // check for unused vertices in all models
