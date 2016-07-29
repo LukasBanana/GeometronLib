@@ -10,6 +10,12 @@
 #include <limits>
 
 
+// ----- MACROS -----
+
+// show models in pre-defined orientation
+#define ENABLE_PRESENTATION
+
+
 // ----- STRUCTURES -----
 
 struct Model
@@ -65,6 +71,7 @@ Model*                      selectedModel   = nullptr;
 bool                        wireframeMode   = false;
 bool                        showFaceNormals = false;
 bool                        showVertNormals = false;
+bool                        showBox         = false;
 bool                        orthoProj       = false;
 bool                        texturedMode    = false;
 
@@ -262,10 +269,15 @@ void addModelCuboid()
 
     Gm::MeshGenerator::CuboidDescriptor desc;
 
+    #ifdef ENABLE_PRESENTATION
+    desc.segments       = { 4, 4, 2 };
+    desc.alternateGrid  = true;
+    #else
     desc.size           = { 1, 0.75f, 1.25f };
     desc.uvScale        = { 1, 1, 2 };
     desc.segments       = { 1, 2, 3 };
     desc.alternateGrid  = true;
+    #endif
 
     mdl->mesh = Gm::MeshGenerator::Cuboid(desc);
 }
@@ -276,10 +288,15 @@ void addModelEllipsoid()
 
     Gm::MeshGenerator::EllipsoidDescriptor desc;
 
+    #ifdef ENABLE_PRESENTATION
+    desc.segments       = { 40, 20 };
+    desc.alternateGrid  = true;
+    #else
     desc.radius         = Gs::Vector3(1, 1.25f, 0.75f)*0.5f;
     desc.uvScale        = { 1, 1 };
     desc.segments       = { 20, 20 };
     desc.alternateGrid  = true;
+    #endif
 
     mdl->mesh = Gm::MeshGenerator::Ellipsoid(desc);
 }
@@ -290,11 +307,16 @@ void addModelCone()
 
     Gm::MeshGenerator::ConeDescriptor desc;
 
+    #ifdef ENABLE_PRESENTATION
+    desc.mantleSegments = { 40, 10 };
+    desc.alternateGrid          = true;
+    #else
     desc.radius         = Gs::Vector2{ 1, 0.5f }*0.5f;
     desc.height         = 1.0f;
     desc.mantleSegments = { 20, 5 };
     desc.coverSegments  = 3;
     desc.alternateGrid  = true;
+    #endif
 
     mdl->mesh = Gm::MeshGenerator::Cone(desc);
 }
@@ -305,12 +327,17 @@ void addModelCylinder()
 
     Gm::MeshGenerator::CylinderDescriptor desc;
 
+    #ifdef ENABLE_PRESENTATION
+    desc.mantleSegments         = { 40, 5 };
+    desc.alternateGrid          = true;
+    #else
     desc.radius                 = Gs::Vector2{ 1, 0.5f }*0.5f;
     desc.height                 = 1.0f;
     desc.mantleSegments         = { 20, 3 };
     desc.topCoverSegments       = 3;
     desc.bottomCoverSegments    = 1;
     desc.alternateGrid          = true;
+    #endif
 
     mdl->mesh = Gm::MeshGenerator::Cylinder(desc);
 }
@@ -321,6 +348,10 @@ void addModelPipe()
 
     Gm::MeshGenerator::PipeDescriptor desc;
 
+    #ifdef ENABLE_PRESENTATION
+    desc.mantleSegments         = { 40, 5 };
+    desc.alternateGrid          = true;
+    #else
     desc.innerRadius            = Gs::Vector2{ 0.75f, 0.35f }*0.5f;
     desc.outerRadius            = Gs::Vector2{ 1, 1 }*0.5f;
     desc.height                 = 1.0f;
@@ -328,6 +359,7 @@ void addModelPipe()
     desc.topCoverSegments       = 3;
     desc.bottomCoverSegments    = 1;
     desc.alternateGrid          = true;
+    #endif
 
     mdl->mesh = Gm::MeshGenerator::Pipe(desc);
 }
@@ -349,9 +381,15 @@ void initScene()
     addModelPipe();
     //...
 
-    // check for unused vertices in all models
     for (auto it = models.begin(); it != models.end();)
     {
+        #ifdef ENABLE_PRESENTATION
+        // setup model for presentation
+        it->turn(0, Gs::Deg2Rad(20.0f));
+        it->turn(Gs::Deg2Rad(40.0f), 0);
+        #endif
+
+        // check for unused vertices in all models
         auto n = countUnusedVertices(it->mesh);
         if (n > 0)
             std::cout << it->name << " has " << n << " unused vertices" << std::endl;
@@ -361,6 +399,7 @@ void initScene()
             it = models.erase(it);
             continue;
         }
+
         ++it;
     }
 
@@ -523,7 +562,8 @@ void drawScene()
     if (selectedModel)
     {
         drawModel(*selectedModel);
-        drawAABB(selectedModel->mesh.BoundingBox(selectedModel->transform.GetMatrix()));
+        if (showBox)
+            drawAABB(selectedModel->mesh.BoundingBox(selectedModel->transform.GetMatrix()));
     }
 }
 
@@ -577,10 +617,13 @@ void keyboardCallback(unsigned char key, int x, int y)
             wireframeMode = !wireframeMode;
             break;
 
-        case ' ': // SPACE
         case '\r': // ENTER
             orthoProj = !orthoProj;
             updateProjection();
+            break;
+
+        case ' ': // SPACE
+            showBox = !showBox;
             break;
 
         default:
@@ -628,7 +671,12 @@ void motionCallback(int x, int y)
         float pitch = static_cast<float>(dy) * rotationSpeed;
         float yaw   = static_cast<float>(dx) * rotationSpeed;
 
+        #if 0
         selectedModel->turn(pitch, yaw);
+        #else
+        for (auto& mdl : models)
+            mdl.turn(pitch, yaw);
+        #endif
     }
 
     storePrevMousePos(x, y);
@@ -640,7 +688,8 @@ int main(int argc, char* argv[])
     std::cout << "------------------------------------" << std::endl;
     std::cout << "Click any mouse button and move the mouse to rotate the current 3D model" << std::endl;
     std::cout << "Press Tab to switch between solid and wireframe mode" << std::endl;
-    std::cout << "Press Enter or Space to switch between perspective and orthogonal projection" << std::endl;
+    std::cout << "Press Enter to switch between perspective and orthogonal projection" << std::endl;
+    std::cout << "Press Space to show/hide bounding box" << std::endl;
     std::cout << "Press F1 to show/hide face normals" << std::endl;
     std::cout << "Press F2 to show/hide vertex normals" << std::endl;
     std::cout << "Press F3 to show/hide texture" << std::endl;
