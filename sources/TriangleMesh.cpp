@@ -48,6 +48,7 @@ TriangleMesh::VertexIndex TriangleMesh::AddVertex(const Gs::Vector3& position, c
 
 TriangleMesh::TriangleIndex TriangleMesh::AddTriangle(VertexIndex v0, VertexIndex v1, VertexIndex v2)
 {
+    GS_ASSERT(v0 < vertices.size() && v1 < vertices.size() && v2 < vertices.size());
     auto idx = triangles.size();
     triangles.push_back({ v0, v1, v2 });
     return idx;

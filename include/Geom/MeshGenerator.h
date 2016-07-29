@@ -57,15 +57,6 @@ struct EllipsoidDescriptor
     bool            alternateGrid   = false;
 };
 
-struct IcoSphereDescriptor
-{
-    //! Radius of the ico-sphere. By default 0.5
-    Gs::Real        radius      = Gs::Real(0.5);
-
-    //! Segmentation as tessellation factor, which will be clamped to [0, 255]. By default 3.
-    unsigned char   segments    = 3;
-};
-
 struct ConeDescriptor
 {
     //! Cone radius in U (x component), and V (y component) direction. By default (0.5, 0.5).
@@ -97,6 +88,9 @@ struct CylinderDescriptor
 
     //! Segmentation of the top- and bottom cover. By default 1.
     unsigned int    coverSegments   = 1;
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid   = false;
 };
 
 struct TubeDescriptor
@@ -178,11 +172,9 @@ TriangleMesh Cuboid(const CuboidDescriptor& desc);
 
 TriangleMesh Ellipsoid(const EllipsoidDescriptor& desc);
 
-//TriangleMesh IcoSphere(const IcoSphereDescriptor& desc);
-
 TriangleMesh Cone(const ConeDescriptor& desc);
 
-//TriangleMesh Cylinder(const CylinderDescriptor& desc);
+TriangleMesh Cylinder(const CylinderDescriptor& desc);
 
 //TriangleMesh Tube(const TubeDescriptor& desc);
 

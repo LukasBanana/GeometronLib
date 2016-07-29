@@ -65,7 +65,7 @@ Model*                      selectedModel   = nullptr;
 bool                        wireframeMode   = false;
 bool                        showFaceNormals = false;
 bool                        showVertNormals = false;
-bool                        orthoProj       = true;
+bool                        orthoProj       = false;
 bool                        texturedMode    = false;
 
 std::unique_ptr<Texture>    texture;
@@ -294,8 +294,24 @@ void addModelCone()
     desc.height         = 1.0f;
     desc.mantleSegments = { 20, 5 };
     desc.coverSegments  = 3;
+    desc.alternateGrid  = true;
 
     mdl->mesh = Gm::MeshGenerator::Cone(desc);
+}
+
+void addModelCylinder()
+{
+    auto mdl = addModel("Cylinder");
+
+    Gm::MeshGenerator::CylinderDescriptor desc;
+
+    desc.radius         = Gs::Vector2{ 1, 0.5f }*0.5f;
+    desc.height         = 1.0f;
+    desc.mantleSegments = { 20, 3 };
+    desc.coverSegments  = 3;
+    desc.alternateGrid  = true;
+
+    mdl->mesh = Gm::MeshGenerator::Cylinder(desc);
 }
 
 void initScene()
@@ -311,6 +327,7 @@ void initScene()
     addModelCuboid();
     addModelEllipsoid();
     addModelCone();
+    addModelCylinder();
     //...
 
     // check for unused vertices in all models

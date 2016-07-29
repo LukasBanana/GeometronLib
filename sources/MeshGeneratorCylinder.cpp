@@ -1,5 +1,5 @@
 /*
- * MeshGeneratorCone.cpp
+ * MeshGeneratorCylinder.cpp
  * 
  * This file is part of the "GeometronLib" project (Copyright (c) 2015 by Lukas Hermanns)
  * See "LICENSE.txt" for license information.
@@ -15,7 +15,7 @@ namespace MeshGenerator
 {
 
 
-TriangleMesh Cone(const ConeDescriptor& desc)
+TriangleMesh Cylinder(const CylinderDescriptor& desc)
 {
     TriangleMesh mesh;
     
@@ -35,9 +35,6 @@ TriangleMesh Cone(const ConeDescriptor& desc)
     Gs::Vector3 coord, normal;
     Gs::Vector2 texCoord;
 
-    const Gs::Vector3 tip(0, halfHeight, 0);
-    coord.y = -halfHeight;
-
     auto angle = Gs::Real(0);
 
     for (unsigned int u = 0; u <= segsHorz; ++u)
@@ -55,31 +52,20 @@ TriangleMesh Cone(const ConeDescriptor& desc)
         normal.z = texCoord.y;
         normal.Normalize();
 
-        /* Add bottom vertex */
+        /* Add top and bottom vertex */
         texCoord.x = static_cast<Gs::Real>(u) * invHorz;
 
-        for (unsigned int v = 1; v <= segsVert; ++v)
+        for (unsigned int v = 0; v <= segsVert; ++v)
         {
-            texCoord.y = static_cast<Gs::Real>(v) * invVert;
-
-            mesh.AddVertex(
-                Gs::Lerp(tip, coord, texCoord.y),
-                Gs::Lerp(Gs::Vector3(0, 1, 0), normal, std::sqrt(texCoord.y)),
-                texCoord
-            );
-        }
-
-        /* Add top vertex */
-        if (u < segsHorz)
-        {
-            texCoord.y = 0.0f;
-            mesh.AddVertex(tip, { 0, 1, 0 }, texCoord);
+            coord.y = Gs::Lerp(halfHeight, -halfHeight, static_cast<Gs::Real>(v) * invVert);
+            mesh.AddVertex(coord, normal, texCoord);
         }
 
         /* Increase angle for the next iteration */
         angle += angleSteps;
     }
 
+#if 0
     /* Generate cover vertices */
     angle = Gs::Real(0);
 
@@ -111,20 +97,19 @@ TriangleMesh Cone(const ConeDescriptor& desc)
         /* Increase angle for the next iteration */
         angle += angleSteps;
     }
+#endif
 
     /* Generate indices for the mantle */
     VertexIndex idxOffset = 0;
 
     for (unsigned int u = 0; u < segsHorz; ++u)
     {
-        mesh.AddTriangle(idxOffset + segsVert, idxOffset, idxOffset + 1 + segsVert);
-        
-        for (unsigned int v = 1; v < segsVert; ++v)
+        for (unsigned int v = 0; v < segsVert; ++v)
         {
-            auto i0 = idxOffset + v + segsVert;
-            auto i1 = idxOffset + v - 1;
-            auto i2 = idxOffset + v;
-            auto i3 = idxOffset + v + 1 + segsVert;
+            auto i0 = idxOffset + v + 1 + segsVert;
+            auto i1 = idxOffset + v;
+            auto i2 = idxOffset + v + 1;
+            auto i3 = idxOffset + v + 2 + segsVert;
 
             AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
         }
@@ -132,6 +117,7 @@ TriangleMesh Cone(const ConeDescriptor& desc)
         idxOffset += (1 + segsVert);
     }
 
+#if 0
     /* Generate indices for the bottom */
     idxOffset = coverIndexOffset + 1;
 
@@ -151,6 +137,7 @@ TriangleMesh Cone(const ConeDescriptor& desc)
 
         idxOffset += segsCov;
     }
+#endif
 
     return mesh;
 }
