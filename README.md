@@ -20,11 +20,11 @@ Mesh Generator
 
 There is a generic mesh generator for the following 3D models:
 
-<img src="docu/images/Mesh_Cuboid.png" alt="Cuboid"/>
-<img src="docu/images/Mesh_Ellipsoid.png" alt="Ellipsoid"/>
-<img src="docu/images/Mesh_Cone.png" alt="Cone"/>
-<img src="docu/images/Mesh_Cylinder.png" alt="Cylinder"/>
-<img src="docu/images/Mesh_Pipe.png" alt="Pipe"/>
+<img src="docu/images/cuboid.png" alt="Cuboid"/>
+<img src="docu/images/ellipsoid.png" alt="Ellipsoid"/>
+<img src="docu/images/cone.png" alt="Cone"/>
+<img src="docu/images/cylinder.png" alt="Cylinder"/>
+<img src="docu/images/pipe.png" alt="Pipe"/>
 
 
 Example
