@@ -30,6 +30,34 @@ There is a generic mesh generator for the following 3D models:
 Example
 -------
 
+This is an example about the mesh generator:
+```cpp
+#include <Geom/Geom.h>
+
+int main()
+{
+	// Generate cuboid
+	Gm::MeshGenerator::CuboidDescriptor cuboidDesc;
+	{
+		// Triangle segmentation (like a static tessellation) for X, Y, and Z axis
+		cuboidDesc.segments			= { 1, 2, 3 };
+		
+		// Cuboid size in X, Y, and Z direction
+		cuboidDesc.size				= { 2, 0.5, 1.5 };
+		
+		// UV-Texture-Coordinate scaling in X, Y, and Z direction
+		cuboidDesc.uvScale			= { 2, 0.5, 1.5 };
+		
+		// Alternate the triangle grid (looks more uniform)
+		cuboidDesc.alternateGrid	= true;
+	}
+	auto cuboidMesh = Gm::MeshGenerator::Cuboid(desc);
+	
+	/* ... */
+}
+```
+
+This is an example about the primitive data types such as Plane, Ray etc.:
 ```cpp
 #include <Geom/Geom.h>
 #include <iostream>
@@ -41,55 +69,55 @@ static const Gs::Real pi = Gs::Real(3.141592654);
 
 int main()
 {
-    // Plane
-    Gm::Plane p;
-    
-    p.normal = Gs::Vector3(1, 1, 1).Normalized();
-    p.distance = 0;
-    
-    // 2D Ray
-    Gm::Ray2 r;
-    
-    r.origin = Gs::Vector2(0, 0);
-    r.direction = Gs::Vector2(3, 2).Normalized();
-    
-    std::cout << "Ray(t) = " << std::endl << r << std::endl;
-    
-    // 3D Oriented Bounding-Box (OBB)
-    Gm::OBB3 o;
-    //...
-    
-    // 2D Axis-Aligned Bounding-Box (AABB)
-    Gm::AABB2 a;
-    
-    a.min = Gs::Vector2(-1, -2);
-    a.max = Gs::Vector2(3, 5);
-    
-    std::cout << "AABB Size = " << a.Size() << std::endl;
-    
-    // 2D Transformation (with affine 3x3 matrix)
-    Gm::Transform2 t2;
-    
-    t2.SetPosition(Gs::Vector2(4, -3));
-    t2.SetRotation(pi*0.5);
-    t2.SetScale(Gs::Vector2(5, 2));
-    
-    Gs::AffineMatrix3 A = t2.GetMatrix();
-    
-    std::cout << "2D Transform:" << std::endl << A << std::endl;
-    
-    // 3D Transformation (with affine 4x4 matrix)
-    Gm::Transform3 t3;
-    
-    t3.SetPosition(Gs::Vector3(5, -2, 6));
-    t3.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.5, 0, -pi*0.25)));
-    t3.SetScale(Gs::Vector3(1, 2, 3));
-    
-    Gs::AffineMatrix4 B = t3.GetMatrix();
-    
-    std::cout << "3D Transform:" << std::endl << B << std::endl;
-    
-    return 0;
+	// Plane
+	Gm::Plane p;
+
+	p.normal = Gs::Vector3(1, 1, 1).Normalized();
+	p.distance = 0;
+
+	// 2D Ray
+	Gm::Ray2 r;
+
+	r.origin = Gs::Vector2(0, 0);
+	r.direction = Gs::Vector2(3, 2).Normalized();
+
+	std::cout << "Ray(t) = " << std::endl << r << std::endl;
+
+	// 3D Oriented Bounding-Box (OBB)
+	Gm::OBB3 o;
+	//...
+
+	// 2D Axis-Aligned Bounding-Box (AABB)
+	Gm::AABB2 a;
+
+	a.min = Gs::Vector2(-1, -2);
+	a.max = Gs::Vector2(3, 5);
+
+	std::cout << "AABB Size = " << a.Size() << std::endl;
+
+	// 2D Transformation (with affine 3x3 matrix)
+	Gm::Transform2 t2;
+
+	t2.SetPosition(Gs::Vector2(4, -3));
+	t2.SetRotation(pi*0.5);
+	t2.SetScale(Gs::Vector2(5, 2));
+
+	Gs::AffineMatrix3 A = t2.GetMatrix();
+
+	std::cout << "2D Transform:" << std::endl << A << std::endl;
+
+	// 3D Transformation (with affine 4x4 matrix)
+	Gm::Transform3 t3;
+
+	t3.SetPosition(Gs::Vector3(5, -2, 6));
+	t3.SetRotation(Gs::Quaternion::EulerAngles(Gs::Vector3(pi*0.5, 0, -pi*0.25)));
+	t3.SetScale(Gs::Vector3(1, 2, 3));
+
+	Gs::AffineMatrix4 B = t3.GetMatrix();
+
+	std::cout << "3D Transform:" << std::endl << B << std::endl;
+
+	return 0;
 }
 ```
 
