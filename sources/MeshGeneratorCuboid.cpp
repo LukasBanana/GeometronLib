@@ -82,25 +82,25 @@ TriangleMesh Cuboid(const CuboidDescriptor& desc)
     /* Generate faces */
     // front
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, 0, pi)),//Gs::Quaternion(),
+        mesh, Gs::Quaternion(),
         desc.size.x, desc.size.y, -desc.size.z, segsX, segsY, desc.uvScale.x, desc.uvScale.y, desc.alternateGrid
     );
 
     // back
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi, pi)),
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi, 0)),
         desc.size.x, desc.size.y, -desc.size.z, segsX, segsY, desc.uvScale.x, desc.uvScale.y, desc.alternateGrid
     );
 
     // left
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, -pi_0_5, pi)),
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, -pi_0_5, 0)),
         desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY, desc.uvScale.z, desc.uvScale.y, desc.alternateGrid
     );
 
     // right
     BuildFace(
-        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi_0_5, pi)),
+        mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi_0_5, 0)),
         desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY, desc.uvScale.z, desc.uvScale.y, desc.alternateGrid
     );
 
