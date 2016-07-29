@@ -162,7 +162,7 @@ void updateProjection()
     // setup perspective projection
     if (orthoProj)
     {
-        const auto orthoZoom = Gs::Real(0.004);
+        const auto orthoZoom = Gs::Real(0.003);
         projection = Gs::ProjectionMatrix4::Orthogonal(
             static_cast<Gs::Real>(resolution.x) * orthoZoom,
             static_cast<Gs::Real>(resolution.y) * orthoZoom,

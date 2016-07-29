@@ -82,34 +82,38 @@ TriangleMesh Cone(const ConeDescriptor& desc)
 
     /* Generate cover vertices */
     angle = Gs::Real(0);
+    VertexIndex coverIndexOffset = 0;
 
-    /* Add centered bottom vertex */
-    const auto coverIndexOffset = mesh.AddVertex({ 0, -halfHeight, 0 }, { 0, -1, 0 }, { Gs::Real(0.5), Gs::Real(0.5) });
-
-    for (unsigned int u = 0; u <= segsHorz; ++u)
+    if (desc.cover)
     {
-        /* Compute X- and Z coordinates */
-        texCoord.x = std::sin(angle);
-        texCoord.y = std::cos(angle);
+        /* Add centered bottom vertex */
+        coverIndexOffset = mesh.AddVertex({ 0, -halfHeight, 0 }, { 0, -1, 0 }, { Gs::Real(0.5), Gs::Real(0.5) });
 
-        coord.x = texCoord.x * desc.radius.x;
-        coord.z = texCoord.y * desc.radius.y;
-
-        /* Add vertex around the bottom */
-        for (unsigned int v = 1; v <= segsCov; ++v)
+        for (unsigned int u = 0; u <= segsHorz; ++u)
         {
-            auto texCoordRadius = static_cast<Gs::Real>(v) * invCov;
-            auto texCoordBottom = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * texCoordRadius;
+            /* Compute X- and Z coordinates */
+            texCoord.x = std::sin(angle);
+            texCoord.y = std::cos(angle);
 
-            mesh.AddVertex(
-                Gs::Lerp(Gs::Vector3(0, -halfHeight, 0), coord, texCoordRadius),
-                Gs::Vector3(0, -1, 0),
-                texCoordBottom
-            );
+            coord.x = texCoord.x * desc.radius.x;
+            coord.z = texCoord.y * desc.radius.y;
+
+            /* Add vertex around the bottom */
+            for (unsigned int v = 1; v <= segsCov; ++v)
+            {
+                auto texCoordRadius = static_cast<Gs::Real>(v) * invCov;
+                auto texCoordBottom = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * texCoordRadius;
+
+                mesh.AddVertex(
+                    Gs::Lerp(Gs::Vector3(0, -halfHeight, 0), coord, texCoordRadius),
+                    Gs::Vector3(0, -1, 0),
+                    texCoordBottom
+                );
+            }
+
+            /* Increase angle for the next iteration */
+            angle += angleSteps;
         }
-
-        /* Increase angle for the next iteration */
-        angle += angleSteps;
     }
 
     /* Generate indices for the mantle */
@@ -132,24 +136,27 @@ TriangleMesh Cone(const ConeDescriptor& desc)
         idxOffset += (1 + segsVert);
     }
 
-    /* Generate indices for the bottom */
-    idxOffset = coverIndexOffset + 1;
-
-    for (unsigned int u = 0; u < segsHorz; ++u)
+    if (desc.cover)
     {
-        mesh.AddTriangle(idxOffset + segsCov, idxOffset, coverIndexOffset);
-        
-        for (unsigned int v = 1; v < segsCov; ++v)
+        /* Generate indices for the bottom */
+        idxOffset = coverIndexOffset + 1;
+
+        for (unsigned int u = 0; u < segsHorz; ++u)
         {
-            auto i1 = idxOffset + v - 1 + segsCov;
-            auto i0 = idxOffset + v - 1;
-            auto i3 = idxOffset + v;
-            auto i2 = idxOffset + v + segsCov;
+            mesh.AddTriangle(idxOffset + segsCov, idxOffset, coverIndexOffset);
 
-            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
+            for (unsigned int v = 1; v < segsCov; ++v)
+            {
+                auto i1 = idxOffset + v - 1 + segsCov;
+                auto i0 = idxOffset + v - 1;
+                auto i3 = idxOffset + v;
+                auto i2 = idxOffset + v + segsCov;
+
+                AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
+            }
+
+            idxOffset += segsCov;
         }
-
-        idxOffset += segsCov;
     }
 
     return mesh;

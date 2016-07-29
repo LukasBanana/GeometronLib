@@ -73,6 +73,9 @@ struct ConeDescriptor
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid   = false;
+
+    //! Specifies whether to generate the bottom cover or not. If false, this will be an open mesh! By default true.
+    bool            cover           = true;
 };
 
 struct CylinderDescriptor
@@ -91,6 +94,12 @@ struct CylinderDescriptor
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid   = false;
+
+    //! Specifies whether to generate the top cover or not. If false, this will be an open mesh! By default true.
+    bool            topCover        = true;
+
+    //! Specifies whether to generate the bottom cover or not. If false, this will be an open mesh! By default true.
+    bool            bottomCover     = true;
 };
 
 struct TubeDescriptor
