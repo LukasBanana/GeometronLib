@@ -58,7 +58,7 @@ PlaneRelation ClipTriangle(const Triangle3T<T>& triangle, const PlaneT<T>& clipP
 
     auto IsFront = [&rel](std::size_t i)
     {
-        return rel[i] != PlaneRelation::Behind;
+        return (rel[i] != PlaneRelation::Behind);
     };
 
     auto AddVertex = [&front, &back](const Gs::Vector3T<T>& coord, const PlaneRelation relation)

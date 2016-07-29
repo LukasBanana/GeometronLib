@@ -12,8 +12,8 @@
 #include <type_traits>
 
 
-#define __GM_ASSERT_FLOAT_TYPE__(name) \
-    static_assert(std::is_floating_point<T>::value, name " class only allows floating point types")
+#define __GM_ASSERT_FLOAT_TYPE__(NAME) \
+    static_assert(std::is_floating_point<T>::value, NAME " class only allows floating point types")
 
 
 #endif

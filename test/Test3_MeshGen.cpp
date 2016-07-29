@@ -65,7 +65,7 @@ Model*                      selectedModel   = nullptr;
 bool                        wireframeMode   = false;
 bool                        showFaceNormals = false;
 bool                        showVertNormals = false;
-bool                        orthoProj       = false;
+bool                        orthoProj       = true;
 bool                        texturedMode    = false;
 
 std::unique_ptr<Texture>    texture;
@@ -118,7 +118,7 @@ void Texture::genImageMask(GLsizei w, GLsizei h, bool linearFilter)
             if (x == 0 || x + 1 == w || y == 0 || y + 1 == h)
                 color = Gs::Vector4f(0.1f, 0.2f, 0.8f, 1);
 
-            auto idx = ((h - y - 1)*w + x)*4;
+            auto idx = (y*w + x)*4;
             image[idx    ] = color.x;
             image[idx + 1] = color.y;
             image[idx + 2] = color.z;
@@ -211,10 +211,19 @@ void showModel(size_t index)
 {
     if (index < models.size())
     {
+        static const std::size_t maxLen = 50;
+
         selectedModel = &(models[index]);
-        std::cout << "\rModel: " << selectedModel->name;
-        if (selectedModel->name.size() < 20)
-            std::cout << std::string(20 - selectedModel->name.size(), ' ');
+        
+        std::stringstream sstr;
+        sstr << "\rModel: " << selectedModel->name << ", Vertices: " << selectedModel->mesh.vertices.size() << ", Triangles: " << selectedModel->mesh.triangles.size();
+
+        auto s = sstr.str();
+        std::cout << s;
+        
+        if (s.size() < maxLen)
+            std::cout << std::string(maxLen - s.size(), ' ');
+
         std::flush(std::cout);
     }
 }
@@ -231,6 +240,20 @@ long long countUnusedVertices(const Gm::TriangleMesh& mesh)
     }
 
     return (static_cast<long long>(mesh.vertices.size()) - verts.size());
+}
+
+void addModelPlane()
+{
+    auto mdl = addModel("Plane");
+    auto& m = mdl->mesh;
+
+    m.AddVertex({ -1,  1, 0 }, { 0, 0, -1 }, { 0, 0 });
+    m.AddVertex({  1,  1, 0 }, { 0, 0, -1 }, { 1, 0 });
+    m.AddVertex({  1, -1, 0 }, { 0, 0, -1 }, { 1, 1 });
+    m.AddVertex({ -1, -1, 0 }, { 0, 0, -1 }, { 0, 1 });
+
+    m.AddTriangle(0, 1, 2);
+    m.AddTriangle(0, 2, 3);
 }
 
 void addModelCuboid()
@@ -284,6 +307,7 @@ void initScene()
     // setup scene
     viewTransform.SetPosition({ 0, 0, -3 });
 
+    //addModelPlane(); // reference model to check that UV-coords are correct
     addModelCuboid();
     addModelEllipsoid();
     addModelCone();
