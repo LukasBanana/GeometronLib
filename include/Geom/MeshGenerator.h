@@ -68,14 +68,11 @@ struct ConeDescriptor
     //! Segmentation around the cone (x component), and height (y component). By default (20, 1).
     Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
 
-    //! Segmentation of the bottom cover. By default 1.
+    //! Segmentation of the bottom cover. If 0, no bottom cover is generated. By default 1.
     unsigned int    coverSegments   = 1;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid   = false;
-
-    //! Specifies whether to generate the bottom cover or not. If false, this will be an open mesh! By default true.
-    bool            cover           = true;
 };
 
 struct CylinderDescriptor
@@ -89,35 +86,38 @@ struct CylinderDescriptor
     //! Segmentation around the cylinder (x component), and height (y component). By default (20, 1).
     Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
 
-    //! Segmentation of the top- and bottom cover. By default 1.
-    unsigned int    coverSegments   = 1;
+    //! Segmentation of the top cover. If 0, no top cover is generated. By default 1.
+    unsigned int    topCoverSegments    = 1;
+
+    //! Segmentation of the bottom cover. If 0, no bottom cover is generated. By default 1.
+    unsigned int    bottomCoverSegments = 1;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid   = false;
-
-    //! Specifies whether to generate the top cover or not. If false, this will be an open mesh! By default true.
-    bool            topCover        = true;
-
-    //! Specifies whether to generate the bottom cover or not. If false, this will be an open mesh! By default true.
-    bool            bottomCover     = true;
 };
 
-struct TubeDescriptor
+struct PipeDescriptor
 {
     //! Radius of the inner cylinder in U (x component), and V (y component) direction. By default (0.25, 0.25).
-    Gs::Vector2     innerRadius     = Gs::Vector2(Gs::Real(0.25));
+    Gs::Vector2     innerRadius         = Gs::Vector2(Gs::Real(0.25));
 
     //! Radius of the outer cylinder in U (x component), and V (y component) direction. By default (0.5, 0.5).
-    Gs::Vector2     outerRadius     = Gs::Vector2(Gs::Real(0.5));
+    Gs::Vector2     outerRadius         = Gs::Vector2(Gs::Real(0.5));
 
     //! Tube height. By default 1.
-    Gs::Real        height          = Gs::Real(1);
+    Gs::Real        height              = Gs::Real(1);
 
     //! Segmentation around the (inner and outer) cylinder (x component), and height (y component). By default (20, 1).
-    Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
+    Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(20, 1);
 
-    //! Segmentation of the top- and bottom cover. By default 1.
-    unsigned int    coverSegments   = 1;
+    //! Segmentation of the top cover. If 0, no top cover is generated. By default 1.
+    unsigned int    topCoverSegments    = 1;
+
+    //! Segmentation of the top cover. If 0, no bottom cover is generated. By default 1.
+    unsigned int    bottomCoverSegments = 1;
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid       = false;
 };
 
 struct CapsuleDescriptor
@@ -185,7 +185,7 @@ TriangleMesh Cone(const ConeDescriptor& desc);
 
 TriangleMesh Cylinder(const CylinderDescriptor& desc);
 
-//TriangleMesh Tube(const TubeDescriptor& desc);
+TriangleMesh Pipe(const PipeDescriptor& desc);
 
 //TriangleMesh Capsule(const CapsuleDescriptor& desc);
 

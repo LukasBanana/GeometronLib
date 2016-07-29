@@ -21,11 +21,10 @@ TriangleMesh Cone(const ConeDescriptor& desc)
     
     const auto segsHorz = std::max(3u, desc.mantleSegments.x);
     const auto segsVert = std::max(1u, desc.mantleSegments.y);
-    const auto segsCov  = std::max(1u, desc.coverSegments);
+    const auto segsCov  = desc.coverSegments;
 
     const auto invHorz  = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
     const auto invVert  = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
-    const auto invCov   = Gs::Real(1) / static_cast<Gs::Real>(segsCov);
 
     const auto angleSteps = invHorz * pi_2;
 
@@ -84,8 +83,10 @@ TriangleMesh Cone(const ConeDescriptor& desc)
     angle = Gs::Real(0);
     VertexIndex coverIndexOffset = 0;
 
-    if (desc.cover)
+    if (segsCov > 0)
     {
+        const auto invCov = Gs::Real(1) / static_cast<Gs::Real>(segsCov);
+        
         /* Add centered bottom vertex */
         coverIndexOffset = mesh.AddVertex({ 0, -halfHeight, 0 }, { 0, -1, 0 }, { Gs::Real(0.5), Gs::Real(0.5) });
 
@@ -136,7 +137,7 @@ TriangleMesh Cone(const ConeDescriptor& desc)
         idxOffset += (1 + segsVert);
     }
 
-    if (desc.cover)
+    if (segsCov > 0)
     {
         /* Generate indices for the bottom */
         idxOffset = coverIndexOffset + 1;
