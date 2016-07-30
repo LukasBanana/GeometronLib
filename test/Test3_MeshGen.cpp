@@ -199,8 +199,13 @@ void initGL()
     glEnable(GL_CULL_FACE);
 
     glCullFace(GL_FRONT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glShadeModel(GL_SMOOTH);
+
+    #ifdef ENABLE_PRESENTATION
+    glClearColor(1, 1, 1, 1);
+    #else
+    glClearColor(0, 0, 0, 1);
+    #endif
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
