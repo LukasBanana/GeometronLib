@@ -92,6 +92,7 @@ void Model::writeObjFile(const std::string& filename)
     {
         f << "# Model generated with GeometronLib" << std::endl;
         f << "o Model" << std::endl;
+        f << "g Mesh" << std::endl;
 
         for (const auto& v : mesh.vertices)
             f << "v " << v.position.x << ' ' << v.position.y << ' ' << v.position.z << std::endl;
@@ -101,7 +102,9 @@ void Model::writeObjFile(const std::string& filename)
             f << "vn " << v.normal.x << ' ' << v.normal.y << ' ' << v.normal.z << std::endl;
 
         for (const auto& t : mesh.triangles)
-            f << "f " << t.a << ' ' << t.b << ' ' << t.c << std::endl;
+            f << "f " << t.a + 1 << ' ' << t.b + 1 << ' ' << t.c + 1 << std::endl;
+
+        f << std::endl;
     }
     else
         std::cerr << "failed to create file: \"" << filename << '\"' << std::endl;
