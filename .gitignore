@@ -2,3 +2,4 @@
 *.a
 *.o
 .DS_Store
+test/

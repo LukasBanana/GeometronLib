@@ -8,6 +8,7 @@
 #include "TestHelper.h"
 #include <memory>
 #include <limits>
+#include <fstream>
 
 
 // ----- MACROS -----
@@ -24,15 +25,9 @@ struct Model
     Gm::Transform3      transform;
     std::string         name;
 
-    void turn(Gs::Real pitch, Gs::Real yaw)
-    {
-        Gs::Matrix3 rotation;
-        rotation.LoadIdentity();
-        Gs::RotateFree(rotation, Gs::Vector3(1, 0, 0), pitch);
-        Gs::RotateFree(rotation, Gs::Vector3(0, 1, 0), yaw);
+    void turn(Gs::Real pitch, Gs::Real yaw);
 
-        transform.SetRotation(transform.GetRotation() * Gs::Quaternion(rotation));
-    }
+    void writeObjFile(const std::string& filename);
 };
 
 class Texture
@@ -79,6 +74,38 @@ std::unique_ptr<Texture>    texture;
 
 
 // ----- CLASSES -----
+
+void Model::turn(Gs::Real pitch, Gs::Real yaw)
+{
+    Gs::Matrix3 rotation;
+    rotation.LoadIdentity();
+    Gs::RotateFree(rotation, Gs::Vector3(1, 0, 0), pitch);
+    Gs::RotateFree(rotation, Gs::Vector3(0, 1, 0), yaw);
+
+    transform.SetRotation(transform.GetRotation() * Gs::Quaternion(rotation));
+}
+
+void Model::writeObjFile(const std::string& filename)
+{
+    std::ofstream f(filename);
+    if (f.good())
+    {
+        f << "# Model generated with GeometronLib" << std::endl;
+        f << "o Model" << std::endl;
+
+        for (const auto& v : mesh.vertices)
+            f << "v " << v.position.x << ' ' << v.position.y << ' ' << v.position.z << std::endl;
+        for (const auto& v : mesh.vertices)
+            f << "vt " << v.texCoord.x << ' ' << v.texCoord.y << std::endl;
+        for (const auto& v : mesh.vertices)
+            f << "vn " << v.normal.x << ' ' << v.normal.y << ' ' << v.normal.z << std::endl;
+
+        for (const auto& t : mesh.triangles)
+            f << "f " << t.a << ' ' << t.b << ' ' << t.c << std::endl;
+    }
+    else
+        std::cerr << "failed to create file: \"" << filename << '\"' << std::endl;
+}
 
 Texture::Texture()
 {
@@ -404,6 +431,9 @@ void initScene()
             it = models.erase(it);
             continue;
         }
+
+        // write model to file
+        it->writeObjFile("mesh/" + it->name + ".obj");
 
         ++it;
     }
