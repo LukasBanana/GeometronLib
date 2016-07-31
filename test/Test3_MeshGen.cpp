@@ -18,7 +18,7 @@
 // ----- MACROS -----
 
 // show models in pre-defined orientation
-//#define ENABLE_PRESENTATION
+#define ENABLE_PRESENTATION
 
 // write models to .obj files
 //#define WRITE_MODELS_TO_FILE
@@ -404,6 +404,25 @@ void addModelPipe()
     mdl->mesh = Gm::MeshGenerator::GeneratePipe(desc);
 }
 
+void addModelTorus()
+{
+    auto mdl = addModel("Torus");
+
+    Gm::MeshGenerator::TorusDescriptor desc;
+
+    #ifdef ENABLE_PRESENTATION
+    desc.segments           = { 100, 50 };
+    desc.alternateGrid      = true;
+    #else
+    //desc.ringRadius         = { 0.3f, 0.6f };
+    //desc.innerTubeRadius    = { 0.2f, 0.4f, 0.1f };
+    //desc.segments           = { 100, 50 };
+    desc.alternateGrid      = true;
+    #endif
+
+    mdl->mesh = Gm::MeshGenerator::GenerateTorus(desc);
+}
+
 void addModelBezierPatch()
 {
     auto mdl = addModel("BezierPatch");
@@ -548,6 +567,7 @@ void initScene()
     addModelCone();
     addModelCylinder();
     addModelPipe();
+    addModelTorus();
     //addModelBezierPatch();
     //addModelTeapot();
     //...

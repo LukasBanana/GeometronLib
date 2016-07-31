@@ -25,6 +25,7 @@ There is a generic mesh generator for the following 3D models:
 <img src="docu/images/mesh/cone.png" alt="Cone"/>
 <img src="docu/images/mesh/cylinder.png" alt="Cylinder"/>
 <img src="docu/images/mesh/pipe.png" alt="Pipe"/>
+<img src="docu/images/mesh/torus.png" alt="Torus"/>
 
 
 Example
