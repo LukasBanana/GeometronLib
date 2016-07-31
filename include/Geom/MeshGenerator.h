@@ -23,6 +23,16 @@ namespace MeshGenerator
 {
 
 
+/**
+\brief Vertex modifier function interface.
+\param[in] u Specifies the interpolation factor U. This will be in the range [0, 1].
+\param[in] v Specifies the interpolation factor V. This will be in the range [0, 1].
+\return Interpolation factor which should be in the range [0, 1].
+\remarks This can be used for a couple of mesh generators, to adjust the final vertex position.
+\see TorusKnotDescriptor
+*/
+using VertexModifier = std::function<Gs::Real(Gs::Real u, Gs::Real v)>;
+
 /* --- Descriptors --- */
 
 struct CuboidDescriptor
@@ -147,8 +157,8 @@ struct TorusDescriptor
     Gs::Vector3     tubeRadius      = Gs::Vector3(Gs::Real(0.25));
 
     /**
-    Segmentation in U (x component), and V (y component) direction.
-    Each component will be clamped to [3, +inf). By default (40, 20).
+    \brief Segmentation in U (x component), and V (y component) direction.
+    \remarks Each component will be clamped to [3, +inf). By default (40, 20).
     */
     Gs::Vector2ui   segments        = Gs::Vector2ui(40, 20);
 
@@ -156,22 +166,55 @@ struct TorusDescriptor
     bool            alternateGrid   = false;
 };
 
+struct TorusKnotDescriptor
+{
+    //! Radius of the torus ring in X, and Y direction. By default (0.25, 0.25, 0.25).
+    Gs::Vector3     ringRadius      = Gs::Vector3(Gs::Real(0.25));
+
+    //! Radius of the inner tube. By default 0.125.
+    Gs::Real        tubeRadius      = Gs::Real(0.125);
+
+    //! Inner radius within the torus knot curve. By default 2.
+    Gs::Real        innerRadius     = Gs::Real(2);
+
+    /**
+    \breif Number of loops within the torus knot. By default 2.
+    \remarks This must be coprime to 'turns', otherwise the mesh will not be a valid torus knot.
+    */
+    unsigned int    loops           = 2;
+
+    /**
+    \breif Number of turns within the torus knot. By default 7.
+    \remarks This must be coprime to 'loops', otherwise the mesh will not be a valid torus knot.
+    */
+    unsigned int    turns           = 3;
+
+    /**
+    \brief Segmentation in U (x component), and V (y component) direction.
+    \remarks Each component will be clamped to [3, +inf). By default (256, 16).
+    */
+    Gs::Vector2ui   segments        = Gs::Vector2ui(256, 16);
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid   = false;
+
+    //! Vertex modifier to adjust the tube radius during mesh generation.
+    VertexModifier  vertexModifier  = nullptr;
+};
+
 struct SpiralDescriptor
 {
     //! Radius of the torus ring in X, and Y direction. By default (0.5, 0.5).
-    Gs::Vector2     ringRadius      = Gs::Vector2(Gs::Real(0.5));
+    Gs::Vector2     ringRadius          = Gs::Vector2(Gs::Real(0.5));
 
     //! Radius of the inner tube in X, Y, and Z direction. By default (0.25, 0.25, 0.25).
-    Gs::Vector3     tubeRadius      = Gs::Vector3(Gs::Real(0.25));
+    Gs::Vector3     tubeRadius          = Gs::Vector3(Gs::Real(0.25));
 
-    //! The displacement for each (360 degree) twist. By default 1.
-    Gs::Real        twistDisplacement   = Gs::Real(1);
+    //! The displacement for each (360 degree) turn. By default 1.
+    Gs::Real        displacement        = Gs::Real(1);
 
-    /**
-    Count of twists (in percent, i.e. 1.0 is a single twist,
-    2.5 are two and a half twist). By default 1.
-    */
-    Gs::Real        twistCount          = Gs::Real(1);
+    //! Number of turns (in percent, i.e. 1.0 is a single twist, 2.5 are two and a half twist). By default 1.
+    Gs::Real        turns               = Gs::Real(1);
 
     /**
     Segmentation of the mantle in U (x component), and V (y component) direction for a single twist.
@@ -231,8 +274,8 @@ TriangleMesh GeneratePipe(const PipeDescriptor& desc);
 void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh);
 TriangleMesh GenerateTorus(const TorusDescriptor& desc);
 
-//void GenerateTorusKnot(const TorusDescriptor& desc, TriangleMesh& mesh);
-//TriangleMesh GenerateTorusKnot(const TorusDescriptor& desc);
+void GenerateTorusKnot(const TorusKnotDescriptor& desc, TriangleMesh& mesh);
+TriangleMesh GenerateTorusKnot(const TorusKnotDescriptor& desc);
 
 void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh);
 TriangleMesh GenerateSpiral(const SpiralDescriptor& desc);

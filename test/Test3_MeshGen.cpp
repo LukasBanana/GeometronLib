@@ -430,18 +430,18 @@ void addModelSpiral()
     Gm::MeshGenerator::SpiralDescriptor desc;
 
     #ifdef ENABLE_PRESENTATION
-    desc.ringRadius         = { 0.4f, 0.4f };
-    desc.tubeRadius         = { 0.1f, 0.1f, 0.1f };
-    desc.mantleSegments     = { 100, 50 };
-    desc.twistCount         = 2;
-    desc.twistDisplacement  = 0.5f;
-    desc.alternateGrid      = true;
+    desc.ringRadius     = { 0.4f, 0.4f };
+    desc.tubeRadius     = { 0.1f, 0.1f, 0.1f };
+    desc.mantleSegments = { 100, 50 };
+    desc.turns          = 2;
+    desc.displacement   = 0.5f;
+    desc.alternateGrid  = true;
     #else
     //desc.ringRadius             = { 0.6f, 0.3f };
     //desc.tubeRadius             = { 0.2f, 0.4f, 0.1f };
     desc.tubeRadius             = { 0.2f, 0.1f, 0.2f };
-    desc.twistCount             = 3;
-    desc.twistDisplacement      = 0.3;
+    desc.turns                  = 3;
+    desc.displacement           = 0.3;
     desc.bottomCoverSegments    = 5;
     desc.topCoverSegments       = 3;
     //desc.mantleSegments         = { 0, 0 };
@@ -449,6 +449,30 @@ void addModelSpiral()
     #endif
 
     mdl->mesh = Gm::MeshGenerator::GenerateSpiral(desc);
+}
+
+void addModelTorusKnot()
+{
+    auto mdl = addModel("TorusKnot");
+
+    Gm::MeshGenerator::TorusKnotDescriptor desc;
+
+    #ifdef ENABLE_PRESENTATION
+    desc.ringRadius     = { 0.2f, 0.2f, 0.2f };
+    desc.segments       = { 200, 50 };
+    desc.alternateGrid  = true;
+    #else
+    desc.ringRadius     = { 0.25f, 0.25f, 0.25f };
+    desc.tubeRadius     = 0.1f;
+    desc.loops          = 2;
+    desc.turns          = 3;
+    desc.innerRadius    = 1.5f;
+    //desc.segments       = { 200, 20 };
+    desc.alternateGrid  = true;
+    desc.vertexModifier = [](Gs::Real u, Gs::Real v) { return 0.6f + std::sin(u*Gs::pi*20)*0.4f; };
+    #endif
+
+    mdl->mesh = Gm::MeshGenerator::GenerateTorusKnot(desc);
 }
 
 void addModelBezierPatch()
@@ -597,6 +621,7 @@ void initScene()
     addModelPipe();
     addModelTorus();
     addModelSpiral();
+    addModelTorusKnot();
     //addModelBezierPatch();
     //addModelTeapot();
     //...

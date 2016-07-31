@@ -15,6 +15,16 @@ namespace MeshGenerator
 {
 
 
+bool TriangulationSwapNeeded(bool alternateGrid, unsigned int u, unsigned int v)
+{
+    return ( alternateGrid && !( ( u % 2 == 0 && v % 2 == 0 ) || ( u % 2 == 1 && v % 2 == 1 ) ) );
+}
+
+void AddTriangle(TriangleMesh& mesh, VertexIndex a, VertexIndex b, VertexIndex c, VertexIndex indexOffset)
+{
+    mesh.AddTriangle(indexOffset + a, indexOffset + b, indexOffset + c);
+}
+
 void AddTriangulatedQuad(
     TriangleMesh& mesh,
     bool alternateGrid,
@@ -23,12 +33,7 @@ void AddTriangulatedQuad(
     VertexIndex i2, VertexIndex i3,
     VertexIndex indexOffset)
 {
-    auto Triangulate = [&mesh, indexOffset](VertexIndex a, VertexIndex b, VertexIndex c)
-    {
-        mesh.AddTriangle(indexOffset + a, indexOffset + b, indexOffset + c);
-    };
-
-    if ( !alternateGrid || ( ( u % 2 == 0 && v % 2 == 0 ) || ( u % 2 == 1 && v % 2 == 1 ) ) )
+    if (!TriangulationSwapNeeded(alternateGrid, u, v))
     {
         /*
         1-----2
@@ -36,8 +41,8 @@ void AddTriangulatedQuad(
         | /   |
         0-----3
         */
-        Triangulate(i0, i1, i2);
-        Triangulate(i0, i2, i3);
+        AddTriangle(mesh, i0, i1, i2, indexOffset);
+        AddTriangle(mesh, i0, i2, i3, indexOffset);
     }
     else
     {
@@ -47,8 +52,8 @@ void AddTriangulatedQuad(
         |   \ |
         0-----3
         */
-        Triangulate(i0, i1, i3);
-        Triangulate(i1, i2, i3);
+        AddTriangle(mesh, i0, i1, i3, indexOffset);
+        AddTriangle(mesh, i1, i2, i3, indexOffset);
     }
 }
 

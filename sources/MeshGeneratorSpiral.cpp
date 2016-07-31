@@ -19,7 +19,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
 {
     const auto idxBaseOffset = mesh.vertices.size();
 
-    const auto twistCount = std::max(Gs::Real(0), desc.twistCount);
+    const auto turns = std::max(Gs::Real(0), desc.turns);
 
     const auto segsU = std::max(3u, desc.mantleSegments.x);
     const auto segsV = std::max(3u, desc.mantleSegments.y);
@@ -27,7 +27,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
     const auto invSegsU = Gs::Real(1) / static_cast<Gs::Real>(segsU);
     const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
 
-    const auto totalSegsU = static_cast<unsigned int>(twistCount * static_cast<Gs::Real>(segsU));
+    const auto totalSegsU = static_cast<unsigned int>(turns * static_cast<Gs::Real>(segsU));
 
     auto GetCoverCoordAndNormal = [&](Gs::Real theta, Gs::Real phi, Gs::Vector3& coord, Gs::Vector3& normal, bool center)
     {
@@ -35,7 +35,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
         auto c1 = std::cos(phi);
 
         coord.x = s1 * desc.ringRadius.x;
-        coord.y = (phi / pi_2) * desc.twistDisplacement - twistCount * desc.twistDisplacement * Gs::Real(0.5);
+        coord.y = ((phi / pi_2) - turns * Gs::Real(0.5)) * desc.displacement;
         coord.z = c1 * desc.ringRadius.y;
 
         if (!center)
@@ -81,7 +81,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
 
             /* Compute coordinate and normal */
             coord.x = s1 * desc.ringRadius.x + s1 * s0 * desc.tubeRadius.x;
-            coord.y = c0 * desc.tubeRadius.y + texCoord.x * desc.twistDisplacement - twistCount * desc.twistDisplacement * Gs::Real(0.5);
+            coord.y = c0 * desc.tubeRadius.y + (texCoord.x - turns * Gs::Real(0.5)) * desc.displacement;
             coord.z = c1 * desc.ringRadius.y + c1 * s0 * desc.tubeRadius.z;
 
             normal.x = s1 * s0 / desc.tubeRadius.x;
@@ -97,7 +97,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
 
     /* Generate bottom and top cover vertices */
     const unsigned int segsCov[2]   = { desc.bottomCoverSegments, desc.topCoverSegments };
-    const Gs::Real coverPhi[2]      = { 0, twistCount * pi_2 };
+    const Gs::Real coverPhi[2]      = { 0, turns * pi_2 };
     const Gs::Real coverSide[2]     = { -1, 1 };
 
     VertexIndex coverIndexOffset[2] = { 0 };

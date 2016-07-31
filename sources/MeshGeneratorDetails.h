@@ -28,6 +28,10 @@ static const auto pi_0_5    = pi*Gs::Real(0.5);
 using VertexIndex = TriangleMesh::VertexIndex;
 
 
+bool TriangulationSwapNeeded(bool alternateGrid, unsigned int u, unsigned int v);
+
+void AddTriangle(TriangleMesh& mesh, VertexIndex a, VertexIndex b, VertexIndex c, VertexIndex indexOffset = 0);
+
 void AddTriangulatedQuad(
     TriangleMesh& mesh,
     bool alternateGrid,
