@@ -129,6 +129,9 @@ class TriangleMesh
         */
         void Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMesh& back) const;
 
+        //! Appends the specified triangle mesh to this mesh.
+        void Append(const TriangleMesh& other);
+
         std::vector<Vertex>     vertices;   //!< Vertex array list.
         std::vector<Triangle>   triangles;  //!< Triangle array list. Make sure that all triangle indices are less than the number of vertices of this mesh!
 

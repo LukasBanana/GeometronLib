@@ -9,6 +9,7 @@
 #include <Geom/TriangleCollision.h>
 #include <Gauss/TransformVector.h>
 #include <Gauss/Equals.h>
+#include <algorithm>
 
 #ifdef GM_ENABLE_MULTI_THREADING
 #   include <thread>
@@ -422,8 +423,27 @@ void TriangleMesh::Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMes
         /* Track triangle index */
         ++triIdx;
     }
+}
 
+void TriangleMesh::Append(const TriangleMesh& other)
+{
+    /* Append all vertices */
+    auto vertexOffset = vertices.size();
+    vertices.resize(vertexOffset + other.vertices.size());
+    std::copy(other.vertices.begin(), other.vertices.end(), vertices.begin() + vertexOffset);
 
+    /* Append all triangles */
+    auto triangleOffset = triangles.size();
+    triangles.resize(triangleOffset + other.triangles.size());
+    std::copy(other.triangles.begin(), other.triangles.end(), triangles.begin() + triangleOffset);
+
+    for (auto i = triangleOffset; i < triangles.size(); ++i)
+    {
+        auto& tri = triangles[i];
+        tri.a += vertexOffset;
+        tri.b += vertexOffset;
+        tri.c += vertexOffset;
+    }
 }
 
 
