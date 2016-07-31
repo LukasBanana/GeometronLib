@@ -10,6 +10,7 @@
 
 
 #include "TriangleMesh.h"
+#include "BezierPatch.h"
 
 #include <functional>
 
@@ -174,6 +175,24 @@ struct SpiralDescriptor
     Gs::Vector2ui   segments            = Gs::Vector2ui(20, 10);
 };
 
+struct BezierPatchDescriptor
+{
+    //! Bezier patch control points.
+    BezierPatch3    bezierPatch;
+
+    /**
+    Segmentation in U (x component), and V (y component) direction.
+    Each component will be clamped to [1, +inf). By default (20, 20).
+    */
+    Gs::Vector2ui   segments        = Gs::Vector2ui(20, 20);
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid   = false;
+
+    //! Specifies whether the faces point to the back or to the front (default).
+    bool            backFacing      = false;
+};
+
 
 /* --- Global Functions --- */
 
@@ -192,6 +211,9 @@ TriangleMesh Pipe(const PipeDescriptor& desc);
 //TriangleMesh Torus(const TorusDescriptor& desc);
 
 //TriangleMesh Spiral(const SpiralDescriptor& desc);
+
+TriangleMesh GenerateBezierPatch(const BezierPatchDescriptor& desc);
+void AppendBezierPatch(TriangleMesh& mesh, const BezierPatchDescriptor& desc);
 
 
 } // /namespace MeshGenerator

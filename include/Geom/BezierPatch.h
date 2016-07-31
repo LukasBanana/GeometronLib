@@ -54,7 +54,9 @@ class BezierPatch
                 for (unsigned int j = 0; j <= order_; ++j)
                 {
                     /* Accumulate bernstein-bezier transformed control points */
-                    result += GetControlPoint(i, j) * BernsteinPolynomial(u, i, order_) * BernsteinPolynomial(v, j, order_);
+                    auto point = GetControlPoint(i, j);
+                    point *= (BernsteinPolynomial(u, i, order_) * BernsteinPolynomial(v, j, order_));
+                    result += point;
                 }
             }
 
@@ -118,6 +120,20 @@ class BezierPatch
         std::vector<P>  controlPoints_;
 
 };
+
+
+/* --- Type Alias --- */
+
+template <typename T> using BezierPatch2T = BezierPatch<Gs::Vector2T<T>, T>;
+template <typename T> using BezierPatch3T = BezierPatch<Gs::Vector3T<T>, T>;
+
+using BezierPatch2  = BezierPatch2T<Gs::Real>;
+using BezierPatch2f = BezierPatch2T<float>;
+using BezierPatch2d = BezierPatch2T<double>;
+
+using BezierPatch3  = BezierPatch3T<Gs::Real>;
+using BezierPatch3f = BezierPatch3T<float>;
+using BezierPatch3d = BezierPatch3T<double>;
 
 
 } // /namespace Gm

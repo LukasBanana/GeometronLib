@@ -21,6 +21,29 @@ namespace Gm
 {
 
 
+TriangleMesh::Vertex::Vertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord) :
+    position( position ),
+    normal  ( normal   ),
+    texCoord( texCoord )
+{
+}
+
+TriangleMesh::Vertex& TriangleMesh::Vertex::operator += (const Vertex& rhs)
+{
+    position    += rhs.position;
+    normal      += rhs.normal;
+    texCoord    += rhs.texCoord;
+    return *this;
+}
+
+TriangleMesh::Vertex& TriangleMesh::Vertex::operator *= (Gs::Real rhs)
+{
+    position    *= rhs;
+    normal      *= rhs;
+    texCoord    *= rhs;
+    return *this;
+}
+
 TriangleMesh::TriangleMesh(TriangleMesh&& rhs) :
     vertices    ( std::move(rhs.vertices)  ),
     triangles   ( std::move(rhs.triangles) )

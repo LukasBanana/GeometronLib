@@ -40,6 +40,13 @@ class TriangleMesh
         //! Base vertex structure. Contains the members: position, normal, and texCoord.
         struct Vertex
         {
+            Vertex() = default;
+            Vertex(const Vertex&) = default;
+            Vertex(const Gs::Vector3& position, const Gs::Vector3& normal, const Gs::Vector2& texCoord);
+
+            Vertex& operator += (const Vertex& rhs);
+            Vertex& operator *= (Gs::Real rhs);
+
             Gs::Vector3 position;
             Gs::Vector3 normal;
             Gs::Vector2 texCoord;

@@ -24,8 +24,8 @@ TriangleMesh Ellipsoid(const EllipsoidDescriptor& desc)
     const auto segsU = std::max(3u, desc.segments.x);
     const auto segsV = std::max(2u, desc.segments.y);
 
-    const auto stepsU = Gs::Real(1) / static_cast<float>(segsU);
-    const auto stepsV = Gs::Real(1) / static_cast<float>(segsV);
+    const auto invSegsU = Gs::Real(1) / static_cast<float>(segsU);
+    const auto invSegsV = Gs::Real(1) / static_cast<float>(segsV);
 
     /* Generate vertices */
     Gs::Spherical point(1, 0, 0);
@@ -34,13 +34,13 @@ TriangleMesh Ellipsoid(const EllipsoidDescriptor& desc)
     for (unsigned int v = 0; v <= segsV; ++v)
     {
         /* Compute theta of spherical coordinate */
-        texCoord.y = static_cast<Gs::Real>(v) * stepsV;
+        texCoord.y = static_cast<Gs::Real>(v) * invSegsV;
         point.theta = texCoord.y * desc.uvScale.y * pi;
 
         for (unsigned int u = 0; u <= segsU; ++u)
         {
             /* Compute phi of spherical coordinate */
-            texCoord.x = static_cast<Gs::Real>(u) * stepsU;
+            texCoord.x = static_cast<Gs::Real>(u) * invSegsU;
             point.phi = texCoord.x * desc.uvScale.x * pi_2;
 
             /* Convert spherical coordinate into cartesian coordinate and set normal by coordinate */
