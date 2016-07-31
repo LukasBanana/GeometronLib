@@ -239,7 +239,7 @@ void initGL()
     glShadeModel(GL_SMOOTH);
 
     #ifdef ENABLE_PRESENTATION
-    glClearColor(1, 1, 1, 1);
+    glClearColor(0, 1, 0, 1);
     #else
     glClearColor(0, 0, 0, 1);
     #endif
@@ -411,16 +411,44 @@ void addModelTorus()
     Gm::MeshGenerator::TorusDescriptor desc;
 
     #ifdef ENABLE_PRESENTATION
-    desc.segments           = { 100, 50 };
-    desc.alternateGrid      = true;
+    desc.segments       = { 100, 50 };
+    desc.alternateGrid  = true;
     #else
-    //desc.ringRadius         = { 0.3f, 0.6f };
-    //desc.innerTubeRadius    = { 0.2f, 0.4f, 0.1f };
-    //desc.segments           = { 100, 50 };
-    desc.alternateGrid      = true;
+    desc.ringRadius     = { 0.3f, 0.6f };
+    desc.tubeRadius     = { 0.2f, 0.4f, 0.1f };
+    //desc.segments       = { 100, 50 };
+    desc.alternateGrid  = true;
     #endif
 
     mdl->mesh = Gm::MeshGenerator::GenerateTorus(desc);
+}
+
+void addModelSpiral()
+{
+    auto mdl = addModel("Spiral");
+
+    Gm::MeshGenerator::SpiralDescriptor desc;
+
+    #ifdef ENABLE_PRESENTATION
+    desc.ringRadius         = { 0.4f, 0.4f };
+    desc.tubeRadius         = { 0.1f, 0.1f, 0.1f };
+    desc.mantleSegments     = { 100, 50 };
+    desc.twistCount         = 2;
+    desc.twistDisplacement  = 0.5f;
+    desc.alternateGrid      = true;
+    #else
+    //desc.ringRadius             = { 0.6f, 0.3f };
+    //desc.tubeRadius             = { 0.2f, 0.4f, 0.1f };
+    desc.tubeRadius             = { 0.2f, 0.1f, 0.2f };
+    desc.twistCount             = 3;
+    desc.twistDisplacement      = 0.3;
+    desc.bottomCoverSegments    = 5;
+    desc.topCoverSegments       = 3;
+    //desc.mantleSegments         = { 0, 0 };
+    desc.alternateGrid          = true;
+    #endif
+
+    mdl->mesh = Gm::MeshGenerator::GenerateSpiral(desc);
 }
 
 void addModelBezierPatch()
@@ -568,6 +596,7 @@ void initScene()
     addModelCylinder();
     addModelPipe();
     addModelTorus();
+    addModelSpiral();
     //addModelBezierPatch();
     //addModelTeapot();
     //...
@@ -880,40 +909,49 @@ void motionCallback(int x, int y)
 
 int main(int argc, char* argv[])
 {
-    std::cout << "GeometronLib: Test3 - MeshGenerators" << std::endl;
-    std::cout << "------------------------------------" << std::endl;
-    std::cout << "Click any mouse button and move the mouse to rotate the current 3D model" << std::endl;
-    std::cout << "Press Tab to switch between solid and wireframe mode" << std::endl;
-    std::cout << "Press Enter to switch between perspective and orthogonal projection" << std::endl;
-    std::cout << "Press Space to show/hide bounding box" << std::endl;
-    std::cout << "Press F1 to show/hide face normals" << std::endl;
-    std::cout << "Press F2 to show/hide vertex normals" << std::endl;
-    std::cout << "Press F3 to show/hide texture" << std::endl;
-    std::cout << std::endl;
+    try
+    {
+        std::cout << "GeometronLib: Test3 - MeshGenerators" << std::endl;
+        std::cout << "------------------------------------" << std::endl;
+        std::cout << "Click any mouse button and move the mouse to rotate the current 3D model" << std::endl;
+        std::cout << "Press Tab to switch between solid and wireframe mode" << std::endl;
+        std::cout << "Press Enter to switch between perspective and orthogonal projection" << std::endl;
+        std::cout << "Press Space to show/hide bounding box" << std::endl;
+        std::cout << "Press F1 to show/hide face normals" << std::endl;
+        std::cout << "Press F2 to show/hide vertex normals" << std::endl;
+        std::cout << "Press F3 to show/hide texture" << std::endl;
+        std::cout << std::endl;
 
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+        glutInit(&argc, argv);
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 
-    auto sx = glutGet(GLUT_SCREEN_WIDTH);
-    auto sy = glutGet(GLUT_SCREEN_HEIGHT);
+        auto sx = glutGet(GLUT_SCREEN_WIDTH);
+        auto sy = glutGet(GLUT_SCREEN_HEIGHT);
 
-    glutInitWindowSize(resolution.x, resolution.y);
-    glutInitWindowPosition(sx/2 - resolution.x/2, sy/2 - resolution.y/2);
-    winID = glutCreateWindow("GeometronLib Test 2 (OpenGL, GLUT)");
+        glutInitWindowSize(resolution.x, resolution.y);
+        glutInitWindowPosition(sx/2 - resolution.x/2, sy/2 - resolution.y/2);
+        winID = glutCreateWindow("GeometronLib Test 2 (OpenGL, GLUT)");
 
-    glutDisplayFunc(displayCallback);
-    glutReshapeFunc(reshapeCallback);
-    glutIdleFunc(idleCallback);
-    glutSpecialFunc(specialCallback);
-    glutKeyboardFunc(keyboardCallback);
-    glutMotionFunc(motionCallback);
-    glutPassiveMotionFunc(storePrevMousePos);
+        glutDisplayFunc(displayCallback);
+        glutReshapeFunc(reshapeCallback);
+        glutIdleFunc(idleCallback);
+        glutSpecialFunc(specialCallback);
+        glutKeyboardFunc(keyboardCallback);
+        glutMotionFunc(motionCallback);
+        glutPassiveMotionFunc(storePrevMousePos);
 
-    initGL();
-    initScene();
+        initGL();
+        initScene();
 
-    glutMainLoop();
-
+        glutMainLoop();
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+        #ifdef _WIN32
+        system("pause");
+        #endif
+    }
     return 0;
 }
 

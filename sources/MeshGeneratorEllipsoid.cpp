@@ -23,8 +23,8 @@ void GenerateEllipsoid(const EllipsoidDescriptor& desc, TriangleMesh& mesh)
     const auto segsU = std::max(3u, desc.segments.x);
     const auto segsV = std::max(2u, desc.segments.y);
 
-    const auto invSegsU = Gs::Real(1) / static_cast<float>(segsU);
-    const auto invSegsV = Gs::Real(1) / static_cast<float>(segsV);
+    const auto invSegsU = Gs::Real(1) / static_cast<Gs::Real>(segsU);
+    const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
 
     /* Generate vertices */
     Gs::Spherical point(1, 0, 0);

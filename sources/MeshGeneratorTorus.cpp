@@ -22,8 +22,8 @@ void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh)
     const auto segsU = std::max(3u, desc.segments.x);
     const auto segsV = std::max(3u, desc.segments.y);
 
-    const auto invSegsU = Gs::Real(1) / static_cast<float>(segsU);
-    const auto invSegsV = Gs::Real(1) / static_cast<float>(segsV);
+    const auto invSegsU = Gs::Real(1) / static_cast<Gs::Real>(segsU);
+    const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
 
     /* Generate vertices */
     Gs::Vector3 coord, normal;
@@ -38,7 +38,7 @@ void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh)
         auto s0 = std::sin(theta);
         auto c0 = std::cos(theta);
 
-        coord.y = c0 * desc.innerTubeRadius.y;
+        coord.y = c0 * desc.tubeRadius.y;
 
         for (unsigned int u = 0; u <= segsU; ++u)
         {
@@ -50,15 +50,16 @@ void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh)
             auto c1 = std::cos(phi);
 
             /* Compute coordinate and normal */
-            coord.x = s1 * desc.ringRadius.x + s1 * s0 * desc.innerTubeRadius.x;
-            coord.z = c1 * desc.ringRadius.y + c1 * s0 * desc.innerTubeRadius.z;
+            coord.x = s1 * desc.ringRadius.x + s1 * s0 * desc.tubeRadius.x;
+            coord.z = c1 * desc.ringRadius.y + c1 * s0 * desc.tubeRadius.z;
 
-            normal.x = s1 * s0 / desc.innerTubeRadius.x;
-            normal.y =      c0 / desc.innerTubeRadius.y;
-            normal.z = c1 * s0 / desc.innerTubeRadius.z;
+            normal.x = s1 * s0 / desc.tubeRadius.x;
+            normal.y =      c0 / desc.tubeRadius.y;
+            normal.z = c1 * s0 / desc.tubeRadius.z;
             normal.Normalize();
 
             /* Add new vertex */
+            texCoord.x = -texCoord.x;
             mesh.AddVertex(coord, normal, texCoord);
         }
     }

@@ -143,8 +143,8 @@ struct TorusDescriptor
     //! Radius of the torus ring in X, and Y direction. By default (0.5, 0.5).
     Gs::Vector2     ringRadius      = Gs::Vector2(Gs::Real(0.5));
 
-    //! Radius of the inner tube in U (x component), and V (y component) direction. By default (0.25, 0.25).
-    Gs::Vector3     innerTubeRadius = Gs::Vector3(Gs::Real(0.25));
+    //! Radius of the inner tube in X, Y, and Z direction. By default (0.25, 0.25, 0.25).
+    Gs::Vector3     tubeRadius      = Gs::Vector3(Gs::Real(0.25));
 
     /**
     Segmentation in U (x component), and V (y component) direction.
@@ -156,11 +156,13 @@ struct TorusDescriptor
     bool            alternateGrid   = false;
 };
 
-#if 0
 struct SpiralDescriptor
 {
-    //! Radius of the tube in U (x component), and V (y component) direction. By default (0.25, 0.25).
-    Gs::Vector2     tubeRadius          = Gs::Vector2(Gs::Real(0.25));
+    //! Radius of the torus ring in X, and Y direction. By default (0.5, 0.5).
+    Gs::Vector2     ringRadius      = Gs::Vector2(Gs::Real(0.5));
+
+    //! Radius of the inner tube in X, Y, and Z direction. By default (0.25, 0.25, 0.25).
+    Gs::Vector3     tubeRadius      = Gs::Vector3(Gs::Real(0.25));
 
     //! The displacement for each (360 degree) twist. By default 1.
     Gs::Real        twistDisplacement   = Gs::Real(1);
@@ -172,15 +174,20 @@ struct SpiralDescriptor
     Gs::Real        twistCount          = Gs::Real(1);
 
     /**
-    Segmentation in U (x component), and V (y component) direction.
-    Each component will be clamped to [3, +inf). By default (20, 10).
+    Segmentation of the mantle in U (x component), and V (y component) direction for a single twist.
+    Each component will be clamped to [3, +inf). By default (40, 20).
     */
-    Gs::Vector2ui   segments            = Gs::Vector2ui(20, 10);
+    Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(40, 20);
+
+    //! Segmentation of the top cover. If 0, no top cover is generated. By default 1.
+    unsigned int    topCoverSegments    = 1;
+
+    //! Segmentation of the top cover. If 0, no bottom cover is generated. By default 1.
+    unsigned int    bottomCoverSegments = 1;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid       = false;
 };
-#endif
 
 struct BezierPatchDescriptor
 {
@@ -227,8 +234,8 @@ TriangleMesh GenerateTorus(const TorusDescriptor& desc);
 //void GenerateTorusKnot(const TorusDescriptor& desc, TriangleMesh& mesh);
 //TriangleMesh GenerateTorusKnot(const TorusDescriptor& desc);
 
-//void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh);
-//TriangleMesh GenerateSpiral(const SpiralDescriptor& desc);
+void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh);
+TriangleMesh GenerateSpiral(const SpiralDescriptor& desc);
 
 void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh);
 TriangleMesh GenerateBezierPatch(const BezierPatchDescriptor& desc);
