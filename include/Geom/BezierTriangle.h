@@ -21,6 +21,7 @@ namespace Gm
 /**
 \brief Curved triangle patch in BB-Form (Bernstein Bezier).
 \tparam P Specifies the type of the control points.
+\todo This is incomplete!!!
 */
 template <typename P, typename T>
 class BezierTriangle

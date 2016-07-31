@@ -15,10 +15,10 @@ namespace MeshGenerator
 {
 
 
-TriangleMesh GenerateCylinder(const CylinderDescriptor& desc)
+void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
 {
-    TriangleMesh mesh;
-    
+    const auto idxBaseOffset = mesh.vertices.size();
+
     const auto segsHorz = std::max(3u, desc.mantleSegments.x);
     const auto segsVert = std::max(1u, desc.mantleSegments.y);
 
@@ -118,18 +118,18 @@ TriangleMesh GenerateCylinder(const CylinderDescriptor& desc)
     }
 
     /* Generate indices for the mantle */
-    VertexIndex idxOffset = 0;
+    auto idxOffset = idxBaseOffset;
 
     for (unsigned int u = 0; u < segsHorz; ++u)
     {
         for (unsigned int v = 0; v < segsVert; ++v)
         {
-            auto i0 = idxOffset + v + 1 + segsVert;
-            auto i1 = idxOffset + v;
-            auto i2 = idxOffset + v + 1;
-            auto i3 = idxOffset + v + 2 + segsVert;
+            auto i0 = v + 1 + segsVert;
+            auto i1 = v;
+            auto i2 = v + 1;
+            auto i3 = v + 2 + segsVert;
 
-            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
+            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3, idxOffset);
         }
 
         idxOffset += (1 + segsVert);
@@ -152,21 +152,26 @@ TriangleMesh GenerateCylinder(const CylinderDescriptor& desc)
 
             for (unsigned int v = 1; v < segsCov[i]; ++v)
             {
-                auto i1 = idxOffset + v - 1 + segsCov[i];
-                auto i0 = idxOffset + v - 1;
-                auto i3 = idxOffset + v;
-                auto i2 = idxOffset + v + segsCov[i];
+                auto i1 = v - 1 + segsCov[i];
+                auto i0 = v - 1;
+                auto i3 = v;
+                auto i2 = v + segsCov[i];
 
                 if (i == 0)
-                    AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
+                    AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3, idxOffset);
                 else
-                    AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i1, i0, i3, i2);
+                    AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i1, i0, i3, i2, idxOffset);
             }
 
             idxOffset += segsCov[i];
         }
     }
+}
 
+TriangleMesh GenerateCylinder(const CylinderDescriptor& desc)
+{
+    TriangleMesh mesh;
+    GenerateCylinder(desc, mesh);
     return mesh;
 }
 

@@ -15,10 +15,10 @@ namespace MeshGenerator
 {
 
 
-TriangleMesh GenerateCone(const ConeDescriptor& desc)
+void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
 {
-    TriangleMesh mesh;
-    
+    const auto idxBaseOffset = mesh.vertices.size();
+
     const auto segsHorz = std::max(3u, desc.mantleSegments.x);
     const auto segsVert = std::max(1u, desc.mantleSegments.y);
     const auto segsCov  = desc.coverSegments;
@@ -118,7 +118,7 @@ TriangleMesh GenerateCone(const ConeDescriptor& desc)
     }
 
     /* Generate indices for the mantle */
-    VertexIndex idxOffset = 0;
+    auto idxOffset = idxBaseOffset;
 
     for (unsigned int u = 0; u < segsHorz; ++u)
     {
@@ -126,12 +126,12 @@ TriangleMesh GenerateCone(const ConeDescriptor& desc)
         
         for (unsigned int v = 1; v < segsVert; ++v)
         {
-            auto i0 = idxOffset + v + segsVert;
-            auto i1 = idxOffset + v - 1;
-            auto i2 = idxOffset + v;
-            auto i3 = idxOffset + v + 1 + segsVert;
+            auto i0 = v + segsVert;
+            auto i1 = v - 1;
+            auto i2 = v;
+            auto i3 = v + 1 + segsVert;
 
-            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
+            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3, idxOffset);
         }
 
         idxOffset += (1 + segsVert);
@@ -148,18 +148,23 @@ TriangleMesh GenerateCone(const ConeDescriptor& desc)
 
             for (unsigned int v = 1; v < segsCov; ++v)
             {
-                auto i1 = idxOffset + v - 1 + segsCov;
-                auto i0 = idxOffset + v - 1;
-                auto i3 = idxOffset + v;
-                auto i2 = idxOffset + v + segsCov;
+                auto i1 = v - 1 + segsCov;
+                auto i0 = v - 1;
+                auto i3 = v;
+                auto i2 = v + segsCov;
 
-                AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
+                AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3, idxOffset);
             }
 
             idxOffset += segsCov;
         }
     }
+}
 
+TriangleMesh GenerateCone(const ConeDescriptor& desc)
+{
+    TriangleMesh mesh;
+    GenerateCone(desc, mesh);
     return mesh;
 }
 

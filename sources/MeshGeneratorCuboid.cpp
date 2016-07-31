@@ -71,10 +71,8 @@ static void BuildFace(
     }
 };
 
-TriangleMesh GenerateCuboid(const CuboidDescriptor& desc)
+void GenerateCuboid(const CuboidDescriptor& desc, TriangleMesh& mesh)
 {
-    TriangleMesh mesh;
-    
     auto segsX = std::max(1u, desc.segments.x);
     auto segsY = std::max(1u, desc.segments.y);
     auto segsZ = std::max(1u, desc.segments.z);
@@ -115,7 +113,12 @@ TriangleMesh GenerateCuboid(const CuboidDescriptor& desc)
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(-pi_0_5, 0, 0)),
         desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ, desc.uvScale.x, desc.uvScale.z, desc.alternateGrid
     );
+}
 
+TriangleMesh GenerateCuboid(const CuboidDescriptor& desc)
+{
+    TriangleMesh mesh;
+    GenerateCuboid(desc, mesh);
     return mesh;
 }
 

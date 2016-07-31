@@ -517,7 +517,7 @@ void addModelTeapot()
                 desc.bezierPatch.SetControlPoint(j % 4, j / 4, point);
             }
 
-            Gm::MeshGenerator::AppendBezierPatch(mdl->mesh, desc);
+            Gm::MeshGenerator::GenerateBezierPatch(desc, mdl->mesh);
         }
     }
 
@@ -550,8 +550,8 @@ void initScene()
     addModelCone();
     addModelCylinder();
     addModelPipe();
-    addModelBezierPatch();
-    addModelTeapot();
+    //addModelBezierPatch();
+    //addModelTeapot();
     //...
 
     for (auto it = models.begin(); it != models.end();)

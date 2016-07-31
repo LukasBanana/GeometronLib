@@ -15,7 +15,7 @@ namespace MeshGenerator
 {
 
 
-void AppendBezierPatch(TriangleMesh& mesh, const BezierPatchDescriptor& desc)
+void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh)
 {
     auto idxOffset = mesh.vertices.size();
 
@@ -86,7 +86,7 @@ void AppendBezierPatch(TriangleMesh& mesh, const BezierPatchDescriptor& desc)
 TriangleMesh GenerateBezierPatch(const BezierPatchDescriptor& desc)
 {
     TriangleMesh mesh;
-    AppendBezierPatch(mesh, desc);
+    GenerateBezierPatch(desc, mesh);
     return mesh;
 }
 

@@ -17,10 +17,10 @@ namespace MeshGenerator
 {
 
 
-TriangleMesh GenerateEllipsoid(const EllipsoidDescriptor& desc)
+void GenerateEllipsoid(const EllipsoidDescriptor& desc, TriangleMesh& mesh)
 {
-    TriangleMesh mesh;
-    
+    const auto idxBaseOffset = mesh.vertices.size();
+
     const auto segsU = std::max(3u, desc.segments.x);
     const auto segsV = std::max(2u, desc.segments.y);
 
@@ -65,10 +65,15 @@ TriangleMesh GenerateEllipsoid(const EllipsoidDescriptor& desc)
             auto i3 = (v + 1)*(segsU + 1) + u;
 
             /* Add new indices */
-            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3);
+            AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3, idxBaseOffset);
         }
     }
+}
 
+TriangleMesh GenerateEllipsoid(const EllipsoidDescriptor& desc)
+{
+    TriangleMesh mesh;
+    GenerateEllipsoid(desc, mesh);
     return mesh;
 }
 
