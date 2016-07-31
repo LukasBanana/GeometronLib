@@ -18,7 +18,7 @@
 // ----- MACROS -----
 
 // show models in pre-defined orientation
-#define ENABLE_PRESENTATION
+//#define ENABLE_PRESENTATION
 
 // write models to .obj files
 //#define WRITE_MODELS_TO_FILE
@@ -468,8 +468,9 @@ void addModelTorusKnot()
     desc.turns          = 3;
     desc.innerRadius    = 1.5f;
     //desc.segments       = { 200, 20 };
+    desc.segments       = { 20, 5 };
     desc.alternateGrid  = true;
-    desc.vertexModifier = [](Gs::Real u, Gs::Real v) { return 0.6f + std::sin(u*Gs::pi*20)*0.4f; };
+    //desc.vertexModifier = [](Gs::Real u, Gs::Real v) { return 0.6f + std::sin(u*Gs::pi*20)*0.4f; };
     #endif
 
     mdl->mesh = Gm::MeshGenerator::GenerateTorusKnot(desc);
