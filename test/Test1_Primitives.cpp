@@ -88,7 +88,7 @@ static void meshTest1()
         cuboidDesc.segments         = { 4, 2, 10 };
         cuboidDesc.alternateGrid    = true;
     }
-    auto mesh = MeshGenerator::Cuboid(cuboidDesc);
+    auto mesh = MeshGenerator::GenerateCuboid(cuboidDesc);
     
     //auto edges = mesh.Edges();
 

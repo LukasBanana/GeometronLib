@@ -15,7 +15,7 @@ namespace MeshGenerator
 {
 
 
-TriangleMesh Cone(const ConeDescriptor& desc)
+TriangleMesh GenerateCone(const ConeDescriptor& desc)
 {
     TriangleMesh mesh;
     

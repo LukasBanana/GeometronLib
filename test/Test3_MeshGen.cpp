@@ -321,7 +321,7 @@ void addModelCuboid()
     desc.alternateGrid  = true;
     #endif
 
-    mdl->mesh = Gm::MeshGenerator::Cuboid(desc);
+    mdl->mesh = Gm::MeshGenerator::GenerateCuboid(desc);
 }
 
 void addModelEllipsoid()
@@ -340,7 +340,7 @@ void addModelEllipsoid()
     desc.alternateGrid  = true;
     #endif
 
-    mdl->mesh = Gm::MeshGenerator::Ellipsoid(desc);
+    mdl->mesh = Gm::MeshGenerator::GenerateEllipsoid(desc);
 }
 
 void addModelCone()
@@ -360,7 +360,7 @@ void addModelCone()
     desc.alternateGrid  = true;
     #endif
 
-    mdl->mesh = Gm::MeshGenerator::Cone(desc);
+    mdl->mesh = Gm::MeshGenerator::GenerateCone(desc);
 }
 
 void addModelCylinder()
@@ -381,7 +381,7 @@ void addModelCylinder()
     desc.alternateGrid          = true;
     #endif
 
-    mdl->mesh = Gm::MeshGenerator::Cylinder(desc);
+    mdl->mesh = Gm::MeshGenerator::GenerateCylinder(desc);
 }
 
 void addModelPipe()
@@ -403,7 +403,7 @@ void addModelPipe()
     desc.alternateGrid          = true;
     #endif
 
-    mdl->mesh = Gm::MeshGenerator::Pipe(desc);
+    mdl->mesh = Gm::MeshGenerator::GeneratePipe(desc);
 }
 
 void addModelBezierPatch()

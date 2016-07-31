@@ -71,7 +71,7 @@ static void BuildFace(
     }
 };
 
-TriangleMesh Cuboid(const CuboidDescriptor& desc)
+TriangleMesh GenerateCuboid(const CuboidDescriptor& desc)
 {
     TriangleMesh mesh;
     

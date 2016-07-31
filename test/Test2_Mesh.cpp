@@ -89,7 +89,7 @@ Model* createCuboidModel(const Gm::MeshGenerator::CuboidDescriptor& desc)
     models.resize(models.size() + 1);
     auto mdl = &(models.back());
 
-    mdl->mesh = Gm::MeshGenerator::Cuboid(desc);
+    mdl->mesh = Gm::MeshGenerator::GenerateCuboid(desc);
 
     return mdl;
 }

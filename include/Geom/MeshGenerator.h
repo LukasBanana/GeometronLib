@@ -196,21 +196,21 @@ struct BezierPatchDescriptor
 
 /* --- Global Functions --- */
 
-TriangleMesh Cuboid(const CuboidDescriptor& desc);
+TriangleMesh GenerateCuboid(const CuboidDescriptor& desc);
 
-TriangleMesh Ellipsoid(const EllipsoidDescriptor& desc);
+TriangleMesh GenerateEllipsoid(const EllipsoidDescriptor& desc);
 
-TriangleMesh Cone(const ConeDescriptor& desc);
+TriangleMesh GenerateCone(const ConeDescriptor& desc);
 
-TriangleMesh Cylinder(const CylinderDescriptor& desc);
+TriangleMesh GenerateCylinder(const CylinderDescriptor& desc);
 
-TriangleMesh Pipe(const PipeDescriptor& desc);
+TriangleMesh GeneratePipe(const PipeDescriptor& desc);
 
-//TriangleMesh Capsule(const CapsuleDescriptor& desc);
+//TriangleMesh GenerateCapsule(const CapsuleDescriptor& desc);
 
-//TriangleMesh Torus(const TorusDescriptor& desc);
+//TriangleMesh GenerateTorus(const TorusDescriptor& desc);
 
-//TriangleMesh Spiral(const SpiralDescriptor& desc);
+//TriangleMesh GenerateSpiral(const SpiralDescriptor& desc);
 
 TriangleMesh GenerateBezierPatch(const BezierPatchDescriptor& desc);
 void AppendBezierPatch(TriangleMesh& mesh, const BezierPatchDescriptor& desc);

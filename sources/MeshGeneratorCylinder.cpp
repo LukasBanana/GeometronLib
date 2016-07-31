@@ -15,7 +15,7 @@ namespace MeshGenerator
 {
 
 
-TriangleMesh Cylinder(const CylinderDescriptor& desc)
+TriangleMesh GenerateCylinder(const CylinderDescriptor& desc)
 {
     TriangleMesh mesh;
     

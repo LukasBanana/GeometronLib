@@ -15,7 +15,7 @@ namespace MeshGenerator
 {
 
 
-TriangleMesh Pipe(const PipeDescriptor& desc)
+TriangleMesh GeneratePipe(const PipeDescriptor& desc)
 {
     TriangleMesh mesh;
     
