@@ -30,9 +30,6 @@ struct CuboidDescriptor
     //! Cuboid size. By default (1, 1, 1).
     Gs::Vector3     size            = Gs::Vector3(Gs::Real(1.0));
 
-    //! Cuboid texture UV scaling (X, Y), (Z, Y), (X, Z). By default (1, 1, 1).
-    Gs::Vector3     uvScale         = Gs::Vector3(Gs::Real(1.0));
-
     //! Cuboid segmentation. Each component will be clamped to [1, +inf). By default (1, 1, 1).
     Gs::Vector3ui   segments        = Gs::Vector3ui(1, 1, 1);
 
@@ -44,9 +41,6 @@ struct EllipsoidDescriptor
 {
     //! Radius in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
     Gs::Vector3     radius          = Gs::Vector3(Gs::Real(0.5));
-
-    //! Ellpsoid texture UV scaling. By default (1, 1).
-    Gs::Vector2     uvScale         = Gs::Vector2(1, 1);
 
     /**
     Segmentation in U (x component), and V (y component) direction.
@@ -121,6 +115,7 @@ struct PipeDescriptor
     bool            alternateGrid       = false;
 };
 
+#if 0
 struct CapsuleDescriptor
 {
     //! Radius of the top- and bottom half-ellipsoids in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
@@ -137,23 +132,31 @@ struct CapsuleDescriptor
     Each component will be clamped to [3, +inf). By default 10.
     */
     unsigned int    ellipsoidSegments   = 10;
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid       = false;
 };
+#endif
 
 struct TorusDescriptor
 {
-    //! Radius of the hole in X, and Y direction. By default (0.5, 0.5).
-    Gs::Vector2     holeRadius  = Gs::Vector2(Gs::Real(0.5));
+    //! Radius of the torus ring in X, and Y direction. By default (0.5, 0.5).
+    Gs::Vector2     ringRadius      = Gs::Vector2(Gs::Real(0.5));
 
-    //! Radius of the ring in U (x component), and V (y component) direction. By default (0.25, 0.25).
-    Gs::Vector2     ringRadius  = Gs::Vector2(Gs::Real(0.25));
+    //! Radius of the inner tube in U (x component), and V (y component) direction. By default (0.25, 0.25).
+    Gs::Vector2     innerTubeRadius = Gs::Vector2(Gs::Real(0.25));
 
     /**
     Segmentation in U (x component), and V (y component) direction.
     Each component will be clamped to [3, +inf). By default (20, 10).
     */
-    Gs::Vector2ui   segments    = Gs::Vector2ui(20, 10);
+    Gs::Vector2ui   segments        = Gs::Vector2ui(20, 10);
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid   = false;
 };
 
+#if 0
 struct SpiralDescriptor
 {
     //! Radius of the tube in U (x component), and V (y component) direction. By default (0.25, 0.25).
@@ -173,7 +176,11 @@ struct SpiralDescriptor
     Each component will be clamped to [3, +inf). By default (20, 10).
     */
     Gs::Vector2ui   segments            = Gs::Vector2ui(20, 10);
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid       = false;
 };
+#endif
 
 struct BezierPatchDescriptor
 {
@@ -211,10 +218,16 @@ TriangleMesh GenerateCylinder(const CylinderDescriptor& desc);
 void GeneratePipe(const PipeDescriptor& desc, TriangleMesh& mesh);
 TriangleMesh GeneratePipe(const PipeDescriptor& desc);
 
+//void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh);
 //TriangleMesh GenerateCapsule(const CapsuleDescriptor& desc);
 
-//TriangleMesh GenerateTorus(const TorusDescriptor& desc);
+void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh);
+TriangleMesh GenerateTorus(const TorusDescriptor& desc);
 
+//void GenerateTorusKnot(const TorusDescriptor& desc, TriangleMesh& mesh);
+//TriangleMesh GenerateTorusKnot(const TorusDescriptor& desc);
+
+//void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh);
 //TriangleMesh GenerateSpiral(const SpiralDescriptor& desc);
 
 void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh);

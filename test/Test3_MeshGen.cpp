@@ -316,7 +316,6 @@ void addModelCuboid()
     desc.alternateGrid  = true;
     #else
     desc.size           = { 1, 0.75f, 1.25f };
-    desc.uvScale        = { 1, 1, 2 };
     desc.segments       = { 1, 2, 3 };
     desc.alternateGrid  = true;
     #endif
@@ -335,7 +334,6 @@ void addModelEllipsoid()
     desc.alternateGrid  = true;
     #else
     desc.radius         = Gs::Vector3(1, 1.25f, 0.75f)*0.5f;
-    desc.uvScale        = { 1, 1 };
     desc.segments       = { 20, 20 };
     desc.alternateGrid  = true;
     #endif

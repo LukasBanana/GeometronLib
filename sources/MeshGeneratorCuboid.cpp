@@ -20,7 +20,7 @@ static void BuildFace(
     TriangleMesh& mesh, const Gs::Quaternion& rotation,
     Gs::Real sizeHorz, Gs::Real sizeVert, Gs::Real sizeOffsetZ,
     unsigned int segsHorz, unsigned int segsVert,
-    Gs::Real uScale, Gs::Real vScale, bool alternateGrid)
+    bool alternateGrid)
 {
     sizeOffsetZ /= 2;
 
@@ -46,9 +46,9 @@ static void BuildFace(
             auto y = sizeVert * v - sizeVert/Gs::Real(2);
 
             mesh.AddVertex(
-                rotation * Gs::Vector3T<Gs::Real>(x, y, sizeOffsetZ),
-                rotation * Gs::Vector3T<Gs::Real>(0, 0, -1),
-                Gs::Vector2T<Gs::Real>(u * uScale, (Gs::Real(1) - v) * vScale)
+                rotation * Gs::Vector3(x, y, sizeOffsetZ),
+                rotation * Gs::Vector3(0, 0, -1),
+                Gs::Vector2(u, Gs::Real(1) - v)
             );
         }
     }
@@ -81,37 +81,37 @@ void GenerateCuboid(const CuboidDescriptor& desc, TriangleMesh& mesh)
     // front
     BuildFace(
         mesh, Gs::Quaternion(),
-        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY, desc.uvScale.x, desc.uvScale.y, desc.alternateGrid
+        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY, desc.alternateGrid
     );
 
     // back
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi, 0)),
-        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY, desc.uvScale.x, desc.uvScale.y, desc.alternateGrid
+        desc.size.x, desc.size.y, -desc.size.z, segsX, segsY, desc.alternateGrid
     );
 
     // left
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, -pi_0_5, 0)),
-        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY, desc.uvScale.z, desc.uvScale.y, desc.alternateGrid
+        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY, desc.alternateGrid
     );
 
     // right
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(0, pi_0_5, 0)),
-        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY, desc.uvScale.z, desc.uvScale.y, desc.alternateGrid
+        desc.size.z, desc.size.y, -desc.size.x, segsZ, segsY, desc.alternateGrid
     );
 
     // top
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(pi_0_5, 0, 0)),
-        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ, desc.uvScale.x, desc.uvScale.z, desc.alternateGrid
+        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ, desc.alternateGrid
     );
 
     // bottom
     BuildFace(
         mesh, Gs::Quaternion::EulerAngles(Gs::Vector3(-pi_0_5, 0, 0)),
-        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ, desc.uvScale.x, desc.uvScale.z, desc.alternateGrid
+        desc.size.x, desc.size.z, -desc.size.y, segsX, segsZ, desc.alternateGrid
     );
 }
 

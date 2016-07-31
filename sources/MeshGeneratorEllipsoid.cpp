@@ -7,7 +7,6 @@
 
 #include "MeshGeneratorDetails.h"
 #include <Gauss/Spherical.h>
-#include <algorithm>
 
 
 namespace Gm
@@ -35,13 +34,13 @@ void GenerateEllipsoid(const EllipsoidDescriptor& desc, TriangleMesh& mesh)
     {
         /* Compute theta of spherical coordinate */
         texCoord.y = static_cast<Gs::Real>(v) * invSegsV;
-        point.theta = texCoord.y * desc.uvScale.y * pi;
+        point.theta = texCoord.y * pi;
 
         for (unsigned int u = 0; u <= segsU; ++u)
         {
             /* Compute phi of spherical coordinate */
             texCoord.x = static_cast<Gs::Real>(u) * invSegsU;
-            point.phi = texCoord.x * desc.uvScale.x * pi_2;
+            point.phi = texCoord.x * pi_2;
 
             /* Convert spherical coordinate into cartesian coordinate and set normal by coordinate */
             auto coord = Gs::Vector3(point);

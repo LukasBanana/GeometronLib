@@ -84,7 +84,6 @@ static void meshTest1()
     MeshGenerator::CuboidDescriptor cuboidDesc;
     {
         cuboidDesc.size             = { Real(4), Real(2), Real(10) };
-        cuboidDesc.uvScale          = cuboidDesc.size;
         cuboidDesc.segments         = { 4, 2, 10 };
         cuboidDesc.alternateGrid    = true;
     }
