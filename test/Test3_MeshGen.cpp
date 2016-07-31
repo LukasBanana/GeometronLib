@@ -14,7 +14,10 @@
 // ----- MACROS -----
 
 // show models in pre-defined orientation
-#define ENABLE_PRESENTATION
+//#define ENABLE_PRESENTATION
+
+// write models to .obj files
+//#define WRITE_MODELS_TO_FILE
 
 
 // ----- STRUCTURES -----
@@ -435,8 +438,10 @@ void initScene()
             continue;
         }
 
+        #ifdef WRITE_MODELS_TO_FILE
         // write model to file
         it->writeObjFile("mesh/" + it->name + ".obj");
+        #endif
 
         ++it;
     }

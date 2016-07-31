@@ -31,6 +31,10 @@
 #include "PlaneCollision.h"
 #include "TriangleCollision.h"
 
+#include "BezierCurve.h"
+#include "BezierTriangle.h"
+#include "BezierPatch.h"
+
 
 /**
 \mainpage GeometronLib 1.00 Alpha Documentation

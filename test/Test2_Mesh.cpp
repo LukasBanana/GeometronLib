@@ -73,6 +73,8 @@ std::size_t             neighborSearchDepth = 1;
 
 Gm::Spline2             spline;
 
+Gm::BezierCurve2        bezierCurve;
+
 Gm::Frustum             frustum;
 
 const Gs::Real          epsilon             = Gs::Epsilon<Gs::Real>();
@@ -212,6 +214,11 @@ void initScene()
     spline.AddPoint({ 460, 500 }, 5.0f);
     spline.AddPoint({ 250, 350 }, 6.0f);
     spline.SetOrder(3);
+
+    bezierCurve.controlPoints.push_back({ 100, 450 });
+    bezierCurve.controlPoints.push_back({ 250, 150 });
+    bezierCurve.controlPoints.push_back({ 600, 350 });
+    bezierCurve.controlPoints.push_back({ 400, 100 });
 }
 
 void emitVertex(const Gm::TriangleMesh::Vertex& vert, const Gs::Vector4& color)
@@ -368,16 +375,16 @@ void drawAABB(const Gm::AABB3& box)
     glEnd();
 }
 
-void drawSpline(const Gm::Spline2& spline, Gs::Real a, Gs::Real b, std::size_t details)
+void drawSpline(const Gm::Spline2& spline, Gs::Real a, Gs::Real b, std::size_t segments)
 {
-    // draw spline curve
+    // draw curve
     glBegin(GL_LINE_STRIP);
 
-    Gs::Real step = (b - a) / details;
+    auto step = (b - a) / segments;
 
-    for (std::size_t i = 0; i <= details; ++i)
+    for (std::size_t i = 0; i <= segments; ++i)
     {
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glColor4f(1, 1, 1, 1);
 
         // interpolate vertex
         auto p = spline(a);
@@ -387,15 +394,51 @@ void drawSpline(const Gm::Spline2& spline, Gs::Real a, Gs::Real b, std::size_t d
 
     glEnd();
 
-    // draw spline control points
+    // draw control points
     glPointSize(5.0f);
 
     glBegin(GL_POINTS);
 
     for (const auto& p : spline.GetPoints())
     {
-        glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
+        glColor4f(1, 0, 0, 1);
         glVertex2fv(p.point.Ptr());
+    }
+
+    glEnd();
+
+    glPointSize(1.0f);
+}
+
+void drawBezierCurve(const Gm::BezierCurve2& curve, std::size_t segments)
+{
+    // draw curve
+    glBegin(GL_LINE_STRIP);
+
+    auto t = Gs::Real(0);
+    auto step = Gs::Real(1) / segments;
+
+    for (std::size_t i = 0; i <= segments; ++i)
+    {
+        glColor4f(1, 1, 1, 1);
+
+        // interpolate vertex
+        auto p = curve(t);
+        glVertex2fv(p.Ptr());
+        t += step;
+    }
+
+    glEnd();
+
+    // draw control points
+    glPointSize(5.0f);
+
+    glBegin(GL_POINTS);
+
+    for (const auto& p : curve.controlPoints)
+    {
+        glColor4f(1, 1, 0, 1);
+        glVertex2fv(p.Ptr());
     }
 
     glEnd();
@@ -466,6 +509,7 @@ void drawScene2D()
 
     // draw scene
     drawSpline(spline, 0.0f, 6.0f, 500);
+    drawBezierCurve(bezierCurve, 100);
 }
 
 void displayCallback()
