@@ -25,13 +25,22 @@ namespace MeshGenerator
 
 /**
 \brief Vertex modifier function interface.
-\param[in] u Specifies the interpolation factor U. This will be in the range [0, 1].
-\param[in] v Specifies the interpolation factor V. This will be in the range [0, 1].
+\param[in] u Specifies the interpolation factor U. This is in the range [0, 1].
+\param[in] v Specifies the interpolation factor V. This is in the range [0, 1].
 \return Interpolation factor which should be in the range [0, 1].
 \remarks This can be used for a couple of mesh generators, to adjust the final vertex position.
 \see TorusKnotDescriptor
 */
 using VertexModifier = std::function<Gs::Real(Gs::Real u, Gs::Real v)>;
+
+/**
+\brief Function interface for an arbitrary R -> R^3 transformation.
+\param[in] t Specifies the curve progression. This is in the range [0, 1].
+\return 3D point which lies on the curve at the position 't'.
+\see CurveDescriptor
+*/
+using CurveFunction = std::function<Gs::Vector3(Gs::Real t)>;
+
 
 /* --- Descriptors --- */
 
@@ -191,9 +200,9 @@ struct TorusKnotDescriptor
 
     /**
     \brief Segmentation in U (x component), and V (y component) direction.
-    \remarks Each component will be clamped to [3, +inf). By default (256, 16).
+    \remarks Each component will be clamped to [3, +inf). By default (256, 20).
     */
-    Gs::Vector2ui   segments        = Gs::Vector2ui(256, 16);
+    Gs::Vector2ui   segments        = Gs::Vector2ui(256, 20);
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid   = false;
@@ -230,6 +239,27 @@ struct SpiralDescriptor
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid       = false;
+};
+
+struct CurveDescriptor
+{
+    //! Curve progression function.
+    CurveFunction   curveFunction   = nullptr;
+
+    //! Radius of the tube which forms the curve. By default 0.25.
+    Gs::Real        radius          = Gs::Real(0.25);
+
+    /**
+    \brief Segmentation in U (x component), and V (y component) direction.
+    \remarks Each component will be clamped to [3, +inf). By default (20, 20).
+    */
+    Gs::Vector2ui   segments        = Gs::Vector2ui(20, 20);
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid   = false;
+
+    //! Vertex modifier to adjust the radius during mesh generation.
+    VertexModifier  vertexModifier  = nullptr;
 };
 
 struct BezierPatchDescriptor
@@ -279,6 +309,9 @@ TriangleMesh GenerateTorusKnot(const TorusKnotDescriptor& desc);
 
 void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh);
 TriangleMesh GenerateSpiral(const SpiralDescriptor& desc);
+
+void GenerateCurve(const CurveDescriptor& desc, TriangleMesh& mesh);
+TriangleMesh GenerateCurve(const CurveDescriptor& desc);
 
 void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh);
 TriangleMesh GenerateBezierPatch(const BezierPatchDescriptor& desc);

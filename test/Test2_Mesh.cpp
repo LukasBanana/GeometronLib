@@ -39,7 +39,7 @@
 //#define TEST_SHOW_SPLIT
 #define TEST_TRIANGLE_NEIGHBORS
 #define TEST_SHOW_EDGES
-#define TEST_BLOATED_CUBE
+//#define TEST_BLOATED_CUBE
 
 
 // ----- STRUCTURES -----
@@ -89,7 +89,11 @@ Model* createCuboidModel(const Gm::MeshGenerator::CuboidDescriptor& desc)
     models.resize(models.size() + 1);
     auto mdl = &(models.back());
 
+    #if 0
     mdl->mesh = Gm::MeshGenerator::GenerateCuboid(desc);
+    #else
+    mdl->mesh = Gm::MeshGenerator::GenerateEllipsoid({});
+    #endif
 
     return mdl;
 }

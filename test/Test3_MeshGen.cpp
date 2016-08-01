@@ -466,14 +466,38 @@ void addModelTorusKnot()
     desc.tubeRadius     = 0.1f;
     desc.loops          = 2;
     desc.turns          = 3;
-    desc.innerRadius    = 1.5f;
-    //desc.segments       = { 200, 20 };
-    desc.segments       = { 20, 5 };
+    //desc.innerRadius    = 1.5f;
+    desc.segments       = { 200, 20 };
+    //desc.segments       = { 2, 5 };
     desc.alternateGrid  = true;
     //desc.vertexModifier = [](Gs::Real u, Gs::Real v) { return 0.6f + std::sin(u*Gs::pi*20)*0.4f; };
     #endif
 
     mdl->mesh = Gm::MeshGenerator::GenerateTorusKnot(desc);
+}
+
+void addModelCurve()
+{
+    auto mdl = addModel("Curve");
+
+    Gm::MeshGenerator::CurveDescriptor desc;
+
+    desc.curveFunction  = [](Gs::Real t)
+    {
+        auto f = t;
+        t = std::sin(t*Gs::pi);
+        return Gs::Vector3(
+            (t-0.5)*2,
+            std::sqrt(t*2)*0.5 + std::sin(std::pow(t, 2.0f)*Gs::pi*7)*0.2,
+            std::sin(f*Gs::pi*2)
+        );
+    };
+
+    desc.segments       = { 200, 20 };
+    desc.radius         = 0.05;
+    desc.alternateGrid  = true;
+
+    mdl->mesh = Gm::MeshGenerator::GenerateCurve(desc);
 }
 
 void addModelBezierPatch()
@@ -623,6 +647,7 @@ void initScene()
     addModelTorus();
     addModelSpiral();
     addModelTorusKnot();
+    //addModelCurve();
     //addModelBezierPatch();
     //addModelTeapot();
     //...
