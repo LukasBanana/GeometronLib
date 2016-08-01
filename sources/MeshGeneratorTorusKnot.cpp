@@ -22,7 +22,7 @@ void GenerateTorusKnot(const TorusKnotDescriptor& desc, TriangleMesh& mesh)
     const auto loops = static_cast<Gs::Real>(desc.loops);
     const auto turns = static_cast<Gs::Real>(desc.turns);
 
-    /* Initialize torus knot ring centers */
+    /* Pass torus-knot curve function to curve mesh generator */
     curveDesc.curveFunction = [&](Gs::Real t)
     {
         t *= pi_2;
