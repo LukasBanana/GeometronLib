@@ -68,8 +68,6 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
         auto s0 = std::sin(theta);
         auto c0 = std::cos(theta);
 
-        auto twist = Gs::Real(0);
-
         for (unsigned int u = 0; u <= totalSegsU; ++u)
         {
             /* Compute phi of spherical coordinate */

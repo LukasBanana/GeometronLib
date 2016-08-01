@@ -24,8 +24,8 @@ void GenerateCurve(const CurveDescriptor& desc, TriangleMesh& mesh)
     const auto segsU = std::max(3u, desc.segments.x);
     const auto segsV = std::max(3u, desc.segments.y);
 
-    const auto invSegsU = Gs::Real(1) / static_cast<Gs::Real>(segsU);
-    const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
+    //const auto invSegsU = Gs::Real(1) / static_cast<Gs::Real>(segsU);
+    //const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
 
     /* Sample curve progression function */
     std::vector<Gs::Vector3> curveSamples(segsU, Gs::Vector3());
