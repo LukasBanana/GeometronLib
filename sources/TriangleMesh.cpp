@@ -288,6 +288,24 @@ std::vector<TriangleMesh::TriangleIndex> TriangleMesh::FindTriangles(const Edge&
     return result;
 }
 
+std::vector<Gm::Triangle<TriangleMesh::Vertex>> TriangleMesh::TriangleList() const
+{
+    std::vector<Gm::Triangle<Vertex>> triangleList;
+
+    for (const auto& tri : triangles)
+    {
+        triangleList.push_back(
+            {
+                vertices[tri.a],
+                vertices[tri.b],
+                vertices[tri.c]
+            }
+        );
+    }
+
+    return triangleList;
+}
+
 Gs::Vector3 TriangleMesh::TriangleNormal(TriangleIndex triangleIndex) const
 {
     GS_ASSERT(triangleIndex < triangles.size());

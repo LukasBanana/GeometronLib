@@ -235,8 +235,12 @@ void initGL()
     glEnable(GL_LIGHT0);
     glEnable(GL_CULL_FACE);
 
+    #if 0
     glCullFace(GL_FRONT);
-    glShadeModel(GL_SMOOTH);
+    #else
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
+    #endif
 
     #ifdef ENABLE_PRESENTATION
     glClearColor(0, 1, 0, 1);

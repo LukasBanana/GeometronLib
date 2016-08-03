@@ -110,6 +110,9 @@ class TriangleMesh
         //! Computes the list of all triangles that are connected to the specified edge.
         std::vector<TriangleIndex> FindTriangles(const Edge& edge) const;
 
+        //! Computes the list of all triangles with their own vertices, but without indices.
+        std::vector<Gm::Triangle<Vertex>> TriangleList() const;
+
         //! Returns the normal vector of the specified triangle (in unit length of 1.0).
         Gs::Vector3 TriangleNormal(TriangleIndex triangleIndex) const;
 
