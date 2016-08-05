@@ -158,9 +158,9 @@ class ProjectionT
         void GetMatrix(MatrixType& matrix, int flags) const
         {
             if (isOrtho_)
-                return Gs::ProjectionMatrix4T<T>::Perspective(matrix, aspect_, near_, far_, fov_, flags);
+                Gs::ProjectionMatrix4T<T>::Orthogonal(matrix, orthoSize_.x, orthoSize_.y, near_, far_, flags);
             else
-                return Gs::ProjectionMatrix4T<T>::Orthogonal(matrix, orthoSize_.x, orthoSize_.y, near_, far_, flags);
+                Gs::ProjectionMatrix4T<T>::Perspective(matrix, aspect_, near_, far_, fov_, flags);
         }
 
     private:
