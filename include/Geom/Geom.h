@@ -36,6 +36,8 @@
 #include "BezierTriangle.h"
 #include "BezierPatch.h"
 
+#include "Playback.h"
+
 
 /**
 \mainpage GeometronLib 1.00 Alpha Documentation
