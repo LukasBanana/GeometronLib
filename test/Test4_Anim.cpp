@@ -17,6 +17,7 @@
 // ----- MACROS -----
 
 //#define ORTHO_PROJECTION
+//#define TEST_TRACKING_SHOT
 
 
 // ----- STRUCTURES -----
@@ -27,10 +28,42 @@ struct Model
     Gm::Transform3      transform;
 };
 
+struct Keyframes
+{
+    std::size_t size() const
+    {
+        return keyframes.size();
+    }
+
+    void clear()
+    {
+        keyframes.clear();
+    }
+
+    void addKeyframe(const Gs::Vector3& position, const Gs::Vector3& rotation)
+    {
+        Gm::Transform3 transform;
+        {
+            transform.SetPosition(position);
+            Gs::Quaternion quat;
+            quat.SetEulerAngles(Gs::Deg2Rad(rotation));
+            transform.SetRotation(quat);
+        }
+        keyframes.push_back(transform);
+    }
+
+    void addKeyframe(const Gm::Transform3& transform)
+    {
+        keyframes.push_back(transform);
+    }
+
+    std::vector<Gm::Transform3> keyframes;
+};
+
 struct Animation
 {
-    Gm::Playback                playback;
-    std::vector<Gm::Transform3> keyframes;
+    Gm::Playback    playback;
+    Keyframes       keyframes;
 };
 
 
@@ -43,8 +76,10 @@ Gs::ProjectionMatrix4   projection;
 Gs::AffineMatrix4       viewMatrix;
 Gm::Transform3          viewTransform;
 
-Model                   model;
+std::vector<Model>      models;
+Model*                  focusedModel = nullptr;
 Animation               animation;
+Keyframes               keyframes0;
 
 
 // ----- FUNCTIONS -----
@@ -103,16 +138,13 @@ void initGL()
     updateProjection();
 }
 
-void addKeyframe(const Gs::Vector3& position, const Gs::Vector3& rotation)
+Gm::TriangleMesh& addModel(const Gs::Vector3& position)
 {
-    Gm::Transform3 transform;
-    {
-        transform.SetPosition(position);
-        Gs::Quaternion quat;
-        quat.SetEulerAngles(Gs::Deg2Rad(rotation));
-        transform.SetRotation(quat);
-    }
-    animation.keyframes.push_back(transform);
+    models.push_back(Model());
+    auto& mdl = models.back();
+    mdl.transform.SetPosition(position);
+    focusedModel = &mdl;
+    return mdl.mesh;
 }
 
 void initScene()
@@ -120,13 +152,23 @@ void initScene()
     // setup scene
     viewTransform.SetPosition({ 0, 0, -3 });
 
+    #ifdef TEST_TRACKING_SHOT
+
     // create models
-    model.mesh = Gm::MeshGenerator::GenerateCuboid({});
+
+
+
+    #else
+
+    // create models
+    addModel({}) = Gm::MeshGenerator::GenerateCuboid({});
 
     // create animation keyframes
-    addKeyframe({ 0, 0, 0 }, { 0, 0, 0 });
-    addKeyframe({ -2, 0, 0 }, { 0, -90, 0 });
-    addKeyframe({ 2, 0, 0 }, { 45, 0, 0 });
+    keyframes0.addKeyframe({ 0, 0, 0 }, { 0, 0, 0 });
+    keyframes0.addKeyframe({ -2, 0, 0 }, { 0, -90, 0 });
+    keyframes0.addKeyframe({ 2, 0, 0 }, { 45, 0, 0 });
+
+    #endif
 }
 
 void drawMesh(const Gm::TriangleMesh& mesh)
@@ -173,15 +215,24 @@ void updateScene()
     // update animation playback
     animation.playback.Update(1.0f / 60.0f);
 
-    const auto& from    = animation.keyframes[ animation.playback.frame     ];
-    const auto& to      = animation.keyframes[ animation.playback.nextFrame ];
-    auto time           = Gs::SmoothStep(animation.playback.interpolator);
+    #ifdef TEST_TRACKING_SHOT
 
-    auto position       = Gs::Lerp(from.GetPosition(), to.GetPosition(), time);
-    auto rotation       = Gs::Slerp(from.GetRotation(), to.GetRotation(), time);
+    #else
 
-    model.transform.SetPosition(position);
-    model.transform.SetRotation(rotation);
+    if (animation.keyframes.size() >= 2)
+    {
+        const auto& from    = animation.keyframes.keyframes[ animation.playback.frame     ];
+        const auto& to      = animation.keyframes.keyframes[ animation.playback.nextFrame ];
+        auto time           = Gs::SmoothStep(animation.playback.interpolator);
+
+        auto position       = Gs::Lerp(from.GetPosition(), to.GetPosition(), time);
+        auto rotation       = Gs::Slerp(from.GetRotation(), to.GetRotation(), time);
+
+        focusedModel->transform.SetPosition(position);
+        focusedModel->transform.SetRotation(rotation);
+    }
+
+    #endif
 }
 
 void drawScene()
@@ -196,7 +247,8 @@ void drawScene()
     viewMatrix = viewTransform.GetMatrix().Inverse();
 
     // draw model
-    drawModel(model);
+    for (const auto& mdl : models)
+        drawModel(mdl);
 }
 
 void displayCallback()
@@ -246,9 +298,17 @@ void keyboardCallback(unsigned char key, int x, int y)
 
         case '\r': // ENTER
             if (animation.playback.GetState() == Gm::Playback::State::Playing)
-                animation.playback.Stop();
+            {
+                animation.keyframes.clear();
+                animation.keyframes.addKeyframe(focusedModel->transform);
+                animation.keyframes.addKeyframe({}, {});
+                animation.playback.Play(0, 1, 5.0f);
+            }
             else
-                animation.playback.Play(0, animation.keyframes.size() - 1, std::make_shared<Gm::Playback::Loop>());
+            {
+                animation.keyframes = keyframes0;
+                animation.playback.Play(0, animation.keyframes.size() - 1, 1.0f, std::make_shared<Gm::Playback::Loop>());
+            }
             break;
     }
 }
