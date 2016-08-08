@@ -12,7 +12,6 @@
 #include "Config.h"
 #include "Line.h"
 #include "Triangle.h"
-#include "Plane.h"
 #include "AABB.h"
 
 #include <Gauss/Vector2.h>
@@ -132,12 +131,6 @@ class TriangleMesh
         AABB3 BoundingBoxMultiThreaded(std::size_t threadCount) const;
 
         #endif
-
-        /**
-        Clips this triangle mesh into a front- and back sided mesh by the specified clipping plane.
-        \see ClipTriangle
-        */
-        void Clip(const Plane& clipPlane, TriangleMesh& front, TriangleMesh& back) const;
 
         //! Appends the specified triangle mesh to this mesh.
         void Append(const TriangleMesh& other);

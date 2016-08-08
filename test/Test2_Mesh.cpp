@@ -35,10 +35,10 @@
 #define DEG_TO_RAD(x) ((x)*Gs::pi/Gs::Real(180))
 
 #define TEST_PROJECTION_MORPHING
-//#define TEST_MESH_CLIPPING
-//#define TEST_SHOW_SPLIT
-#define TEST_TRIANGLE_NEIGHBORS
-#define TEST_SHOW_EDGES
+#define TEST_MESH_CLIPPING
+#define TEST_SHOW_SPLIT
+//#define TEST_TRIANGLE_NEIGHBORS
+//#define TEST_SHOW_EDGES
 //#define TEST_BLOATED_CUBE
 
 
@@ -330,7 +330,7 @@ void drawModel(const Model& mdl)
     clipPlane = Gm::TransformPlane(modelView.Inverse(), clipPlane);
 
     Gm::TriangleMesh front, back;
-    mdl.mesh.Clip(clipPlane, front, back);
+    Gm::MeshModifier::ClipMesh(mdl.mesh, clipPlane, front, back);
 
     drawMesh(front, wireframeMode);
 

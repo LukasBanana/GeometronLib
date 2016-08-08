@@ -23,6 +23,7 @@
 
 #include "TriangleMesh.h"
 #include "MeshGenerator.h"
+#include "MeshModifier.h"
 
 #include "Transform2.h"
 #include "Transform3.h"

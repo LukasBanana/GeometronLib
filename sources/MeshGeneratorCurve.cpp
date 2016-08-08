@@ -8,6 +8,7 @@
 #include "MeshGeneratorDetails.h"
 
 #include <Gauss/Equals.h>
+#include <Gauss/RotateVector.h>
 
 
 namespace Gm
