@@ -59,6 +59,7 @@ class TriangleMesh
 
         TriangleMesh() = default;
 
+        TriangleMesh(const TriangleMesh&) = default;
         TriangleMesh(TriangleMesh&& rhs);
 
         TriangleMesh& operator = (const TriangleMesh& rhs) = default;
