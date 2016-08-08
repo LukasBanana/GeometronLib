@@ -16,7 +16,7 @@
 
 // ----- MACROS -----
 
-//...
+//#define ORTHO_PROJECTION
 
 
 // ----- STRUCTURES -----
@@ -27,17 +27,24 @@ struct Model
     Gm::Transform3      transform;
 };
 
+struct Animation
+{
+    Gm::Playback                playback;
+    std::vector<Gm::Transform3> keyframes;
+};
+
 
 // ----- VARIABLES -----
 
-int                         winID = 0;
+int                     winID = 0;
 
-Gs::Vector2i                resolution(800, 600);
-Gs::ProjectionMatrix4       projection;
-Gs::AffineMatrix4           viewMatrix;
-Gm::Transform3              viewTransform;
+Gs::Vector2i            resolution(800, 600);
+Gs::ProjectionMatrix4   projection;
+Gs::AffineMatrix4       viewMatrix;
+Gm::Transform3          viewTransform;
 
-std::vector<Model>          models;
+Model                   model;
+Animation               animation;
 
 
 // ----- FUNCTIONS -----
@@ -50,6 +57,19 @@ void updateProjection()
         flags |= Gs::ProjectionFlags::HorizontalFOV;
 
     // setup perspective projection
+    #ifdef ORTHO_PROJECTION
+
+    const auto orthoZoom = Gs::Real(0.01);
+    projection = Gs::ProjectionMatrix4::Orthogonal(
+        static_cast<Gs::Real>(resolution.x) * orthoZoom,
+        static_cast<Gs::Real>(resolution.y) * orthoZoom,
+        0.1f,
+        100.0f,
+        flags
+    );
+
+    #else
+    
     projection = Gs::ProjectionMatrix4::Perspective(
         static_cast<Gs::Real>(resolution.x) / resolution.y,
         0.1f,
@@ -57,6 +77,8 @@ void updateProjection()
         Gs::Deg2Rad(74.0f),
         flags
     );
+
+    #endif
 }
 
 void initGL()
@@ -81,19 +103,30 @@ void initGL()
     updateProjection();
 }
 
+void addKeyframe(const Gs::Vector3& position, const Gs::Vector3& rotation)
+{
+    Gm::Transform3 transform;
+    {
+        transform.SetPosition(position);
+        Gs::Quaternion quat;
+        quat.SetEulerAngles(Gs::Deg2Rad(rotation));
+        transform.SetRotation(quat);
+    }
+    animation.keyframes.push_back(transform);
+}
+
 void initScene()
 {
     // setup scene
     viewTransform.SetPosition({ 0, 0, -3 });
 
     // create models
-    Model mdl;
-    {
-        mdl.mesh = Gm::MeshGenerator::GenerateCuboid({});
-    }
-    models.push_back(mdl);
-    //...
+    model.mesh = Gm::MeshGenerator::GenerateCuboid({});
 
+    // create animation keyframes
+    addKeyframe({ 0, 0, 0 }, { 0, 0, 0 });
+    addKeyframe({ -2, 0, 0 }, { 0, -90, 0 });
+    addKeyframe({ 2, 0, 0 }, { 45, 0, 0 });
 }
 
 void drawMesh(const Gm::TriangleMesh& mesh)
@@ -138,8 +171,17 @@ void drawModel(const Model& mdl)
 void updateScene()
 {
     // update animation playback
-    //...
+    animation.playback.Update(1.0f / 60.0f);
 
+    const auto& from    = animation.keyframes[ animation.playback.frame     ];
+    const auto& to      = animation.keyframes[ animation.playback.nextFrame ];
+    auto time           = Gs::SmoothStep(animation.playback.interpolator);
+
+    auto position       = Gs::Lerp(from.GetPosition(), to.GetPosition(), time);
+    auto rotation       = Gs::Slerp(from.GetRotation(), to.GetRotation(), time);
+
+    model.transform.SetPosition(position);
+    model.transform.SetRotation(rotation);
 }
 
 void drawScene()
@@ -153,9 +195,8 @@ void drawScene()
     glMatrixMode(GL_MODELVIEW);
     viewMatrix = viewTransform.GetMatrix().Inverse();
 
-    // draw models
-    for (const auto& mdl : models)
-        drawModel(mdl);
+    // draw model
+    drawModel(model);
 }
 
 void displayCallback()
@@ -204,7 +245,10 @@ void keyboardCallback(unsigned char key, int x, int y)
             break;
 
         case '\r': // ENTER
-            //start/stop animation ...
+            if (animation.playback.GetState() == Gm::Playback::State::Playing)
+                animation.playback.Stop();
+            else
+                animation.playback.Play(0, animation.keyframes.size() - 1, std::make_shared<Gm::Playback::Loop>());
             break;
     }
 }
