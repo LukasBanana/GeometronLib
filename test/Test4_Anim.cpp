@@ -12,12 +12,13 @@
 #include "TestHelper.h"
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 
 // ----- MACROS -----
 
 //#define ORTHO_PROJECTION
-//#define TEST_TRACKING_SHOT
+#define TEST_TRACKING_SHOT
 
 
 // ----- STRUCTURES -----
@@ -30,32 +31,10 @@ struct Model
 
 struct Keyframes
 {
-    std::size_t size() const
-    {
-        return keyframes.size();
-    }
-
-    void clear()
-    {
-        keyframes.clear();
-    }
-
-    void addKeyframe(const Gs::Vector3& position, const Gs::Vector3& rotation)
-    {
-        Gm::Transform3 transform;
-        {
-            transform.SetPosition(position);
-            Gs::Quaternion quat;
-            quat.SetEulerAngles(Gs::Deg2Rad(rotation));
-            transform.SetRotation(quat);
-        }
-        keyframes.push_back(transform);
-    }
-
-    void addKeyframe(const Gm::Transform3& transform)
-    {
-        keyframes.push_back(transform);
-    }
+    std::size_t size() const;
+    void clear();
+    void addKeyframe(const Gs::Vector3& position, const Gs::Vector3& rotation);
+    void addKeyframe(const Gm::Transform3& transform);
 
     std::vector<Gm::Transform3> keyframes;
 };
@@ -64,6 +43,16 @@ struct Animation
 {
     Gm::Playback    playback;
     Keyframes       keyframes;
+};
+
+struct TrackingShot
+{
+    void addKeyframe(const Gs::Vector3& position, const Gs::Vector3& target);
+    void finalize();
+    Gm::Transform3 interpolate(Gs::Real t) const;
+
+    Gm::Spline3 positionCurve;
+    Gm::Spline3 targetCurve;
 };
 
 
@@ -80,6 +69,81 @@ std::vector<Model>      models;
 Model*                  focusedModel = nullptr;
 Animation               animation;
 Keyframes               keyframes0;
+TrackingShot            trackingShot;
+
+bool                    showTrackingShot = false;
+
+
+// ----- CLASSES -----
+
+std::size_t Keyframes::size() const
+{
+    return keyframes.size();
+}
+
+void Keyframes::clear()
+{
+    keyframes.clear();
+}
+
+void Keyframes::addKeyframe(const Gs::Vector3& position, const Gs::Vector3& rotation)
+{
+    Gm::Transform3 transform;
+    {
+        transform.SetPosition(position);
+        Gs::Quaternion quat;
+        quat.SetEulerAngles(Gs::Deg2Rad(rotation));
+        transform.SetRotation(quat);
+    }
+    keyframes.push_back(transform);
+}
+
+void Keyframes::addKeyframe(const Gm::Transform3& transform)
+{
+    keyframes.push_back(transform);
+}
+
+void TrackingShot::addKeyframe(const Gs::Vector3& position, const Gs::Vector3& target)
+{
+    auto t = static_cast<Gs::Real>(positionCurve.GetPoints().size());
+    positionCurve.AddPoint(position, t);
+    targetCurve.AddPoint(target, t);
+}
+
+void TrackingShot::finalize()
+{
+    positionCurve.SetOrder(3);
+    targetCurve.SetOrder(3);
+}
+
+Gm::Transform3 TrackingShot::interpolate(Gs::Real t) const
+{
+    // interpolate position and target splines
+    t *= static_cast<Gs::Real>(positionCurve.GetPoints().size() - 1);
+
+    auto position = positionCurve(t);
+    auto target = targetCurve(t);
+
+    // setup rotation matrix from position and target
+    Gs::Vector3 upVector(0, 1, 0);
+
+    auto zVec = (target - position).Normalized();
+    auto xVec = Gs::Cross(upVector, zVec).Normalized();
+    auto yVec = Gs::Cross(zVec, xVec).Normalized();
+
+    Gs::Matrix3 rotation;
+    rotation << xVec.x, yVec.x, zVec.x,
+                xVec.y, yVec.y, zVec.y,
+                xVec.z, yVec.z, zVec.z;
+
+    // setup final transformation
+    Gm::Transform3 transform;
+    {
+        transform.SetPosition(position);
+        transform.SetRotation(Gs::Quaternion(rotation));
+    }
+    return transform;
+}
 
 
 // ----- FUNCTIONS -----
@@ -116,6 +180,23 @@ void updateProjection()
     #endif
 }
 
+void turnCamera(Gs::Real deltaPitch, Gs::Real deltaYaw)
+{
+    static Gs::Real pitch, yaw;
+
+    pitch -= deltaPitch;
+    yaw -= deltaYaw;
+
+    pitch = std::max(-Gs::pi/2, std::min(pitch, Gs::pi/2));
+
+    Gs::Matrix3 rotation;
+    rotation.LoadIdentity();
+    Gs::RotateFree(rotation, Gs::Vector3(0, 1, 0), yaw);
+    Gs::RotateFree(rotation, Gs::Vector3(1, 0, 0), pitch);
+
+    viewTransform.SetRotation(Gs::Quaternion(rotation));
+}
+
 void initGL()
 {
     // setup GL configuration
@@ -126,7 +207,7 @@ void initGL()
 
     glCullFace(GL_BACK);
     glFrontFace(GL_CW);
-
+    glClearColor(0.3f, 0.3f, 1, 1);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // setup lighting
@@ -138,30 +219,64 @@ void initGL()
     updateProjection();
 }
 
-Gm::TriangleMesh& addModel(const Gs::Vector3& position)
+Model& addModel()
 {
     models.push_back(Model());
     auto& mdl = models.back();
-    mdl.transform.SetPosition(position);
     focusedModel = &mdl;
-    return mdl.mesh;
+    return mdl;
+}
+
+float randFloat()
+{
+    return (static_cast<Gs::Real>(rand()) / RAND_MAX);
+}
+
+float randFloat(float min, float max)
+{
+    return (min + randFloat() * (max - min));
 }
 
 void initScene()
 {
-    // setup scene
-    viewTransform.SetPosition({ 0, 0, -3 });
-
     #ifdef TEST_TRACKING_SHOT
 
     // create models
+    auto size = Gs::Real(5);
 
+    for (auto x = -size; x <= size; x += 1)
+    {
+        for (auto z = -size; z <= size; z += 1)
+        {
+            auto& mdl = addModel();
 
+            Gm::MeshGenerator::CuboidDescriptor desc;
+            {
+                desc.size.x = randFloat(0.5f, 2.5f);
+                desc.size.y = randFloat(1.0f, 5.0f);
+                desc.size.z = randFloat(0.5f, 2.5f);
+            }
+            mdl.mesh = Gm::MeshGenerator::GenerateCuboid(desc);
+
+            mdl.transform.SetPosition({ x*5, -5 + desc.size.y/2, z*5 });
+        }
+    }
+
+    // create tracking shot
+    trackingShot.addKeyframe({ 0, 0, 1 }, { 0, 0, 3 });
+    trackingShot.addKeyframe({ -4, 1, 1 }, { -7, 0, 3 });
+    trackingShot.addKeyframe({ -8, 2, 6 }, { -8, 0, 8 });
+    trackingShot.addKeyframe({ -6, 2, 10 }, { -2, 2, 9 });
+    trackingShot.addKeyframe({ 8, 4, 6 }, { -2, 2, 4 });
+    trackingShot.finalize();
 
     #else
 
+    // initialize view position
+    viewTransform.SetPosition({ 0, 0, -3 });
+
     // create models
-    addModel({}) = Gm::MeshGenerator::GenerateCuboid({});
+    addModel().mesh = Gm::MeshGenerator::GenerateCuboid({});
 
     // create animation keyframes
     keyframes0.addKeyframe({ 0, 0, 0 }, { 0, 0, 0 });
@@ -210,12 +325,66 @@ void drawModel(const Model& mdl)
     drawMesh(mdl.mesh);
 }
 
+void drawSpline(const Gm::Spline3& spline, Gs::Real a, Gs::Real b, std::size_t segments, const Gs::Vector4f& color)
+{
+    // draw curve
+    glBegin(GL_LINE_STRIP);
+
+    auto step = (b - a) / segments;
+
+    for (std::size_t i = 0; i <= segments; ++i)
+    {
+        glColor4fv(color.Ptr());
+
+        // interpolate vertex
+        auto p = spline(a);
+        glVertex3fv(p.Ptr());
+        a += step;
+    }
+
+    glEnd();
+
+    // draw control points
+    glPointSize(5.0f);
+
+    glBegin(GL_POINTS);
+
+    for (const auto& p : spline.GetPoints())
+    {
+        glColor4f(1, 1, 0, 1);
+        auto v = spline(p.interval);
+        glVertex3fv(v.Ptr());
+    }
+
+    glEnd();
+
+    glPointSize(1.0f);
+}
+
+void drawTrackingShot(const TrackingShot& track)
+{
+    // reset model-view matrix
+    auto matrix = viewMatrix.ToMatrix4();
+    glLoadMatrixf(matrix.Ptr());
+
+    // draw splines
+    auto size = static_cast<Gs::Real>(track.positionCurve.GetPoints().size());
+    drawSpline(track.positionCurve, 0.0f, size, 100, { 1, 0, 0, 1 });
+    drawSpline(track.targetCurve, 0.0f, size, 100, { 0, 1, 0, 1 });
+}
+
 void updateScene()
 {
     // update animation playback
     animation.playback.Update(1.0f / 60.0f);
 
     #ifdef TEST_TRACKING_SHOT
+
+    if (animation.playback.GetState() == Gm::Playback::State::Playing)
+    {
+        auto t = animation.playback.interpolator;
+        viewTransform = trackingShot.interpolate(t);
+    }
 
     #else
 
@@ -249,6 +418,14 @@ void drawScene()
     // draw model
     for (const auto& mdl : models)
         drawModel(mdl);
+
+    #ifdef TEST_TRACKING_SHOT
+    
+    // draw tracking shot
+    if (showTrackingShot)
+        drawTrackingShot(trackingShot);
+
+    #endif
 }
 
 void displayCallback()
@@ -290,6 +467,8 @@ void quitApp()
 
 void keyboardCallback(unsigned char key, int x, int y)
 {
+    static const Gs::Real cameraMove = Gs::Real(1);
+
     switch (key)
     {
         case 27: // ESC
@@ -297,6 +476,16 @@ void keyboardCallback(unsigned char key, int x, int y)
             break;
 
         case '\r': // ENTER
+        {
+            #ifdef TEST_TRACKING_SHOT
+
+            if (animation.playback.GetState() == Gm::Playback::State::Playing)
+                animation.playback.Stop();
+            else
+                animation.playback.Play(0, 1, 0.1f, std::make_shared<Gm::Playback::Loop>());
+
+            #else
+
             if (animation.playback.GetState() == Gm::Playback::State::Playing)
             {
                 animation.keyframes.clear();
@@ -309,9 +498,56 @@ void keyboardCallback(unsigned char key, int x, int y)
                 animation.keyframes = keyframes0;
                 animation.playback.Play(0, animation.keyframes.size() - 1, 1.0f, std::make_shared<Gm::Playback::Loop>());
             }
+
+            #endif
+        }
+        break;
+
+        case ' ': // SPACE
+            showTrackingShot = !showTrackingShot;
+            break;
+
+        case 'w':
+            viewTransform.MoveLocal({ 0, 0, cameraMove });
+            break;
+        case 's':
+            viewTransform.MoveLocal({ 0, 0, -cameraMove });
+            break;
+        case 'd':
+            viewTransform.MoveLocal({ cameraMove, 0, 0 });
+            break;
+        case 'a':
+            viewTransform.MoveLocal({ -cameraMove, 0, 0 });
             break;
     }
 }
+
+#ifdef TEST_TRACKING_SHOT
+
+static int prevMouseX = 0, prevMouseY = 0;
+
+void storePrevMousePos(int x, int y)
+{
+    prevMouseX = x;
+    prevMouseY = y;
+}
+
+void motionCallback(int x, int y)
+{
+    static const Gs::Real rotationSpeed = Gs::pi*0.002f;
+
+    auto dx = x - prevMouseX;
+    auto dy = y - prevMouseY;
+
+    float pitch = static_cast<float>(dy) * rotationSpeed;
+    float yaw   = static_cast<float>(dx) * rotationSpeed;
+
+    turnCamera(pitch, yaw);
+
+    storePrevMousePos(x, y);
+}
+
+#endif
 
 int main(int argc, char* argv[])
 {
@@ -336,6 +572,11 @@ int main(int argc, char* argv[])
         glutReshapeFunc(reshapeCallback);
         glutIdleFunc(idleCallback);
         glutKeyboardFunc(keyboardCallback);
+
+        #ifdef TEST_TRACKING_SHOT
+        glutMotionFunc(motionCallback);
+        glutPassiveMotionFunc(storePrevMousePos);
+        #endif
 
         initGL();
         initScene();
