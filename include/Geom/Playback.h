@@ -99,6 +99,10 @@ class Playback
                 
         };
 
+        /**
+        \brief One shot playback event listener.
+        \remarks Plays an animation from the first to the last frame.
+        */
         class OneShot : public EventListener
         {
 
@@ -108,6 +112,10 @@ class Playback
 
         };
 
+        /**
+        \brief Loop playback event listener.
+        \remarks Plays an animation from the first to the last frame, and then starts the animation from the beginning.
+        */
         class Loop : public EventListener
         {
 
@@ -117,6 +125,10 @@ class Playback
 
         };
 
+        /**
+        \brief Ping-pong loop playback event listener.
+        \remarks Plays an animation from the first to the last frame, and vise-versa, and then starts the animation from the beginning.
+        */
         class PingPongLoop : public EventListener
         {
 
@@ -126,6 +138,10 @@ class Playback
 
         };
 
+        /**
+        \brief List loop playback event listener.
+        \remarks Plays an animation by the listed frame indices in a loop fashion.
+        */
         class ListLoop : public EventListener
         {
 
