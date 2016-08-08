@@ -165,10 +165,10 @@ class ProjectionT
 
     private:
         
-        T                   near_       = T(0);
-        T                   far_        = T(0);
-        T                   fov_        = Gs::pi*T(74)/T(180);
-        T                   aspect_     = T(0);
+        T                   near_       = T(1);             //!< Default near clipping plane: 1.
+        T                   far_        = T(1000);          //!< Default far clipping plane: 1000.
+        T                   fov_        = Gs::pi*T(0.25);   //!< Default field of view: 45 degrees (or 'pi*45/180' radians).
+        T                   aspect_     = T(1);             //!< Default aspect ratio: 1:1.
         int                 flags_      = 0;
         bool                isOrtho_    = false;
         Gs::Vector2T<T>     orthoSize_;
