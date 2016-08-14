@@ -445,7 +445,7 @@ void addModelSpiral()
     //desc.tubeRadius             = { 0.2f, 0.4f, 0.1f };
     desc.tubeRadius             = { 0.2f, 0.1f, 0.2f };
     desc.turns                  = 3;
-    desc.displacement           = 0.3;
+    desc.displacement           = 0.3f;
     desc.bottomCoverSegments    = 5;
     desc.topCoverSegments       = 3;
     //desc.mantleSegments         = { 0, 0 };
@@ -491,14 +491,14 @@ void addModelCurve()
         auto f = t;
         t = std::sin(t*Gs::pi);
         return Gs::Vector3(
-            (t-0.5)*2,
-            std::sqrt(t*2)*0.5 + std::sin(std::pow(t, 2.0f)*Gs::pi*7)*0.2,
+            (t-0.5f)*2,
+            std::sqrt(t*2)*0.5f + std::sin(std::pow(t, 2.0f)*Gs::pi*7)*0.2f,
             std::sin(f*Gs::pi*2)
         );
     };
 
     desc.segments       = { 200, 20 };
-    desc.radius         = 0.05;
+    desc.radius         = 0.05f;
     desc.alternateGrid  = true;
 
     mdl->mesh = Gm::MeshGenerator::GenerateCurve(desc);
@@ -735,7 +735,7 @@ void drawMeshNormals(const Gm::TriangleMesh& mesh, bool faceNormals, bool vertNo
     glBegin(GL_LINES);
 
     const Gs::Vector4 faceNormalColor(1, 1, 0, 1);
-    const Gs::Vector4 vertNormalColor(0.2, 0.2, 1, 1);
+    const Gs::Vector4 vertNormalColor(0.2f, 0.2f, 1, 1);
 
     if (faceNormals)
     {

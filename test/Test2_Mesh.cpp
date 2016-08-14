@@ -293,7 +293,7 @@ void drawMesh(const Gm::TriangleMesh& mesh, bool wireframe = false)
 
 void drawMeshEdges(const Gm::TriangleMesh& mesh)
 {
-    auto edges = mesh.SilhouetteEdges(Gs::pi*0.01);
+    auto edges = mesh.SilhouetteEdges(Gs::pi*0.01f);
 
     const auto color = Gs::Vector4(1, 1, 0, 1);
 
@@ -504,7 +504,8 @@ void drawScene2D()
 {
     // setup projection
     glMatrixMode(GL_PROJECTION);
-    auto proj = Gs::ProjectionMatrix4::Planar(resolution.x, resolution.y);
+	auto res = resolution.Cast<Gs::Real>();
+    auto proj = Gs::ProjectionMatrix4::Planar(res.x, res.y);
     glLoadMatrix_T(proj.Ptr());
 
     // setup model-view matrix
@@ -589,11 +590,11 @@ void keyboardCallback(unsigned char key, int x, int y)
             break;
 
         case '4':
-            rotateModel = 0.1;
+            rotateModel = 0.1f;
             break;
 
         case '5':
-            rotateModel = -0.1;
+            rotateModel = -0.1f;
             break;
 
         case '6':
