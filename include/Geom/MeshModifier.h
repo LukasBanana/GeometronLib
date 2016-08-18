@@ -21,7 +21,6 @@ namespace MeshModifier
 {
 
 
-
 /**
 Clips this triangle mesh into a front- and back sided mesh by the specified clipping plane.
 \see ClipTriangle
