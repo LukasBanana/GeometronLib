@@ -37,6 +37,7 @@
 #include "BezierPatch.h"
 
 #include "Playback.h"
+#include "Skeleton.h"
 
 
 /**

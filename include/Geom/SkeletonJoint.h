@@ -34,6 +34,15 @@ class SkeletonJoint
         */
         struct VertexWeight
         {
+            VertexWeight() = default;
+            VertexWeight(const VertexWeight&) = default;
+
+            VertexWeight(TriangleMesh::VertexIndex index, Gs::Real weight) :
+                index   ( index  ),
+                weight  ( weight )
+            {
+            }
+
             TriangleMesh::VertexIndex   index   = 0;
             Gs::Real                    weight  = Gs::Real(0);
         };
@@ -43,8 +52,14 @@ class SkeletonJoint
 
         virtual ~SkeletonJoint();
 
-        //! Sets the new vertex-joint weights and normalizes the weight factors so that their sum is 1.0.
-        void SetVertexWeights(const std::vector<VertexWeight>& vertexWeights);
+        /**
+        \brief Sets the new vertex-joint weights and normalizes the weight factors so that their sum is 1.0.
+        \param[in] maxWeightCount Specifies an optional limit of weights. If this is greater than zero,
+        only the first 'maxWeightCount' most influential weights will be used (i.e. the weight with the highest weight factors).
+        This can be used to limit the weights for a vertex shader for instance.
+        If this parameter is zero, no limit is applied. By default 0.
+        */
+        void SetVertexWeights(const std::vector<VertexWeight>& vertexWeights, std::size_t maxWeightCount = 0);
 
         //! Returns the vertex-joint weights
         inline const std::vector<VertexWeight>& GetVertexWeights() const
@@ -54,9 +69,10 @@ class SkeletonJoint
 
         /**
         \brief Adds the specified skeleton joint and takes the ownership.
-        \throw std::invalid_argument If the specified joint already has a different parent than this joint.
+        \throw std::invalid_argument If the specified joint already has a parent.
+        \return Reference to the new skeleton joint.
         */
-        void AddSubJoint(SkeletonJointPtr&& joint);
+        SkeletonJoint& AddSubJoint(SkeletonJointPtr&& joint);
 
         /**
         \brief Removes the specified skeleton joint from the list of sub-joints.
@@ -82,7 +98,7 @@ class SkeletonJoint
         This matrix is generated for each joint within a skeleton by the "Skeleton::BuildPose" function.
         Here is a vertex transformation example:
         \code
-        animatedVertexPosition = joint->GetOriginTransform() * joint->transform * vertex.position;
+        animatedVertexPosition = joint->transform * joint->GetOriginTransform() * vertex.position;
         \endcode
         \see Skeleton::BuildPose
         */
@@ -90,6 +106,18 @@ class SkeletonJoint
         {
             return originTransform_;
         }
+
+        /**
+        \brief Stores the current global transformation of this skeleton joint in the specified output matrix parameter.
+        \see transform
+        */
+        void GlobalTransform(TransformMatrix& matrix) const;
+
+        /**
+        \brief Returns the current global transformation matrix of this skeleton joint.
+        \see transform
+        */
+        TransformMatrix GlobalTransform() const;
 
         /**
         \brief Current local transformation of this joint.

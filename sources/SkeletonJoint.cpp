@@ -19,10 +19,23 @@ SkeletonJoint::~SkeletonJoint()
 {
 }
 
-void SkeletonJoint::SetVertexWeights(const std::vector<VertexWeight>& vertexWeights)
+void SkeletonJoint::SetVertexWeights(const std::vector<VertexWeight>& vertexWeights, std::size_t maxWeightCount)
 {
     /* Set new vertex weights */
     vertexWeights_ = vertexWeights;
+
+    if (maxWeightCount > 0 && vertexWeights_.size() > maxWeightCount)
+    {
+        /* Sort weights by their weight factors */
+        std::sort(
+            vertexWeights_.begin(), vertexWeights_.end(),
+            [](const VertexWeight& lhs, const VertexWeight& rhs)
+            {
+                return (lhs.weight > rhs.weight);
+            }
+        );
+        vertexWeights_.resize(maxWeightCount);
+    }
 
     /* Determine sum of weight factors */
     auto weightSum = Gs::Real(0);
@@ -38,15 +51,17 @@ void SkeletonJoint::SetVertexWeights(const std::vector<VertexWeight>& vertexWeig
     }
 }
 
-void SkeletonJoint::AddSubJoint(SkeletonJointPtr&& joint)
+SkeletonJoint& SkeletonJoint::AddSubJoint(SkeletonJointPtr&& joint)
 {
-    if (joint->GetParent() == this)
-        return;
+    /* Validate input joint */
     if (joint->GetParent() != nullptr)
         throw std::invalid_argument(__FUNCTION__ ": SkeletonJoint already has another parent");
 
+    /* Set parent, add to sub-joint list, and return reference */
     joint->parent_ = this;
     subJoints_.push_back(std::move(joint));
+
+    return (*subJoints_.back().get());
 }
 
 SkeletonJointPtr SkeletonJoint::RemoveSubJoint(SkeletonJoint& joint)
@@ -66,6 +81,20 @@ SkeletonJointPtr SkeletonJoint::RemoveSubJoint(SkeletonJoint& joint)
     }
 
     return nullptr;
+}
+
+void SkeletonJoint::GlobalTransform(TransformMatrix& matrix) const
+{
+    if (parent_)
+        parent_->GlobalTransform(matrix);
+    matrix *= transform;
+}
+
+SkeletonJoint::TransformMatrix SkeletonJoint::GlobalTransform() const
+{
+    TransformMatrix matrix;
+    GlobalTransform(matrix);
+    return matrix;
 }
 
 
