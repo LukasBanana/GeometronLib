@@ -21,6 +21,8 @@ class Skeleton
     
     public:
 
+        virtual ~Skeleton();
+
         /**
         \brief Adds the specified skeleton joint and takes the ownership.
         \throw std::invalid_argument If the specified joint has a parent.

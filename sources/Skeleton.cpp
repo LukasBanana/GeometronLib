@@ -13,6 +13,10 @@ namespace Gm
 {
 
 
+Skeleton::~Skeleton()
+{
+}
+
 SkeletonJoint& Skeleton::AddRootJoint(SkeletonJointPtr&& joint)
 {
     /* Validate input joint */

@@ -123,17 +123,22 @@ class SkeletonJoint
         */
         TransformMatrix GlobalTransform() const;
 
+        /* ----- Members ----- */
+
         /**
         \brief Current local transformation of this joint.
         \remarks This transformation will change during animation.
         */
-        TransformMatrix transform;
+        TransformMatrix     transform;
 
         /**
         \brief Local pose transformation of this joint.
         \remarks This is the static transformation when the joint is not being animated.
         */
-        TransformMatrix poseTransform;
+        TransformMatrix     poseTransform;
+
+        //! Animation keyframe sequence.
+        KeyframeSequence    keyframes;
 
     protected:
 
