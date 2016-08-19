@@ -43,6 +43,10 @@ class KeyframeSequence
         
         void ClearKeys();
 
+        /**
+        \brief Builds the interpolated keys by the specified keyframes.
+        \param[in] positionKeyframes Specifies the position keyframes.
+        */
         void BuildKeys(
             std::vector<PositionKeyframe> positionKeyframes,
             std::vector<RotationKeyframe> rotationKeyframes,

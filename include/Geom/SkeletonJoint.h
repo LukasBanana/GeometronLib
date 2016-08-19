@@ -10,6 +10,7 @@
 
 
 #include "TriangleMesh.h"
+#include "KeyframeSequence.h"
 #include <Gauss/AffineMatrix4.h>
 #include <vector>
 #include <memory>
@@ -27,6 +28,9 @@ class SkeletonJoint
 {
     
     public:
+
+        //! Invalid ID for skeleton joints.
+        static const std::size_t invalidID = ~0;
 
         /**
         \brief Vertex-joint weight structure.

@@ -40,6 +40,9 @@ class Skeleton
             return rootJoints_;
         }
 
+        //! Returns a list of all root- and sub-joints of this skeleton.
+        std::vector<SkeletonJoint*> ListedJoints() const;
+
         /**
         \briefs Builds the final pose. This must be called after all joint pose transformations have been set.
         \see SkeletonJoint::poseTransform
@@ -78,7 +81,7 @@ class Skeleton
 
     private:
 
-        std::size_t NumJoints(const SkeletonJoint& joint) const;
+        std::size_t NumSubJoints(const SkeletonJoint& joint) const;
 
         void FillGlobalTransformBuffer(
             const SkeletonJoint& joint,
@@ -95,6 +98,8 @@ class Skeleton
             std::size_t& writtenMatrices,
             std::size_t maxNumMatrices
         ) const;
+
+        void ListJoints(const SkeletonJointPtr& joint, std::vector<SkeletonJoint*>& jointList) const;
 
         std::vector<SkeletonJointPtr> rootJoints_;
 

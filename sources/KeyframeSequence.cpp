@@ -99,7 +99,7 @@ void KeyframeSequence::BuildKeys(
     std::vector<RotationKeyframe> rotationKeyframes,
     std::vector<ScaleKeyframe> scaleKeyframes)
 {
-    /* Sort keyframes by their indices */
+    /* Sort keyframes by their frame indices */
     std::sort(positionKeyframes.begin(), positionKeyframes.end(), CompareKeyframeSWO<Gs::Vector3>);
     std::sort(rotationKeyframes.begin(), rotationKeyframes.end(), CompareKeyframeSWO<Gs::Quaternion>);
     std::sort(scaleKeyframes.begin(), scaleKeyframes.end(), CompareKeyframeSWO<Gs::Vector3>);
@@ -112,15 +112,15 @@ void KeyframeSequence::BuildKeys(
     GetFrameBounds(frameBegin_, frameEnd_, rotationKeyframes);
     GetFrameBounds(frameBegin_, frameEnd_, scaleKeyframes);
 
-    if (frameBegin_ == frameEnd_)
-        return;
+    if (frameBegin_ < frameEnd_)
+    {
+        /* Build interpolated keys */
+        auto numKeys = (frameEnd_ - frameBegin_);
 
-    /* Build keys */
-    auto numKeys = (frameEnd_ - frameBegin_);
-
-    BuildInterpolatedKeys(positionKeys_, positionKeyframes, numKeys);
-    BuildInterpolatedKeys(rotationKeys_, rotationKeyframes, numKeys);
-    BuildInterpolatedKeys(scaleKeys_, scaleKeyframes, numKeys);
+        BuildInterpolatedKeys(positionKeys_, positionKeyframes, numKeys);
+        BuildInterpolatedKeys(rotationKeys_, rotationKeyframes, numKeys);
+        BuildInterpolatedKeys(scaleKeys_, scaleKeyframes, numKeys);
+    }
 }
 
 void KeyframeSequence::Interpolate(Gs::AffineMatrix4& matrix, std::size_t from, std::size_t to, Gs::Real interpolator)

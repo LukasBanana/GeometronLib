@@ -6,6 +6,7 @@
  */
 
 #include <Geom/Skeleton.h>
+#include <stack>
 
 
 namespace Gm
@@ -43,6 +44,14 @@ SkeletonJointPtr Skeleton::RemoveRootJoint(SkeletonJoint& joint)
     return nullptr;
 }
 
+std::vector<SkeletonJoint*> Skeleton::ListedJoints() const
+{
+    std::vector<SkeletonJoint*> joints;
+    for (const auto& joint : rootJoints_)
+        ListJoints(joint, joints);
+    return joints;
+}
+
 void Skeleton::BuildPose()
 {
     /* Build pose for each root joint with identity as parent matrix (due to no parent) */
@@ -55,10 +64,10 @@ void Skeleton::BuildPose()
 
 std::size_t Skeleton::NumJoints() const
 {
-    std::size_t n = 0;
+    std::size_t n = rootJoints_.size();
 
     for (const auto& joint : rootJoints_)
-        n += NumJoints(*joint);
+        n += NumSubJoints(*joint);
 
     return n;
 }
@@ -123,12 +132,12 @@ std::size_t Skeleton::FillLocalTransformBuffer(float* buffer, std::size_t buffer
  * ======= Private: =======
  */
 
-std::size_t Skeleton::NumJoints(const SkeletonJoint& joint) const
+std::size_t Skeleton::NumSubJoints(const SkeletonJoint& joint) const
 {
-    std::size_t n = 1;
+    std::size_t n = joint.GetSubJoints().size();
 
     for (const auto& sub : joint.GetSubJoints())
-        n += NumJoints(*sub);
+        n += NumSubJoints(*sub);
 
     return n;
 }
@@ -177,6 +186,13 @@ void Skeleton::FillLocalTransformBuffer(
         else
             break;
     }
+}
+
+void Skeleton::ListJoints(const SkeletonJointPtr& joint, std::vector<SkeletonJoint*>& jointList) const
+{
+    jointList.push_back(joint.get());
+    for (const auto& subJoint : joint->GetSubJoints())
+        ListJoints(subJoint, jointList);
 }
 
 
