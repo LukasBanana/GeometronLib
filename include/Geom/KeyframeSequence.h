@@ -25,6 +25,15 @@ namespace Gm
 template <typename T>
 struct Keyframe
 {
+    Keyframe() = default;
+    Keyframe(const Keyframe<T>&) = default;
+
+    Keyframe(const T& key, std::size_t frame) :
+        key     ( key   ),
+        frame   ( frame )
+    {
+    }
+
     T           key;        //!< Keyframe value (commonly Vector3 for position and scale, or Quaternion for rotation).
     std::size_t frame = 0;  //!< Keyframe index.
 };

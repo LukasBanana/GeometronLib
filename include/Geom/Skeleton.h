@@ -21,6 +21,11 @@ class Skeleton
     
     public:
 
+        Skeleton() = default;
+
+        Skeleton(const Skeleton&) = delete;
+        Skeleton& operator = (const Skeleton&) = delete;
+
         virtual ~Skeleton();
 
         /**

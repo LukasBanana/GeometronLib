@@ -284,12 +284,6 @@ void initScene()
     keyframes0.addKeyframe({ 2, 0, 0 }, { 45, 0, 0 });
 
     #endif
-
-    #if 1
-    Gm::Skeleton skeleton;
-    auto& joint = skeleton.AddRootJoint(std::make_unique<Gm::SkeletonJoint>());
-    joint.SetVertexWeights({ { 0, 0.3f }, { 1, 0.5f }, { 2, 0.2f } }, 2);
-    #endif
 }
 
 void drawMesh(const Gm::TriangleMesh& mesh)
