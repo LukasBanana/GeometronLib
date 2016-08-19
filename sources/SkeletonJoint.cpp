@@ -15,10 +15,17 @@ namespace Gm
 {
 
 
+SkeletonJoint::SkeletonJoint()
+{
+    transform.LoadIdentity();
+}
+
 SkeletonJoint::~SkeletonJoint()
 {
 }
 
+#if 0
+//TODO -> this is for the final weights for each vertex attribue, but not for the joint!!!
 void SkeletonJoint::SetVertexWeights(const std::vector<VertexWeight>& vertexWeights, std::size_t maxWeightCount)
 {
     /* Set new vertex weights */
@@ -50,6 +57,7 @@ void SkeletonJoint::SetVertexWeights(const std::vector<VertexWeight>& vertexWeig
             vw.weight *= weightSumInv;
     }
 }
+#endif
 
 SkeletonJoint& SkeletonJoint::AddSubJoint(SkeletonJointPtr&& joint)
 {
@@ -93,6 +101,7 @@ void SkeletonJoint::GlobalTransform(TransformMatrix& matrix) const
 SkeletonJoint::TransformMatrix SkeletonJoint::GlobalTransform() const
 {
     TransformMatrix matrix;
+    matrix.LoadIdentity();
     GlobalTransform(matrix);
     return matrix;
 }

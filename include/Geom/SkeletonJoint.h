@@ -48,15 +48,17 @@ class SkeletonJoint
             {
             }
 
-            TriangleMesh::VertexIndex   index   = 0;
-            Gs::Real                    weight  = Gs::Real(0);
+            TriangleMesh::VertexIndex   index   = 0;            //!< Vertex index within the respective mesh.
+            Gs::Real                    weight  = Gs::Real(0);  //!< Weight factor. This should be in the range (0, +inf).
         };
 
         //! Transformation matrix type of skeleton joints (4x4 affine matrix).
         using TransformMatrix = Gs::AffineMatrix4;
 
+        SkeletonJoint();
         virtual ~SkeletonJoint();
 
+        #if 0
         /**
         \brief Sets the new vertex-joint weights and normalizes the weight factors so that their sum is 1.0.
         \param[in] maxWeightCount Specifies an optional limit of weights. If this is greater than zero,
@@ -71,6 +73,7 @@ class SkeletonJoint
         {
             return vertexWeights_;
         }
+        #endif
 
         /**
         \brief Adds the specified skeleton joint and takes the ownership.
@@ -130,16 +133,19 @@ class SkeletonJoint
         \brief Current local transformation of this joint.
         \remarks This transformation will change during animation.
         */
-        TransformMatrix     transform;
+        TransformMatrix             transform;
 
         /**
         \brief Local pose transformation of this joint.
         \remarks This is the static transformation when the joint is not being animated.
         */
-        Transform3          poseTransform;
+        Transform3                  poseTransform;
+
+        //! Vertex weight, which describe how much this joint influences each vertex.
+        std::vector<VertexWeight>   vertexWeights;
 
         //! Animation keyframe sequence.
-        KeyframeSequence    keyframes;
+        KeyframeSequence            keyframes;
 
     protected:
 
@@ -152,8 +158,6 @@ class SkeletonJoint
 
         SkeletonJoint*                  parent_         = nullptr;
         std::vector<SkeletonJointPtr>   subJoints_;
-
-        std::vector<VertexWeight>       vertexWeights_;
 
         TransformMatrix                 originTransform_; // inverse global pose transformation
 

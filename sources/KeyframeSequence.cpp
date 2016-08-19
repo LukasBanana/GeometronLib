@@ -50,9 +50,9 @@ void InterpolateKeys<Gs::Quaternion>(Gs::Quaternion& output, const Gs::Quaternio
 }
 
 template <typename T>
-void BuildInterpolatedKeys(std::vector<T>& outputKeys, const std::vector<Keyframe<T>>& keyframes, std::size_t numKeys)
+void BuildInterpolatedKeys(std::vector<T>& outputKeys, const std::vector<Keyframe<T>>& keyframes, std::size_t numKeys, const T& initValue)
 {
-    outputKeys.resize(numKeys);
+    outputKeys.resize(numKeys, initValue);
 
     if (!keyframes.empty())
     {
@@ -117,9 +117,9 @@ void KeyframeSequence::BuildKeys(
         /* Build interpolated keys */
         auto numKeys = (frameEnd_ - frameBegin_);
 
-        BuildInterpolatedKeys(positionKeys_, positionKeyframes, numKeys);
-        BuildInterpolatedKeys(rotationKeys_, rotationKeyframes, numKeys);
-        BuildInterpolatedKeys(scaleKeys_, scaleKeyframes, numKeys);
+        BuildInterpolatedKeys(positionKeys_, positionKeyframes, numKeys, Gs::Vector3(0));
+        BuildInterpolatedKeys(rotationKeys_, rotationKeyframes, numKeys, Gs::Quaternion());
+        BuildInterpolatedKeys(scaleKeys_, scaleKeyframes, numKeys, Gs::Vector3(1));
     }
 }
 

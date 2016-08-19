@@ -48,12 +48,34 @@ SkeletonJointPtr Skeleton::RemoveRootJoint(SkeletonJoint& joint)
     return nullptr;
 }
 
-std::vector<SkeletonJoint*> Skeleton::ListedJoints() const
+std::vector<SkeletonJoint*> Skeleton::JointList() const
 {
     std::vector<SkeletonJoint*> joints;
     for (const auto& joint : rootJoints_)
         ListJoints(joint, joints);
     return joints;
+}
+
+template <typename It>
+void IterateOverJointList(const std::vector<SkeletonJointPtr>& jointList, const It& iterator, std::size_t& index)
+{
+    for (const auto& joint : jointList)
+    {
+        iterator(*joint, index++);
+        IterateOverJointList(joint->GetSubJoints(), iterator, index);
+    }
+}
+
+void Skeleton::ForEachJoint(const SkeletonJointIterationFunction& iterator)
+{
+    std::size_t index = 0;
+    IterateOverJointList(rootJoints_, iterator, index);
+}
+
+void Skeleton::ForEachJoint(const SkeletonJointConstIterationFunction& iterator) const
+{
+    std::size_t index = 0;
+    IterateOverJointList(rootJoints_, iterator, index);
 }
 
 void Skeleton::BuildPose()

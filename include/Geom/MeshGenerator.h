@@ -92,13 +92,13 @@ struct ConeDescriptor
 struct CylinderDescriptor
 {
     //! Cylinder radius in U (x component), and V (y component) direction. By default (0.5, 0.5).
-    Gs::Vector2     radius          = Gs::Vector2(Gs::Real(0.5));
+    Gs::Vector2     radius              = Gs::Vector2(Gs::Real(0.5));
 
     //! Cylinder height. By default 1.
-    Gs::Real        height          = Gs::Real(1);
+    Gs::Real        height              = Gs::Real(1);
 
     //! Segmentation around the cylinder (x component), and height (y component). By default (20, 1).
-    Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
+    Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(20, 1);
 
     //! Segmentation of the top cover. If 0, no top cover is generated. By default 1.
     unsigned int    topCoverSegments    = 1;
@@ -107,7 +107,7 @@ struct CylinderDescriptor
     unsigned int    bottomCoverSegments = 1;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
-    bool            alternateGrid   = false;
+    bool            alternateGrid       = false;
 };
 
 struct PipeDescriptor

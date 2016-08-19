@@ -22,6 +22,16 @@
 
 // ----- STRUCTURES -----
 
+struct JointVertex
+{
+    struct Joint
+    {
+        std::size_t joint;
+        Gs::Real    weight;
+    };
+    std::vector<Joint> joints;
+};
+
 struct Model
 {
     Model() :
@@ -33,6 +43,8 @@ struct Model
     Gm::Transform3                  transform;
     std::shared_ptr<Gm::Skeleton>   skeleton;
     Gm::Playback                    animation;
+    std::vector<JointVertex>        jointVertices;
+    std::vector<Gs::Matrix4f>       jointMatrices;
 };
 
 
@@ -47,8 +59,10 @@ Gm::Transform3          viewTransform;
 
 std::vector<Model>      models;
 Model*                  focusedModel    = nullptr;
+Gm::Playback            playback;
 
-bool                    showSkeleton    = false;
+bool                    showWireframes  = false;
+bool                    showSkeleton    = true;
 
 
 // ----- FUNCTIONS -----
@@ -127,6 +141,15 @@ Gs::Quaternion makeRotation(Gs::Real pitch, Gs::Real yaw, Gs::Real roll)
     return rotation;
 }
 
+void genVertexWeights(const Gm::TriangleMesh& mesh, Gm::SkeletonJoint& joint)
+{
+    for (std::size_t i = 0, n = mesh.vertices.size(); i < n; ++i)
+    {
+        auto weight = 1.0f / Gs::Distance(mesh.vertices[i].position, joint.poseTransform.GetPosition());
+        joint.vertexWeights.push_back({ i, weight });
+    }
+}
+
 void initScene()
 {
     viewTransform.SetPosition({ 0, 0, -3 });
@@ -137,6 +160,7 @@ void initScene()
     Gm::MeshGenerator::CylinderDescriptor desc;
     {
         desc.height         = 3;
+        desc.alternateGrid  = true;
         desc.mantleSegments = { 20, 20 };
     }
     mdl.mesh = Gm::MeshGenerator::GenerateCylinder(desc);
@@ -145,52 +169,145 @@ void initScene()
     auto& rootJoint = mdl.skeleton->AddRootJoint(makeJoint());
     auto& subJoint = rootJoint.AddSubJoint(makeJoint());
 
-    rootJoint.poseTransform.SetPosition({ 0, 1.5f, 0 });
+    rootJoint.poseTransform.SetPosition({ 0, -1.5f, 0 });
+    subJoint.poseTransform.SetPosition({ 0, 1.5f, 0 });
+
+    mdl.skeleton->BuildPose();
 
     // create joint keyframes
     std::vector<Gm::RotationKeyframe> rotationKeys;
     {
         rotationKeys.push_back({ makeRotation(0, 0, 0), 0 });
-        rotationKeys.push_back({ makeRotation(0, 0, 90), 1 });
+        rotationKeys.push_back({ makeRotation(-90, 0, 90), 1 });
     }
-    subJoint.keyframes.BuildKeys({}, rotationKeys, {});
+    subJoint.keyframes.BuildKeys(
+        { { Gs::Vector3(0, 1.5f, 0), 0 } },
+        rotationKeys,
+        { { Gs::Vector3(1), 0 }, { Gs::Vector3(0.5f), 1 } }
+    );
 
-    //...
+    mdl.jointVertices.resize(mdl.mesh.vertices.size());
 
-    #if 0
-    Gm::Skeleton skeleton;
-    auto& joint = skeleton.AddRootJoint(std::make_unique<Gm::SkeletonJoint>());
-    joint.SetVertexWeights({ { 0, 0.3f }, { 1, 0.5f }, { 2, 0.2f } }, 2);
-    #endif
+    mdl.skeleton->ForEachJoint(
+        [&](Gm::SkeletonJoint& joint, std::size_t index)
+        {
+            joint.transform = joint.poseTransform.GetMatrix();
+            
+            genVertexWeights(mdl.mesh, joint);
+
+            for (auto& vw : joint.vertexWeights)
+            {
+                auto& jv = mdl.jointVertices[vw.index];
+                jv.joints.push_back({ index, vw.weight });
+            }
+        }
+    );
+
+    // normalize vertex weights
+    for (auto& jv : mdl.jointVertices)
+    {
+        auto num = jv.joints.size();
+        if (num > 0)
+        {
+            auto sum = Gs::Real(0);
+            for (auto& j : jv.joints)
+                sum += j.weight;
+            for (auto& j : jv.joints)
+                j.weight /= sum;
+        }
+    }
+
+    // setup joint matrices
+    mdl.jointMatrices.resize(mdl.skeleton->NumJoints());
 }
 
-void drawMesh(const Gm::TriangleMesh& mesh)
+void emitSkinnedVertex(const std::vector<Gs::Matrix4f>& jointMatrices, Gm::TriangleMesh::Vertex v, const JointVertex& jv)
 {
+    static const Gs::Vector3 jointColors[3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
+    Gs::Vector3 pos;
+    Gs::Vector3 color;
+
+    for (const auto& j : jv.joints)
+    {
+        pos += (Gs::TransformVector(jointMatrices[j.joint], v.position) * j.weight);
+        color += (jointColors[j.joint % 3] * j.weight);
+    }
+
+    v.position = pos;
+
+    glColor4f(color.x, color.y, color.z, 1.0f);
+    emitVertex(v);
+}
+
+void drawMesh(const Model& mdl)
+{
+    const auto& mesh            = mdl.mesh;
+    const auto& jointVertices   = mdl.jointVertices;
+    const auto& jointMatrices   = mdl.jointMatrices;
+
     Gs::Vector4 diffuse(1.0f, 1.0f, 1.0f, 1.0f);
     Gs::Vector4 ambient(0.4f, 0.4f, 0.4f, 1.0f);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse.Ptr());
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient.Ptr());
+    glEnable(GL_COLOR_MATERIAL);
+
+    glPolygonMode(GL_FRONT_AND_BACK, (showWireframes ? GL_LINE : GL_FILL));
 
     glEnable(GL_LIGHTING);
 
     glBegin(GL_TRIANGLES);
-
-    for (std::size_t i = 0; i < mesh.triangles.size(); ++i)
     {
-        const auto& tri = mesh.triangles[i];
+        for (std::size_t i = 0; i < mesh.triangles.size(); ++i)
+        {
+            const auto& tri = mesh.triangles[i];
 
-        const auto& v0 = mesh.vertices[tri.a];
-        const auto& v1 = mesh.vertices[tri.b];
-        const auto& v2 = mesh.vertices[tri.c];
-
-        emitVertex(v0);
-        emitVertex(v1);
-        emitVertex(v2);
+            emitSkinnedVertex(jointMatrices, mesh.vertices[tri.a], jointVertices[tri.a]);
+            emitSkinnedVertex(jointMatrices, mesh.vertices[tri.b], jointVertices[tri.b]);
+            emitSkinnedVertex(jointMatrices, mesh.vertices[tri.c], jointVertices[tri.c]);
+        }
     }
-
     glEnd();
 
     glDisable(GL_LIGHTING);
+}
+
+void drawJoint(const Gm::SkeletonJoint& joint)
+{
+    auto transform = joint.GlobalTransform();
+    auto base = transform.GetPosition();
+    auto tip = Gs::TransformVector(transform, Gs::Vector3(0, 1, 0));
+
+    glBegin(GL_POINTS);
+    {
+        glColor4f(1, 0, 0, 1);
+        glVertex3fv(base.Ptr());
+    }
+    glEnd();
+
+    glBegin(GL_LINES);
+    {
+        drawLine(base, tip, Gs::Vector4f(1, 1, 0, 1));
+    }
+    glEnd();
+}
+
+void drawSkeleton(const Gm::Skeleton& skeleton)
+{
+    glDisable(GL_DEPTH_TEST);
+    glPointSize(15);
+    glLineWidth(5);
+
+    skeleton.ForEachJoint(
+        [](const Gm::SkeletonJoint& joint, std::size_t index)
+        {
+            drawJoint(joint);
+        }
+    );
+
+    glLineWidth(1);
+    glPointSize(1);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void drawModel(const Model& mdl)
@@ -200,55 +317,32 @@ void drawModel(const Model& mdl)
     glLoadMatrixf(modelView.Ptr());
 
     // draw model
-    drawMesh(mdl.mesh);
+    drawMesh(mdl);
 
     // draw skeleton
-    /*if (showSkeleton)
-        drawSkeleton(mdl.skeleton);*/
-}
-
-void drawSpline(const Gm::Spline3& spline, Gs::Real a, Gs::Real b, std::size_t segments, const Gs::Vector4f& color)
-{
-    // draw curve
-    glBegin(GL_LINE_STRIP);
-
-    auto step = (b - a) / segments;
-
-    for (std::size_t i = 0; i <= segments; ++i)
-    {
-        glColor4fv(color.Ptr());
-
-        // interpolate vertex
-        auto p = spline(a);
-        glVertex3fv(p.Ptr());
-        a += step;
-    }
-
-    glEnd();
-
-    // draw control points
-    glPointSize(5.0f);
-
-    glBegin(GL_POINTS);
-
-    for (const auto& p : spline.GetPoints())
-    {
-        glColor4f(1, 1, 0, 1);
-        auto v = spline(p.interval);
-        glVertex3fv(v.Ptr());
-    }
-
-    glEnd();
-
-    glPointSize(1.0f);
+    if (showSkeleton)
+        drawSkeleton(*mdl.skeleton);
 }
 
 void updateScene()
 {
     // update animation playback
-    //animation.playback.Update(1.0f / 60.0f);
+    playback.Update(1.0f / 60.0f);
 
+    for (auto& mdl : models)
+    {
+        mdl.skeleton->FillGlobalTransformBuffer(
+            reinterpret_cast<float*>(mdl.jointMatrices.data()),
+            mdl.jointMatrices.size() * 16
+        );
 
+        mdl.skeleton->ForEachJoint(
+            [&](Gm::SkeletonJoint& joint, std::size_t index)
+            {
+                joint.keyframes.Interpolate(joint.transform, 0, 1, playback.interpolator);
+            }
+        );
+    }
 }
 
 void drawScene()
@@ -316,20 +410,16 @@ void keyboardCallback(unsigned char key, int x, int y)
 
         case '\r': // ENTER
         {
-            /*if (animation.playback.GetState() == Gm::Playback::State::Playing)
-            {
-                animation.keyframes.clear();
-                animation.keyframes.addKeyframe(focusedModel->transform);
-                animation.keyframes.addKeyframe({}, {});
-                animation.playback.Play(0, 1, 5.0f);
-            }
+            if (playback.GetState() == Gm::Playback::State::Playing)
+                playback.Stop();
             else
-            {
-                animation.keyframes = keyframes0;
-                animation.playback.Play(0, animation.keyframes.size() - 1, 1.0f, std::make_shared<Gm::Playback::Loop>());
-            }*/
+                playback.Play(0, 1, 0.5f, std::make_shared<Gm::Playback::PingPongLoop>());
         }
         break;
+
+        case '\t': // TAB
+            showWireframes = !showWireframes;
+            break;
 
         case ' ': // SPACE
             showSkeleton = !showSkeleton;

@@ -10,10 +10,15 @@
 
 
 #include "SkeletonJoint.h"
+#include <functional>
 
 
 namespace Gm
 {
+
+
+using SkeletonJointIterationFunction = std::function<void(SkeletonJoint& joint, std::size_t index)>;
+using SkeletonJointConstIterationFunction = std::function<void(const SkeletonJoint& joint, std::size_t index)>;
 
 
 class Skeleton
@@ -48,7 +53,13 @@ class Skeleton
         }
 
         //! Returns a list of all root- and sub-joints of this skeleton.
-        std::vector<SkeletonJoint*> ListedJoints() const;
+        std::vector<SkeletonJoint*> JointList() const;
+
+        //! Iterates over each joint with the specified iteration function.
+        void ForEachJoint(const SkeletonJointIterationFunction& iterator);
+
+        //! Iterates over each joint with the specified iteration function.
+        void ForEachJoint(const SkeletonJointConstIterationFunction& iterator) const;
 
         /**
         \briefs Builds the final pose. This must be called after all joint pose transformations have been set.
