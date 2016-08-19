@@ -105,7 +105,7 @@ SkeletonJoint::TransformMatrix SkeletonJoint::GlobalTransform() const
 void SkeletonJoint::BuildPose(TransformMatrix parentPoseTransform)
 {
     /* Apply pose transformation of this joint and store its inverse matrix */
-    parentPoseTransform *= poseTransform;
+    parentPoseTransform *= poseTransform.GetMatrix();
     originTransform_ = parentPoseTransform.Inverse();
 
     /* Repeat the process for each sub-joint */

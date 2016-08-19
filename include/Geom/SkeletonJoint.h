@@ -10,6 +10,7 @@
 
 
 #include "TriangleMesh.h"
+#include "Transform3.h"
 #include "KeyframeSequence.h"
 #include <Gauss/AffineMatrix4.h>
 #include <vector>
@@ -135,7 +136,7 @@ class SkeletonJoint
         \brief Local pose transformation of this joint.
         \remarks This is the static transformation when the joint is not being animated.
         */
-        TransformMatrix     poseTransform;
+        Transform3          poseTransform;
 
         //! Animation keyframe sequence.
         KeyframeSequence    keyframes;
