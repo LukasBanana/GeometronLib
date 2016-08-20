@@ -5,6 +5,7 @@
  * See "LICENSE.txt" for license information.
  */
 
+#include "Except.h"
 #include <Geom/Skeleton.h>
 #include <stack>
 
@@ -21,7 +22,7 @@ SkeletonJoint& Skeleton::AddRootJoint(SkeletonJointPtr&& joint)
 {
     /* Validate input joint */
     if (joint->GetParent())
-        throw std::invalid_argument(std::string(__FUNCTION__) + std::string(": SkeletonJoint already has another parent"));
+        throw std::invalid_argument(GM_EXCEPT_INFO("SkeletonJoint already has another parent"));
 
     /* Add to root-joint list and return reference */
     rootJoints_.push_back(std::move(joint));
@@ -102,9 +103,9 @@ std::size_t Skeleton::FillGlobalTransformBuffer(float* buffer, std::size_t buffe
 {
     /* Validate input parameters */
     if (!buffer)
-        throw std::invalid_argument(std::string(__FUNCTION__) + std::string(": 'buffer' must not be null"));
+        throw std::invalid_argument(GM_EXCEPT_INFO("'buffer' must not be null"));
     if (bufferSize % 16 != 0)
-        throw std::invalid_argument(std::string(__FUNCTION__) + std::string(": 'bufferSize' must be a multiple of 16"));
+        throw std::invalid_argument(GM_EXCEPT_INFO("'bufferSize' must be a multiple of 16"));
 
     /* Convert float pointer to 4x4-matrix pointer */
     auto maxNumMatrices = bufferSize / 16;
@@ -131,9 +132,9 @@ std::size_t Skeleton::FillLocalTransformBuffer(float* buffer, std::size_t buffer
 {
     /* Validate input parameters */
     if (!buffer)
-        throw std::invalid_argument(std::string(__FUNCTION__) + std::string(": 'buffer' must not be null"));
+        throw std::invalid_argument(GM_EXCEPT_INFO("'buffer' must not be null"));
     if (bufferSize % 16 != 0)
-        throw std::invalid_argument(std::string(__FUNCTION__) + std::string(": 'bufferSize' must be a multiple of 16"));
+        throw std::invalid_argument(GM_EXCEPT_INFO("'bufferSize' must be a multiple of 16"));
 
     /* Convert float pointer to 4x4-matrix pointer */
     auto maxNumMatrices = bufferSize / 16;

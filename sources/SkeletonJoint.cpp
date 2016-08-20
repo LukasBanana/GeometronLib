@@ -5,6 +5,7 @@
  * See "LICENSE.txt" for license information.
  */
 
+#include "Except.h"
 #include <Geom/SkeletonJoint.h>
 #include <Gauss/Epsilon.h>
 #include <stdexcept>
@@ -63,7 +64,7 @@ SkeletonJoint& SkeletonJoint::AddSubJoint(SkeletonJointPtr&& joint)
 {
     /* Validate input joint */
     if (joint->GetParent() != nullptr)
-        throw std::invalid_argument(std::string(__FUNCTION__) + std::string(": SkeletonJoint already has another parent"));
+        throw std::invalid_argument(GM_EXCEPT_INFO("SkeletonJoint already has another parent"));
 
     /* Set parent, add to sub-joint list, and return reference */
     joint->parent_ = this;
