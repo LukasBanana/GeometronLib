@@ -63,8 +63,10 @@ class KeyframeSequence
         );
 
         /**
-        \brief Interpolates the specified keyframes and writes the result into the output matrix.
-        \param[out] matrix Specifies the output matrix.
+        \brief Interpolates the specified keyframes and writes the result into the respective output parameter.
+        \param[out] position Specifies the interpolated output position.
+        \param[out] rotation Specifies the interpolated output rotation.
+        \param[out] scale Specifies the interpolated output scale.
         \param[in] from Specifies the keyframe index from which to interpolate. This will be clamped to the range [GetFrameBegin(), GetFrameEnd()).
         \param[in] to Specifies the keyframe index to which to interpolate. This will be clamped to the range [GetFrameBegin(), GetFrameEnd()).
         \param[in] interpolator Specifies the interpolation factor in the range [0, 1].
@@ -72,6 +74,12 @@ class KeyframeSequence
         \see GetFrameBegin
         \see GetFrameEnd
         \see BuildKeys
+        */
+        void Interpolate(Gs::Vector3& position, Gs::Quaternion& rotation, Gs::Vector3& scale, std::size_t from, std::size_t to, Gs::Real interpolator);
+
+        /**
+        \brief Interpolates the specified keyframes and writes the result into the output matrix.
+        \see Interpolate(Gs::Vector3&, Gs::Quaternion&, Gs::Vector3&, std::size_t, std::size_t, Gs::Real)
         */
         void Interpolate(Gs::AffineMatrix4& matrix, std::size_t from, std::size_t to, Gs::Real interpolator);
 
@@ -81,16 +89,19 @@ class KeyframeSequence
         */
         void Interpolate(Gs::AffineMatrix4& matrix, const Playback& playback);
 
+        //! Returns the pre-computed position keys.
         inline const std::vector<Gs::Vector3>& GetPositionKeys() const
         {
             return positionKeys_;
         }
 
+        //! Returns the pre-computed rotation keys.
         inline const std::vector<Gs::Quaternion>& GetRotationKeys() const
         {
             return rotationKeys_;
         }
 
+        //! Returns the pre-computed scale keys.
         inline const std::vector<Gs::Vector3>& GetScaleKeys() const
         {
             return scaleKeys_;

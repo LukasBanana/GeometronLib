@@ -13,7 +13,6 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
-#include "Test5_Skeleton.h"
 
 
 // ----- MACROS -----

@@ -123,7 +123,7 @@ void KeyframeSequence::BuildKeys(
     }
 }
 
-void KeyframeSequence::Interpolate(Gs::AffineMatrix4& matrix, std::size_t from, std::size_t to, Gs::Real interpolator)
+void KeyframeSequence::Interpolate(Gs::Vector3& position, Gs::Quaternion& rotation, Gs::Vector3& scale, std::size_t from, std::size_t to, Gs::Real interpolator)
 {
     if (GetFrameBegin() < GetFrameEnd())
     {
@@ -145,9 +145,21 @@ void KeyframeSequence::Interpolate(Gs::AffineMatrix4& matrix, std::size_t from, 
         const auto& scaleTo         = scaleKeys_[to];
 
         /* Interpolate keys */
-        auto position   = Gs::Lerp(positionFrom, positionTo, interpolator);
-        auto rotation   = Gs::Slerp(rotationFrom, rotationTo, interpolator);
-        auto scale      = Gs::Lerp(scaleFrom, scaleTo, interpolator);
+        Gs::Lerp(position, positionFrom, positionTo, interpolator);
+        rotation = Gs::Slerp(rotationFrom, rotationTo, interpolator);
+        Gs::Lerp(scale, scaleFrom, scaleTo, interpolator);
+    }
+}
+
+void KeyframeSequence::Interpolate(Gs::AffineMatrix4& matrix, std::size_t from, std::size_t to, Gs::Real interpolator)
+{
+    if (GetFrameBegin() < GetFrameEnd())
+    {
+        /* Interpolate position, rotation, and scale */
+        Gs::Vector3 position, scale;
+        Gs::Quaternion rotation;
+
+        Interpolate(position, rotation, scale, from, to, interpolator);
 
         /* Set final matrix transformation */
         matrix.SetPosition(position);
