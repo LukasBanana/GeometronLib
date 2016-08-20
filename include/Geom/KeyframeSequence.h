@@ -65,15 +65,13 @@ class KeyframeSequence
         /**
         \brief Interpolates the specified keyframes and writes the result into the output matrix.
         \param[out] matrix Specifies the output matrix.
-        \param[in] from Specifies the keyframe index from which to interpolate.
-        \param[in] to Specifies the keyframe index to which to interpolate.
+        \param[in] from Specifies the keyframe index from which to interpolate. This will be clamped to the range [GetFrameBegin(), GetFrameEnd()).
+        \param[in] to Specifies the keyframe index to which to interpolate. This will be clamped to the range [GetFrameBegin(), GetFrameEnd()).
         \param[in] interpolator Specifies the interpolation factor in the range [0, 1].
-        \remarks If any of the frame indices ('from' and 'to') are out of range, this function call has no effect.
-        \see GetPositionKeys
-        \see GetRotationKeys
-        \see GetScaleKeys
+        \remarks If this keyframe sequences has no keys, this function call has no effect. To build the keys, call "BuildKeys".
         \see GetFrameBegin
         \see GetFrameEnd
+        \see BuildKeys
         */
         void Interpolate(Gs::AffineMatrix4& matrix, std::size_t from, std::size_t to, Gs::Real interpolator);
 
@@ -111,6 +109,8 @@ class KeyframeSequence
         }
 
     private:
+
+        void ClampFrame(std::size_t& frame) const;
 
         std::vector<Gs::Vector3>    positionKeys_;
         std::vector<Gs::Quaternion> rotationKeys_;

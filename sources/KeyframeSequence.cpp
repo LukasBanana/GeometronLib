@@ -16,11 +16,6 @@ namespace Gm
 {
 
 
-static Gs::Real FrameInterpolator(std::size_t from, std::size_t to, std::size_t current)
-{
-    return static_cast<Gs::Real>(current - from) / (to - from);
-}
-
 template <typename T>
 bool CompareKeyframeSWO(const Keyframe<T>& lhs, const Keyframe<T>& rhs)
 {
@@ -35,6 +30,11 @@ void GetFrameBounds(std::size_t& frameBegin, std::size_t& frameEnd, const std::v
         frameBegin  = std::min(frameBegin, keyframes.front().frame);
         frameEnd    = std::max(frameEnd, keyframes.back().frame + 1);
     }
+}
+
+static Gs::Real FrameInterpolator(std::size_t from, std::size_t to, std::size_t current)
+{
+    return static_cast<Gs::Real>(current - from) / (to - from);
 }
 
 template <typename T>
@@ -125,12 +125,12 @@ void KeyframeSequence::BuildKeys(
 
 void KeyframeSequence::Interpolate(Gs::AffineMatrix4& matrix, std::size_t from, std::size_t to, Gs::Real interpolator)
 {
-    /* Validate input parameters */
-    auto minFrame = std::min(from, to);
-    auto maxFrame = std::max(from, to);
-
-    if (minFrame >= GetFrameBegin() && maxFrame < GetFrameEnd())
+    if (GetFrameBegin() < GetFrameEnd())
     {
+        /* Clamp frame boundaries */
+        ClampFrame(from);
+        ClampFrame(to);
+
         /* Subtract frame offset */
         from -= GetFrameBegin();
         to -= GetFrameBegin();
@@ -159,6 +159,19 @@ void KeyframeSequence::Interpolate(Gs::AffineMatrix4& matrix, std::size_t from, 
 void KeyframeSequence::Interpolate(Gs::AffineMatrix4& matrix, const Playback& playback)
 {
     Interpolate(matrix, playback.frame, playback.nextFrame, playback.interpolator);
+}
+
+
+/*
+ * ======= Private: =======
+ */
+
+void KeyframeSequence::ClampFrame(std::size_t& frame) const
+{
+    if (frame < frameBegin_)
+        frame = frameBegin_;
+    if (frame >= frameEnd_)
+        frame = frameEnd_ - 1;
 }
 
 

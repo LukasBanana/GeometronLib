@@ -13,6 +13,7 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include "Test5_Skeleton.h"
 
 
 // ----- MACROS -----
@@ -162,6 +163,7 @@ void initScene()
         desc.height         = 3;
         desc.alternateGrid  = true;
         desc.mantleSegments = { 20, 20 };
+        desc.topCoverSegments = 3;//!!!
     }
     mdl.mesh = Gm::MeshGenerator::GenerateCylinder(desc);
 
@@ -179,11 +181,24 @@ void initScene()
     {
         rotationKeys.push_back({ makeRotation(0, 0, 0), 0 });
         rotationKeys.push_back({ makeRotation(-90, 0, 90), 1 });
+        rotationKeys.push_back({ makeRotation(0, 0, 90), 3 });
     }
     subJoint.keyframes.BuildKeys(
         { { Gs::Vector3(0, 1.5f, 0), 0 } },
         rotationKeys,
         { { Gs::Vector3(1), 0 }, { Gs::Vector3(0.5f), 1 } }
+    );
+
+    rotationKeys.clear();
+    {
+        rotationKeys.push_back({ makeRotation(0, 0, 0), 0 });
+        rotationKeys.push_back({ makeRotation(0, 45, 45), 1 });
+        rotationKeys.push_back({ makeRotation(45, -45, 0), 2 });
+    }
+    rootJoint.keyframes.BuildKeys(
+        { { Gs::Vector3(0, -1.5f, 0), 0 } },
+        rotationKeys,
+        {}
     );
 
     mdl.jointVertices.resize(mdl.mesh.vertices.size());
@@ -339,7 +354,7 @@ void updateScene()
         mdl.skeleton->ForEachJoint(
             [&](Gm::SkeletonJoint& joint, std::size_t index)
             {
-                joint.keyframes.Interpolate(joint.transform, 0, 1, playback.interpolator);
+                joint.keyframes.Interpolate(joint.transform, playback);
             }
         );
     }
@@ -413,7 +428,7 @@ void keyboardCallback(unsigned char key, int x, int y)
             if (playback.GetState() == Gm::Playback::State::Playing)
                 playback.Stop();
             else
-                playback.Play(0, 1, 0.5f, std::make_shared<Gm::Playback::PingPongLoop>());
+                playback.Play(0, 3, 0.5f, std::make_shared<Gm::Playback::Loop>());
         }
         break;
 
