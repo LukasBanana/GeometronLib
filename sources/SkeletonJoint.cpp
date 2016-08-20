@@ -25,41 +25,6 @@ SkeletonJoint::~SkeletonJoint()
 {
 }
 
-#if 0
-//TODO -> this is for the final weights for each vertex attribue, but not for the joint!!!
-void SkeletonJoint::SetVertexWeights(const std::vector<VertexWeight>& vertexWeights, std::size_t maxWeightCount)
-{
-    /* Set new vertex weights */
-    vertexWeights_ = vertexWeights;
-
-    if (maxWeightCount > 0 && vertexWeights_.size() > maxWeightCount)
-    {
-        /* Sort weights by their weight factors */
-        std::sort(
-            vertexWeights_.begin(), vertexWeights_.end(),
-            [](const VertexWeight& lhs, const VertexWeight& rhs)
-            {
-                return (lhs.weight > rhs.weight);
-            }
-        );
-        vertexWeights_.resize(maxWeightCount);
-    }
-
-    /* Determine sum of weight factors */
-    auto weightSum = Gs::Real(0);
-    for (const auto& vw : vertexWeights_)
-        weightSum += vw.weight;
-
-    /* Normalize weight factors to 1 */
-    if (weightSum > Gs::Epsilon<Gs::Real>())
-    {
-        auto weightSumInv = Gs::Real(1) / weightSum;
-        for (auto& vw : vertexWeights_)
-            vw.weight *= weightSumInv;
-    }
-}
-#endif
-
 SkeletonJoint& SkeletonJoint::AddSubJoint(SkeletonJointPtr&& joint)
 {
     /* Validate input joint */

@@ -58,23 +58,6 @@ class SkeletonJoint
         SkeletonJoint();
         virtual ~SkeletonJoint();
 
-        #if 0
-        /**
-        \brief Sets the new vertex-joint weights and normalizes the weight factors so that their sum is 1.0.
-        \param[in] maxWeightCount Specifies an optional limit of weights. If this is greater than zero,
-        only the first 'maxWeightCount' most influential weights will be used (i.e. the weight with the highest weight factors).
-        This can be used to limit the weights for a vertex shader for instance.
-        If this parameter is zero, no limit is applied. By default 0.
-        */
-        void SetVertexWeights(const std::vector<VertexWeight>& vertexWeights, std::size_t maxWeightCount = 0);
-
-        //! Returns the vertex-joint weights
-        inline const std::vector<VertexWeight>& GetVertexWeights() const
-        {
-            return vertexWeights_;
-        }
-        #endif
-
         /**
         \brief Adds the specified skeleton joint and takes the ownership.
         \throw std::invalid_argument If the specified joint already has a parent.
