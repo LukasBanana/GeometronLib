@@ -63,7 +63,7 @@ SkeletonJoint& SkeletonJoint::AddSubJoint(SkeletonJointPtr&& joint)
 {
     /* Validate input joint */
     if (joint->GetParent() != nullptr)
-        throw std::invalid_argument(__FUNCTION__ ": SkeletonJoint already has another parent");
+        throw std::invalid_argument(std::string(__FUNCTION__) + std::string(": SkeletonJoint already has another parent"));
 
     /* Set parent, add to sub-joint list, and return reference */
     joint->parent_ = this;
