@@ -42,6 +42,14 @@ class Transform3T
         {
         }
 
+        explicit Transform3T(const Gs::AffineMatrix4T<T>& matrix) :
+            hasChanged_( true )
+        {
+            position_ = matrix.GetPosition();
+            Gs::MatrixToQuaternion(rotation_, matrix);
+            scale_ = matrix.GetScale();
+        }
+
         void SetPosition(const Gs::Vector3T<T>& position)
         {
             position_ = position;

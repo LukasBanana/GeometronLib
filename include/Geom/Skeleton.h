@@ -64,6 +64,7 @@ class Skeleton
         /**
         \briefs Builds the final pose. This must be called after all joint pose transformations have been set.
         \see SkeletonJoint::poseTransform
+        \see SkeletonJoint
         \see SkeletonJoint::GetOriginTransform()
         */
         void BuildPose();

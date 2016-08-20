@@ -174,12 +174,12 @@ void Skeleton::FillGlobalTransformBuffer(
     std::size_t& writtenMatrices, std::size_t maxNumMatrices, bool relativeTransform) const
 {
     /* Apply joint transformation to parent matrix */
-    parentMatrix *= joint.transform.ToMatrix4();
+    parentMatrix *= joint.transform.ToMatrix4().Cast<float>();
 
     /* Set current entry in output buffer */
     *buffer = parentMatrix;
     if (relativeTransform)
-        *buffer *= joint.GetOriginTransform().ToMatrix4();
+        *buffer *= joint.jointSpaceTransform.ToMatrix4().Cast<float>();
 
     /* Go to next buffer entry */
     ++buffer;

@@ -116,7 +116,7 @@ void SkeletonJoint::BuildPose(TransformMatrix parentPoseTransform)
 {
     /* Apply pose transformation of this joint and store its inverse matrix */
     parentPoseTransform *= poseTransform.GetMatrix();
-    originTransform_ = parentPoseTransform.Inverse();
+    jointSpaceTransform = parentPoseTransform.Inverse();
 
     /* Repeat the process for each sub-joint */
     for (auto& joint : subJoints_)

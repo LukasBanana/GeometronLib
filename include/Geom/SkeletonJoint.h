@@ -101,21 +101,6 @@ class SkeletonJoint
         }
 
         /**
-        \brief Returns the origin transformation (or rather inverse global pose transformation).
-        \remarks This is used as base matrix to transform the animated vertices.
-        This matrix is generated for each joint within a skeleton by the "Skeleton::BuildPose" function.
-        Here is a vertex transformation example:
-        \code
-        animatedVertexPosition = joint->transform * joint->GetOriginTransform() * vertex.position;
-        \endcode
-        \see Skeleton::BuildPose
-        */
-        inline const TransformMatrix& GetOriginTransform() const
-        {
-            return originTransform_;
-        }
-
-        /**
         \brief Stores the current global transformation of this skeleton joint in the specified output matrix parameter.
         \see transform
         */
@@ -138,8 +123,24 @@ class SkeletonJoint
         /**
         \brief Local pose transformation of this joint.
         \remarks This is the static transformation when the joint is not being animated.
+        When 'Skeleton::BuildPose' is called, the field 'jointSpaceTransform'
+        will be set to the inverse global pose transformation of this joint.
+        \see jointSpaceTransform
+        \see Skeleton::BuildPose
         */
         Transform3                  poseTransform;
+
+        /**
+        \brief Specifies the joint-space transformation.
+        \remarks This matrix is used to transform the vertices from model-space into joint-space.
+        This function will be overwritten whenever 'Skeleton::BuildPose' is called.
+        Here is a vertex transformation example:
+        \code
+        skinnedVertex = joint->transform * joint->jointSpaceTransform * vertex.position;
+        \endcode
+        \see poseTransform
+        */
+        TransformMatrix             jointSpaceTransform;
 
         //! Vertex weight, which describe how much this joint influences each vertex.
         std::vector<VertexWeight>   vertexWeights;
@@ -151,15 +152,13 @@ class SkeletonJoint
 
         friend class Skeleton;
 
-        //! Builds the origin transformation for this joint and all sub-joints.
+        //! Builds the joint-space transformation for this joint and all sub-joints.
         void BuildPose(TransformMatrix parentPoseTransform);
 
     private:
 
         SkeletonJoint*                  parent_         = nullptr;
         std::vector<SkeletonJointPtr>   subJoints_;
-
-        TransformMatrix                 originTransform_; // inverse global pose transformation
 
 };
 
