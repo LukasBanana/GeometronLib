@@ -173,7 +173,7 @@ void initScene()
     rootJoint.poseTransform.SetPosition({ 0, -1.5f, 0 });
     subJoint.poseTransform.SetPosition({ 0, 1.5f, 0 });
 
-    mdl.skeleton->BuildPose();
+    mdl.skeleton->BuildJointSpace();
 
     // create joint keyframes
     std::vector<Gm::RotationKeyframe> rotationKeys;

@@ -153,7 +153,7 @@ class SkeletonJoint
         friend class Skeleton;
 
         //! Builds the joint-space transformation for this joint and all sub-joints.
-        void BuildPose(TransformMatrix parentPoseTransform);
+        void BuildJointSpace(TransformMatrix parentPoseTransform);
 
     private:
 

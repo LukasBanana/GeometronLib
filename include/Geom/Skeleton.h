@@ -62,12 +62,14 @@ class Skeleton
         void ForEachJoint(const SkeletonJointConstIterationFunction& iterator) const;
 
         /**
-        \briefs Builds the final pose. This must be called after all joint pose transformations have been set.
+        \briefs Builds the joint-space transformations for each joint.
+        \remarks This should be called after all joint pose transformations have been set,
+        otherwise the 'SkeletonJoint::jointSpaceTransform' fields must be set manually.
         \see SkeletonJoint::poseTransform
         \see SkeletonJoint
         \see SkeletonJoint::GetOriginTransform()
         */
-        void BuildPose();
+        void BuildJointSpace();
 
         //! Returns the number of all joints in thie skeleton hierarchy.
         std::size_t NumJoints() const;

@@ -79,14 +79,14 @@ void Skeleton::ForEachJoint(const SkeletonJointConstIterationFunction& iterator)
     IterateOverJointList(rootJoints_, iterator, index);
 }
 
-void Skeleton::BuildPose()
+void Skeleton::BuildJointSpace()
 {
     /* Build pose for each root joint with identity as parent matrix (due to no parent) */
     SkeletonJoint::TransformMatrix identity;
     identity.LoadIdentity();
 
     for (auto& joint : rootJoints_)
-        joint->BuildPose(identity);
+        joint->BuildJointSpace(identity);
 }
 
 std::size_t Skeleton::NumJoints() const

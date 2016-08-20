@@ -112,7 +112,7 @@ SkeletonJoint::TransformMatrix SkeletonJoint::GlobalTransform() const
  * ======= Protected: =======
  */
 
-void SkeletonJoint::BuildPose(TransformMatrix parentPoseTransform)
+void SkeletonJoint::BuildJointSpace(TransformMatrix parentPoseTransform)
 {
     /* Apply pose transformation of this joint and store its inverse matrix */
     parentPoseTransform *= poseTransform.GetMatrix();
@@ -120,7 +120,7 @@ void SkeletonJoint::BuildPose(TransformMatrix parentPoseTransform)
 
     /* Repeat the process for each sub-joint */
     for (auto& joint : subJoints_)
-        joint->BuildPose(parentPoseTransform);
+        joint->BuildJointSpace(parentPoseTransform);
 }
 
 
