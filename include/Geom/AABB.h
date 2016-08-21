@@ -40,17 +40,23 @@ class AABB
             min( Gs::UninitializeTag{} ),
             max( Gs::UninitializeTag{} )
         {
-            for (std::size_t i = 0; i < Vec<T>::components; ++i)
-            {
-                min[i] = std::numeric_limits<T>::max();
-                max[i] = std::numeric_limits<T>::lowest();
-            }
+            Reset();
         }
 
         AABB(const Vec<T>& min, const Vec<T>& max) :
             min( min ),
             max( max )
         {
+        }
+
+        //! Sets the minimum to the highest possible value and the maximum to the lowest possible value.
+        void Reset()
+        {
+            for (std::size_t i = 0; i < Vec<T>::components; ++i)
+            {
+                min[i] = std::numeric_limits<T>::max();
+                max[i] = std::numeric_limits<T>::lowest();
+            }
         }
 
         //! Sets the minimum and maximum to the specified point.
