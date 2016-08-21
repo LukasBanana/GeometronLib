@@ -20,6 +20,7 @@
 #include "Spline.h"
 #include "UniformSpline.h"
 #include "Triangle.h"
+#include "TangentSpace.h"
 
 #include "TriangleMesh.h"
 #include "MeshGenerator.h"

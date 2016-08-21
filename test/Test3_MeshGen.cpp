@@ -28,9 +28,10 @@
 
 struct Model
 {
-    Gm::TriangleMesh    mesh;
-    Gm::Transform3      transform;
-    std::string         name;
+    Gm::TriangleMesh            mesh;
+    std::vector<Gs::Vector3>    tangents[2];
+    Gm::Transform3              transform;
+    std::string                 name;
 
     void turn(Gs::Real pitch, Gs::Real yaw);
 
@@ -73,6 +74,7 @@ Model*                      selectedModel   = nullptr;
 bool                        wireframeMode   = false;
 bool                        showFaceNormals = false;
 bool                        showVertNormals = false;
+bool                        showTagentSpace = false;
 bool                        showBox         = false;
 bool                        orthoProj       = false;
 bool                        texturedMode    = false;
@@ -675,6 +677,40 @@ void initScene()
             continue;
         }
 
+        // compute tangent vectors
+        const auto& verts = it->mesh.vertices;
+        auto numVerts = verts.size();
+        it->tangents[0].resize(numVerts);
+        it->tangents[1].resize(numVerts);
+
+        Gs::Vector3 tangent, bitangent, normal;
+
+        for (const auto& indices : it->mesh.triangles)
+        {
+            Gm::Triangle3 coords(
+                verts[indices.a].position,
+                verts[indices.b].position,
+                verts[indices.c].position
+            );
+
+            Gm::Triangle2 texCoords(
+                verts[indices.a].texCoord,
+                verts[indices.b].texCoord,
+                verts[indices.c].texCoord
+            );
+
+            Gm::ComputeTangentSpace(coords, texCoords, tangent, bitangent, normal);
+
+            (it->tangents[0])[indices.a] = tangent;
+            (it->tangents[1])[indices.a] = bitangent;
+
+            (it->tangents[0])[indices.b] = tangent;
+            (it->tangents[1])[indices.b] = bitangent;
+
+            (it->tangents[0])[indices.c] = tangent;
+            (it->tangents[1])[indices.c] = bitangent;
+        }
+
         #ifdef WRITE_MODELS_TO_FILE
         // write model to file
         it->writeObjFile("mesh/" + it->name + ".obj");
@@ -764,6 +800,29 @@ void drawMeshNormals(const Gm::TriangleMesh& mesh, bool faceNormals, bool vertNo
     glDisable(GL_COLOR_MATERIAL);
 }
 
+void drawMeshTangents(
+    const Gm::TriangleMesh& mesh,
+    const std::vector<Gs::Vector3>& tangents, const std::vector<Gs::Vector3>& bitangents, float tangentLength = 0.1f)
+{
+    glEnable(GL_COLOR_MATERIAL);
+
+    glBegin(GL_LINES);
+
+    const Gs::Vector4 tangentColor(0, 1, 0, 1);
+    const Gs::Vector4 bitangentColor(1, 0, 1, 1);
+
+    for (std::size_t i = 0, n = mesh.vertices.size(); i < n; ++i)
+    {
+        const auto& v = mesh.vertices[i];
+        drawLine(v.position, v.position + tangents[i] * tangentLength, tangentColor);
+        drawLine(v.position, v.position + bitangents[i] * tangentLength, bitangentColor);
+    }
+
+    glEnd();
+
+    glDisable(GL_COLOR_MATERIAL);
+}
+
 void drawModel(const Model& mdl)
 {
     // setup world-view matrix
@@ -773,6 +832,8 @@ void drawModel(const Model& mdl)
     // draw model
     drawMesh(mdl.mesh, wireframeMode);
     drawMeshNormals(mdl.mesh, showFaceNormals, showVertNormals);
+    if (showTagentSpace)
+        drawMeshTangents(mdl.mesh, mdl.tangents[0], mdl.tangents[1]);
 }
 
 void drawAABB(const Gm::AABB3& box)
@@ -900,6 +961,10 @@ void specialCallback(int key, int x, int y)
             break;
 
         case GLUT_KEY_F3:
+            showTagentSpace = !showTagentSpace;
+            break;
+
+        case GLUT_KEY_F4:
             texturedMode = !texturedMode;
             break;
     }
@@ -948,7 +1013,8 @@ int main(int argc, char* argv[])
         std::cout << "Press Space to show/hide bounding box" << std::endl;
         std::cout << "Press F1 to show/hide face normals" << std::endl;
         std::cout << "Press F2 to show/hide vertex normals" << std::endl;
-        std::cout << "Press F3 to show/hide texture" << std::endl;
+        std::cout << "Press F3 to show/hide tangent space" << std::endl;
+        std::cout << "Press F4 to show/hide texture" << std::endl;
         std::cout << std::endl;
 
         glutInit(&argc, argv);
