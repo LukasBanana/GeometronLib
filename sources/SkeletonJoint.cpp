@@ -19,6 +19,8 @@ namespace Gm
 SkeletonJoint::SkeletonJoint()
 {
     transform.LoadIdentity();
+    poseTransform.LoadIdentity();
+    jointSpaceTransform.LoadIdentity();
 }
 
 SkeletonJoint::~SkeletonJoint()
@@ -80,12 +82,23 @@ SkeletonJoint::TransformMatrix SkeletonJoint::GlobalTransform() const
 void SkeletonJoint::BuildJointSpace(TransformMatrix parentPoseTransform)
 {
     /* Apply pose transformation of this joint and store its inverse matrix */
-    parentPoseTransform *= poseTransform.GetMatrix();
+    parentPoseTransform *= poseTransform;
     jointSpaceTransform = parentPoseTransform.Inverse();
 
     /* Repeat the process for each sub-joint */
     for (auto& joint : subJoints_)
         joint->BuildJointSpace(parentPoseTransform);
+}
+
+void SkeletonJoint::RebuildPoseTransforms(TransformMatrix parentPoseTransform)
+{
+    /* Get pose transform from inverse parent pose transform and joint-space transform */
+    poseTransform = parentPoseTransform.Inverse() * jointSpaceTransform.Inverse();
+    parentPoseTransform *= poseTransform;
+
+    /* Repeat the process for each sub-joint */
+    for (auto& joint : subJoints_)
+        joint->RebuildPoseTransforms(parentPoseTransform);
 }
 
 

@@ -174,6 +174,8 @@ void initScene()
     subJoint.poseTransform.SetPosition({ 0, 1.5f, 0 });
 
     mdl.skeleton->BuildJointSpace();
+    //mdl.skeleton->RebuildPoseTransforms();
+    //mdl.skeleton->BuildJointSpace();
 
     // create joint keyframes
     std::vector<Gm::RotationKeyframe> rotationKeys;
@@ -205,7 +207,7 @@ void initScene()
     mdl.skeleton->ForEachJoint(
         [&](Gm::SkeletonJoint& joint, std::size_t index)
         {
-            joint.transform = joint.poseTransform.GetMatrix();
+            joint.transform = joint.poseTransform;
             
             genVertexWeights(mdl.mesh, joint);
 

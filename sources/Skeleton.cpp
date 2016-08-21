@@ -89,6 +89,16 @@ void Skeleton::BuildJointSpace()
         joint->BuildJointSpace(identity);
 }
 
+void Skeleton::RebuildPoseTransforms()
+{
+    /* Build pose for each root joint with identity as parent matrix (due to no parent) */
+    SkeletonJoint::TransformMatrix identity;
+    identity.LoadIdentity();
+
+    for (auto& joint : rootJoints_)
+        joint->RebuildPoseTransforms(identity);
+}
+
 std::size_t Skeleton::NumJoints() const
 {
     std::size_t n = rootJoints_.size();

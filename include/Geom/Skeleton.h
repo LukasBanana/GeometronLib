@@ -62,14 +62,22 @@ class Skeleton
         void ForEachJoint(const SkeletonJointConstIterationFunction& iterator) const;
 
         /**
-        \briefs Builds the joint-space transformations for each joint.
+        \brief Builds the joint-space transformations for each joint.
         \remarks This should be called after all joint pose transformations have been set,
         otherwise the 'SkeletonJoint::jointSpaceTransform' fields must be set manually.
         \see SkeletonJoint::poseTransform
-        \see SkeletonJoint
-        \see SkeletonJoint::GetOriginTransform()
+        \see SkeletonJoint::jointSpaceTransform
         */
         void BuildJointSpace();
+
+        /**
+        \brief Rebuilds the pose transformations for each joint from its joint-space transformation.
+        \remarks This should be called when the joint-space was constructed manually instead of the using "BuildJointSpace".
+        \see SkeletonJoint::poseTransform
+        \see SkeletonJoint::jointSpaceTransform
+        \see BuildJointSpace
+        */
+        void RebuildPoseTransforms();
 
         //! Returns the number of all joints in thie skeleton hierarchy.
         std::size_t NumJoints() const;
@@ -80,12 +88,12 @@ class Skeleton
         'NumJoints()' to store the matrices of all skeleton joints and '16' to store a full 4x4 matrix for each joint.
         \param[in] bufferSize Specifies the size of the output buffer (in elements, not in bytes!).
         \param[in] relativeTransform Specifies whether to store relative matrix transformations. This is commonly used for skeleton animation in a vertex shader.
-        If this is false, the respective animated vertex should be multiplied with the origin transformation (see "SkeletonJoint::GetOriginTransform").
+        If this is false, the respective animated vertex should be multiplied with the joint-space transformation (see "SkeletonJoint::jointSpaceTransform").
         If this is true, the origin transformation is already included in the transformation buffer. By default true.
         \return Number of elements written to the output buffer. In the optimal case, this should be equal to 'bufferSize'.
         \throw std::invalid_argument If 'buffer' is null or 'bufferSize' is not a multiple of 16.
         \see NumJoints
-        \see SkeletonJoint::GetOriginTransform
+        \see SkeletonJoint::jointSpaceTransform
         */
         std::size_t FillGlobalTransformBuffer(float* buffer, std::size_t bufferSize, bool relativeTransform = true) const;
 

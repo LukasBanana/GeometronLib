@@ -111,7 +111,7 @@ class SkeletonJoint
         \see jointSpaceTransform
         \see Skeleton::BuildPose
         */
-        Transform3                  poseTransform;
+        TransformMatrix             poseTransform;
 
         /**
         \brief Specifies the joint-space transformation.
@@ -137,6 +137,9 @@ class SkeletonJoint
 
         //! Builds the joint-space transformation for this joint and all sub-joints.
         void BuildJointSpace(TransformMatrix parentPoseTransform);
+
+        //! Rebuilds the pose transformation for this joint and all sub-joints.
+        void RebuildPoseTransforms(TransformMatrix parentPoseTransform);
 
     private:
 
