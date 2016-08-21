@@ -149,7 +149,7 @@ static void barycentricTest1()
         { 50, 25 }, { 150, 50 }, { 50, 200 }
     );
 
-    auto triB = triA.Barycentric(
+    auto triB = triA.BarycentricToCartesian(
         Triangle3({ 0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.5f, 0.5f })
     );
 }

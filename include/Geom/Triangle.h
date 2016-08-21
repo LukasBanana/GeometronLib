@@ -109,7 +109,7 @@ class Triangle< Gs::Vector2T<T> >
         \param[in] barycentricCoords Specifies the barycentric coordinates with respect to this triangle.
         The sum of all components must be one, i.e. x+y+z = 1.
         */
-        Gs::Vector2T<T> Barycentric(const Gs::Vector3T<T>& barycentricCoords) const
+        Gs::Vector2T<T> BarycentricToCartesian(const Gs::Vector3T<T>& barycentricCoords) const
         {
             return Gs::Vector2T<T>(
                 a.x*barycentricCoords.x + b.x*barycentricCoords.y + c.x*barycentricCoords.z,
@@ -123,12 +123,12 @@ class Triangle< Gs::Vector2T<T> >
         If this input parameter is { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }, the result is equal to this triangle.
         The sum of all components must be one for each triangle vertex, i.e. x+y+z = 1.
         */
-        Triangle< Gs::Vector2T<T> > Barycentric(const Triangle< Gs::Vector3T<T> >& barycentricCoords) const
+        Triangle< Gs::Vector2T<T> > BarycentricToCartesian(const Triangle< Gs::Vector3T<T> >& barycentricCoords) const
         {
             return Triangle< Gs::Vector2T<T> >(
-                Barycentric(barycentricCoords.a),
-                Barycentric(barycentricCoords.b),
-                Barycentric(barycentricCoords.c)
+                BarycentricToCartesian(barycentricCoords.a),
+                BarycentricToCartesian(barycentricCoords.b),
+                BarycentricToCartesian(barycentricCoords.c)
             );
         }
 
@@ -209,7 +209,7 @@ class Triangle< Gs::Vector3T<T> >
         \param[in] barycentricCoords Specifies the barycentric coordinates with respect to this triangle.
         The sum of all components must be one, i.e. x+y+z = 1.
         */
-        Gs::Vector3T<T> Barycentric(const Gs::Vector3T<T>& barycentricCoords) const
+        Gs::Vector3T<T> BarycentricToCartesian(const Gs::Vector3T<T>& barycentricCoords) const
         {
             return Gs::Vector3T<T>(
                 a.x*barycentricCoords.x + b.x*barycentricCoords.y + c.x*barycentricCoords.z,
@@ -224,12 +224,12 @@ class Triangle< Gs::Vector3T<T> >
         If this input parameter is { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }, the result is equal to this triangle.
         The sum of all components must be one for each triangle vertex, i.e. x+y+z = 1.
         */
-        Triangle< Gs::Vector3T<T> > Barycentric(const Triangle< Gs::Vector3T<T> >& barycentricCoords) const
+        Triangle< Gs::Vector3T<T> > BarycentricToCartesian(const Triangle< Gs::Vector3T<T> >& barycentricCoords) const
         {
             return Triangle< Gs::Vector3T<T> >(
-                Barycentric(barycentricCoords.a),
-                Barycentric(barycentricCoords.b),
-                Barycentric(barycentricCoords.c)
+                BarycentricToCartesian(barycentricCoords.a),
+                BarycentricToCartesian(barycentricCoords.b),
+                BarycentricToCartesian(barycentricCoords.c)
             );
         }
 
