@@ -145,13 +145,34 @@ static void planeTest1()
 
 static void barycentricTest1()
 {
-    Triangle2 triA(
-        { 50, 25 }, { 150, 50 }, { 50, 200 }
+    Triangle2 tri(
+        { 50, 25 },
+        { 150, 50 },
+        { 50, 200 }
     );
 
-    auto triB = triA.BarycentricToCartesian(
-        Triangle3({ 0.5f, 0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.5f, 0.5f })
+    auto a = Gs::Vector3(0.5f, 0.5f, 0.0f);
+    auto b = tri.BarycentricToCartesian(a);
+    auto c = tri.CartesianToBarycentric(b);
+
+    std::cout << "Barycentric Test 1" << std::endl;
+    std::cout << "a = " << a << ", b = " << b << ", c = " << c << std::endl;
+}
+
+static void barycentricTest2()
+{
+    Triangle3 tri(
+        { 50, 25, 0 },
+        { 150, 50, 20 },
+        { 50, 200, 30 }
     );
+
+    auto a = Gs::Vector3(0.5f, 0.5f, 0.0f);
+    auto b = tri.BarycentricToCartesian(a);
+    auto c = tri.CartesianToBarycentric(b);
+
+    std::cout << "Barycentric Test 2" << std::endl;
+    std::cout << "a = " << a << ", b = " << b << ", c = " << c << std::endl;
 }
 
 static void uniformSplineTest1()
@@ -177,8 +198,9 @@ int main()
     //meshTest1();
     //sphereTest1();
     //planeTest1();
-    //barycentricTest1();
-    uniformSplineTest1();
+    barycentricTest1();
+    barycentricTest2();
+    //uniformSplineTest1();
 
     #ifdef _WIN32
     system("pause");
