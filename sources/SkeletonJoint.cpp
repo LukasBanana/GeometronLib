@@ -16,13 +16,6 @@ namespace Gm
 {
 
 
-SkeletonJoint::SkeletonJoint()
-{
-    transform.LoadIdentity();
-    poseTransform.LoadIdentity();
-    jointSpaceTransform.LoadIdentity();
-}
-
 SkeletonJoint::~SkeletonJoint()
 {
 }
@@ -69,7 +62,6 @@ void SkeletonJoint::GlobalTransform(TransformMatrix& matrix) const
 SkeletonJoint::TransformMatrix SkeletonJoint::GlobalTransform() const
 {
     TransformMatrix matrix;
-    matrix.LoadIdentity();
     GlobalTransform(matrix);
     return matrix;
 }

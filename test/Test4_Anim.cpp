@@ -190,7 +190,6 @@ void turnCamera(Gs::Real deltaPitch, Gs::Real deltaYaw)
     pitch = std::max(-Gs::pi/2, std::min(pitch, Gs::pi/2));
 
     Gs::Matrix3 rotation;
-    rotation.LoadIdentity();
     Gs::RotateFree(rotation, Gs::Vector3(0, 1, 0), yaw);
     Gs::RotateFree(rotation, Gs::Vector3(1, 0, 0), pitch);
 

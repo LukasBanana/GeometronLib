@@ -55,7 +55,11 @@ class SkeletonJoint
         //! Transformation matrix type of skeleton joints (4x4 affine matrix).
         using TransformMatrix = Gs::AffineMatrix4;
 
-        SkeletonJoint();
+        SkeletonJoint() = default;
+
+        SkeletonJoint(const SkeletonJoint&) = delete;
+        SkeletonJoint& operator = (const SkeletonJoint&) = delete;
+
         virtual ~SkeletonJoint();
 
         /**

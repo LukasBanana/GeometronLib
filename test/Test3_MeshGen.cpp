@@ -87,7 +87,6 @@ std::unique_ptr<Texture>    texture;
 void Model::turn(Gs::Real pitch, Gs::Real yaw)
 {
     Gs::Matrix3 rotation;
-    rotation.LoadIdentity();
     Gs::RotateFree(rotation, Gs::Vector3(1, 0, 0), pitch);
     Gs::RotateFree(rotation, Gs::Vector3(0, 1, 0), yaw);
 

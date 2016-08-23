@@ -83,8 +83,6 @@ void Skeleton::BuildJointSpace()
 {
     /* Build pose for each root joint with identity as parent matrix (due to no parent) */
     SkeletonJoint::TransformMatrix identity;
-    identity.LoadIdentity();
-
     for (auto& joint : rootJoints_)
         joint->BuildJointSpace(identity);
 }
@@ -93,8 +91,6 @@ void Skeleton::RebuildPoseTransforms()
 {
     /* Build pose for each root joint with identity as parent matrix (due to no parent) */
     SkeletonJoint::TransformMatrix identity;
-    identity.LoadIdentity();
-
     for (auto& joint : rootJoints_)
         joint->RebuildPoseTransforms(identity);
 }
@@ -125,7 +121,6 @@ std::size_t Skeleton::FillGlobalTransformBuffer(float* buffer, std::size_t buffe
 
     /* Fill buffer recursively with global root-joint transformations */
     Gs::Matrix4f identity;
-    identity.LoadIdentity();
 
     for (const auto& joint : rootJoints_)
     {
