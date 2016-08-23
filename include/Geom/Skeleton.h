@@ -20,6 +20,8 @@ namespace Gm
 using SkeletonJointIterationFunction = std::function<void(SkeletonJoint& joint, std::size_t index)>;
 using SkeletonJointConstIterationFunction = std::function<void(const SkeletonJoint& joint, std::size_t index)>;
 
+using MakeSkeletonJointFunction = std::function<SkeletonJointPtr()>;
+
 
 class Skeleton
 {
@@ -108,6 +110,14 @@ class Skeleton
         */
         std::size_t FillLocalTransformBuffer(float* buffer, std::size_t bufferSize) const;
 
+        /**
+        \brief Copies the specified skeleton model into this skeleton.
+        \param[in] skeletonModel Specifies the skeleton which is to be copied into this skeleton.
+        \param[in] makeSkeletonJoint Specifies an optional callback to create skeleton joints. By default the standard "SkeletonJoint" base class is created.
+        \return Reference to this joint to follow the convention of copy operators.
+        */
+        Skeleton& CopyFrom(const Skeleton& skeletonModel, MakeSkeletonJointFunction makeSkeletonJoint = nullptr);
+
     private:
 
         std::size_t NumSubJoints(const SkeletonJoint& joint) const;
@@ -129,6 +139,8 @@ class Skeleton
         ) const;
 
         void ListJoints(const SkeletonJointPtr& joint, std::vector<SkeletonJoint*>& jointList) const;
+
+        void CopyJoint(SkeletonJoint& lhs, const SkeletonJoint& rhs, const MakeSkeletonJointFunction& makeSkeletonJoint);
 
         std::vector<SkeletonJointPtr> rootJoints_;
 

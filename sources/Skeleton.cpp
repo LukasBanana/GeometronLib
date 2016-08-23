@@ -159,6 +159,22 @@ std::size_t Skeleton::FillLocalTransformBuffer(float* buffer, std::size_t buffer
     return writtenMatrices*16;
 }
 
+Skeleton& Skeleton::CopyFrom(const Skeleton& skeletonModel, MakeSkeletonJointFunction makeSkeletonJoint)
+{
+    /* Check if default joint creator is required */
+    if (!makeSkeletonJoint)
+        makeSkeletonJoint = [&](){ return std::unique_ptr<SkeletonJoint>(new SkeletonJoint()); };
+
+    /* Copy each root joint */
+    for (const auto& jointModel : skeletonModel.GetRootJoints())
+    {
+        auto& joint = AddRootJoint(makeSkeletonJoint());
+        CopyJoint(joint, *jointModel, makeSkeletonJoint);
+    }
+
+    return *this;
+}
+
 
 /*
  * ======= Private: =======
@@ -225,6 +241,23 @@ void Skeleton::ListJoints(const SkeletonJointPtr& joint, std::vector<SkeletonJoi
     jointList.push_back(joint.get());
     for (const auto& subJoint : joint->GetSubJoints())
         ListJoints(subJoint, jointList);
+}
+
+void Skeleton::CopyJoint(SkeletonJoint& lhs, const SkeletonJoint& rhs, const MakeSkeletonJointFunction& makeSkeletonJoint)
+{
+    /* Copy properties */
+    lhs.transform           = rhs.transform;
+    lhs.poseTransform       = rhs.poseTransform;
+    lhs.jointSpaceTransform = rhs.jointSpaceTransform;
+    lhs.vertexWeights       = rhs.vertexWeights;
+    lhs.keyframes           = rhs.keyframes;
+
+    /* Copy sub-joints */
+    for (const auto& jointModel : rhs.GetSubJoints())
+    {
+        auto& joint = lhs.AddSubJoint(makeSkeletonJoint());
+        CopyJoint(joint, *jointModel, makeSkeletonJoint);
+    }
 }
 
 
