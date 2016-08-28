@@ -18,6 +18,113 @@ namespace MeshModifier
 
 using TriangleIndex = TriangleMesh::TriangleIndex;
 
+
+/* ----- Internal functions ----- */
+
+static std::size_t GetVertexStride(const VertexDescriptor& vertexDesc)
+{
+    auto stride = vertexDesc.stride;
+    if (stride == 0)
+    {
+        for (const auto& attrib : vertexDesc.attributes)
+            stride += attrib.components * sizeof(Gs::Real);
+    }
+    return stride;
+}
+
+template <typename T>
+struct ByteBufferDetails
+{
+};
+
+template <>
+struct ByteBufferDetails<void*>
+{
+    using OutputType    = Gs::Real*;
+    using ByteType      = char*;
+};
+
+template <>
+struct ByteBufferDetails<const void*>
+{
+    using OutputType    = const Gs::Real*;
+    using ByteType      = const char*;
+};
+
+template <typename T>
+class BasicByteBuffer
+{
+
+    private:
+
+        using ByteType = typename ByteBufferDetails<T>::ByteType;
+
+        ByteType    buffer_;
+        std::size_t stride_;
+
+    public:
+
+        using OutputType = typename ByteBufferDetails<T>::OutputType;
+
+        BasicByteBuffer(T buffer, const VertexDescriptor& vertexDesc) :
+            buffer_( reinterpret_cast<ByteType>(buffer) ),
+            stride_( GetVertexStride(vertexDesc)        )
+        {
+        }
+
+        OutputType Attrib(const VertexAttributeDescriptor& attribDesc, std::size_t index) const
+        {
+            return reinterpret_cast<OutputType>(buffer_ + (index * stride_) + attribDesc.offset);
+        }
+
+};
+
+using ByteBuffer = BasicByteBuffer<void*>;
+using ConstByteBuffer = BasicByteBuffer<const void*>;
+
+
+/* ----- Gloval functions ----- */
+
+const VertexDescriptor& GetDefaultVertexDesc()
+{
+    static const VertexDescriptor desc(
+        {
+            { 0, 3 },
+            { 3 * sizeof(Gs::Real), 3 },
+            { 6 * sizeof(Gs::Real), 2 },
+        }
+    );
+    return desc;
+}
+
+void InterpolateBarycentric(
+    const VertexDescriptor& vertexDesc,
+    void* outputVertexBuffer, const void* inputVertexBuffer,
+    std::size_t v0, std::size_t v1, std::size_t v2,
+    const Gs::Vector3& barycentricCoords)
+{
+    ByteBuffer output(outputVertexBuffer, vertexDesc);
+    ConstByteBuffer input(inputVertexBuffer, vertexDesc);
+
+    for (const auto& attribDesc : vertexDesc.attributes)
+    {
+        auto out = output.Attrib(attribDesc, 0);
+
+        auto in0 = input.Attrib(attribDesc, v0);
+        auto in1 = input.Attrib(attribDesc, v1);
+        auto in2 = input.Attrib(attribDesc, v2);
+
+        for (unsigned int i = 0; i < attribDesc.components; ++i)
+        {
+            out[i] = (
+                in0[i] * barycentricCoords.x +
+                in1[i] * barycentricCoords.y +
+                in2[i] * barycentricCoords.z
+            );
+        }
+    }
+}
+
 void ClipMesh(const TriangleMesh& mesh, const Plane& clipPlane, TriangleMesh& front, TriangleMesh& back)
 {
     /* Clear previous output meshes */

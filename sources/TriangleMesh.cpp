@@ -7,6 +7,7 @@
 
 #include <Geom/TriangleMesh.h>
 #include <Geom/TriangleCollision.h>
+#include <Geom/MeshModifier.h>
 #include <Gauss/TransformVector.h>
 #include <Gauss/Equals.h>
 #include <algorithm>
@@ -84,6 +85,8 @@ TriangleMesh::Vertex TriangleMesh::Barycentric(TriangleIndex triangleIndex, cons
 
     const auto& tri = triangles[triangleIndex];
 
+    #if 0
+    
     const auto& a = vertices[tri.a];
     const auto& b = vertices[tri.b];
     const auto& c = vertices[tri.c];
@@ -93,6 +96,19 @@ TriangleMesh::Vertex TriangleMesh::Barycentric(TriangleIndex triangleIndex, cons
     v.position  = a.position * barycentricCoords.x + b.position * barycentricCoords.y + c.position * barycentricCoords.z;
     v.normal    = a.normal   * barycentricCoords.x + b.normal   * barycentricCoords.y + c.normal   * barycentricCoords.z;
     v.texCoord  = a.texCoord * barycentricCoords.x + b.texCoord * barycentricCoords.y + c.texCoord * barycentricCoords.z;
+
+    #else
+
+    Vertex v;
+
+    MeshModifier::InterpolateBarycentric(
+        MeshModifier::GetDefaultVertexDesc(),
+        &v, vertices.data(),
+        tri.a, tri.b, tri.c,
+        barycentricCoords
+    );
+
+    #endif
 
     return v;
 }
