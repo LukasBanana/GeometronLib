@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_PROJECTION_H__
-#define __GM_PROJECTION_H__
+#ifndef GM_PROJECTION_H
+#define GM_PROJECTION_H
 
 
 #include "Macros.h"

@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_OBB_H__
-#define __GM_OBB_H__
+#ifndef GM_OBB_H
+#define GM_OBB_H
 
 
 #include <Gauss/Vector3.h>

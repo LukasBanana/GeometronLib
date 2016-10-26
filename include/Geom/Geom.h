@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_GEOM_H__
-#define __GM_GEOM_H__
+#ifndef GM_GEOM_H
+#define GM_GEOM_H
 
 
 #include "AABB.h"

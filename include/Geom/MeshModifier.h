@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_MESH_MODIFIER_H__
-#define __GM_MESH_MODIFIER_H__
+#ifndef GM_MESH_MODIFIER_H
+#define GM_MESH_MODIFIER_H
 
 
 #include "TriangleMesh.h"

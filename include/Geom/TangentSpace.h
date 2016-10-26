@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_TANGENT_SPACE_H__
-#define __GM_TANGENT_SPACE_H__
+#ifndef GM_TANGENT_SPACE_H
+#define GM_TANGENT_SPACE_H
 
 
 #include "Triangle.h"

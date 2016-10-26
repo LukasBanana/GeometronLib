@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_BERNSTEIN_POLYNOMIAL_H__
-#define __GM_BERNSTEIN_POLYNOMIAL_H__
+#ifndef GM_BERNSTEIN_POLYNOMIAL_H
+#define GM_BERNSTEIN_POLYNOMIAL_H
 
 
 #include <cstdlib>

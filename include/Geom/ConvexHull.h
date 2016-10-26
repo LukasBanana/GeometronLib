@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_CONVEX_HULL_H__
-#define __GM_CONVEX_HULL_H__
+#ifndef GM_CONVEX_HULL_H
+#define GM_CONVEX_HULL_H
 
 
 #include "Plane.h"

@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_SKELETON_JOINT_H__
-#define __GM_SKELETON_JOINT_H__
+#ifndef GM_SKELETON_JOINT_H
+#define GM_SKELETON_JOINT_H
 
 
 #include "TriangleMesh.h"

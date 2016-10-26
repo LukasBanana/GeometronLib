@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_CONFIG_H__
-#define __GM_CONFIG_H__
+#ifndef GM_CONFIG_H
+#define GM_CONFIG_H
 
 
 //! Enables multi-threading features.

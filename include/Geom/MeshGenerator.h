@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_MESH_GENERATOR_H__
-#define __GM_MESH_GENERATOR_H__
+#ifndef GM_MESH_GENERATOR_H
+#define GM_MESH_GENERATOR_H
 
 
 #include "TriangleMesh.h"

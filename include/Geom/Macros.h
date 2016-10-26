@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_MACROS_H__
-#define __GM_MACROS_H__
+#ifndef GM_MACROS_H
+#define GM_MACROS_H
 
 
 #include <type_traits>

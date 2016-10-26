@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_PLANE_H__
-#define __GM_PLANE_H__
+#ifndef GM_PLANE_H
+#define GM_PLANE_H
 
 
 #include "Macros.h"

@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_SPLINE_H__
-#define __GM_SPLINE_H__
+#ifndef GM_SPLINE_H
+#define GM_SPLINE_H
 
 
 #include "Macros.h"

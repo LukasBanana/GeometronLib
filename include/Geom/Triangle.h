@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_TRIANGLE_H__
-#define __GM_TRIANGLE_H__
+#ifndef GM_TRIANGLE_H
+#define GM_TRIANGLE_H
 
 
 #include <Gauss/Vector2.h>

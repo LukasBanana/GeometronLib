@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_PLAYBACK_H__
-#define __GM_PLAYBACK_H__
+#ifndef GM_PLAYBACK_H
+#define GM_PLAYBACK_H
 
 
 #include <Gauss/Real.h>

@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_EXCEPT_H__
-#define __GM_EXCEPT_H__
+#ifndef GM_EXCEPT_H
+#define GM_EXCEPT_H
 
 
 #include <stdexcept>

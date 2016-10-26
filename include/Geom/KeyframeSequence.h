@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_KEYFRAME_SEQUENCE_H__
-#define __GM_KEYFRAME_SEQUENCE_H__
+#ifndef GM_KEYFRAME_SEQUENCE_H
+#define GM_KEYFRAME_SEQUENCE_H
 
 
 #include "Playback.h"

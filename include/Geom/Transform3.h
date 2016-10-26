@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_TRANSFORM3_H__
-#define __GM_TRANSFORM3_H__
+#ifndef GM_TRANSFORM3_H
+#define GM_TRANSFORM3_H
 
 
 #include "Macros.h"

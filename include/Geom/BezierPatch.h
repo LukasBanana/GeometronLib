@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_BEZIER_PATCH_H__
-#define __GM_BEZIER_PATCH_H__
+#ifndef GM_BEZIER_PATCH_H
+#define GM_BEZIER_PATCH_H
 
 
 #include "BernsteinPolynomial.h"

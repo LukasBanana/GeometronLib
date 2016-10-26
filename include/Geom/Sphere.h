@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_SPHERE_H__
-#define __GM_SPHERE_H__
+#ifndef GM_SPHERE_H
+#define GM_SPHERE_H
 
 
 #include <Gauss/Real.h>

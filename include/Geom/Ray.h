@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_RAY_H__
-#define __GM_RAY_H__
+#ifndef GM_RAY_H
+#define GM_RAY_H
 
 
 #include <Gauss/Vector2.h>

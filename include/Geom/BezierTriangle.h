@@ -5,8 +5,8 @@
  * See "LICENSE.txt" for license information.
  */
 
-#ifndef __GM_BEZIER_TRIANGLE_H__
-#define __GM_BEZIER_TRIANGLE_H__
+#ifndef GM_BEZIER_TRIANGLE_H
+#define GM_BEZIER_TRIANGLE_H
 
 
 #include <Gauss/Vector2.h>
