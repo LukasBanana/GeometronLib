@@ -30,7 +30,7 @@ class Transform2T
     
     public:
         
-        __GM_ASSERT_FLOAT_TYPE__("Transform2T");
+        GM_ASSERT_FLOAT_TYPE("Transform2T");
 
         using MatrixType = Gs::AffineMatrix3T<T>;
 

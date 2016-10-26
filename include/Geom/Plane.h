@@ -34,7 +34,7 @@ class PlaneT
     
     public:
         
-        __GM_ASSERT_FLOAT_TYPE__("PlaneT");
+        GM_ASSERT_FLOAT_TYPE("PlaneT");
 
         PlaneT() :
             distance( T(0) )

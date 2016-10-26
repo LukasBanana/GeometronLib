@@ -34,7 +34,7 @@ class UniformSpline
     
     public:
         
-        __GM_ASSERT_FLOAT_TYPE__("UniformSpline");
+        GM_ASSERT_FLOAT_TYPE("UniformSpline");
 
         //! Spline dimension (e.g. 2 for a 2D-vector).
         static const std::size_t dimension = P::components;

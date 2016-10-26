@@ -29,7 +29,7 @@ class ProjectionT
     
     public:
         
-        __GM_ASSERT_FLOAT_TYPE__("ProjectionT");
+        GM_ASSERT_FLOAT_TYPE("ProjectionT");
 
         using MatrixType = Gs::ProjectionMatrix4T<T>;
 

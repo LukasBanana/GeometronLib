@@ -33,7 +33,7 @@ class Spline
     
     public:
         
-        __GM_ASSERT_FLOAT_TYPE__("Spline");
+        GM_ASSERT_FLOAT_TYPE("Spline");
 
         struct ControlPoint
         {
