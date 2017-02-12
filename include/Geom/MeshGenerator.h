@@ -193,7 +193,7 @@ struct TorusKnotDescriptor
     unsigned int    loops           = 2;
 
     /**
-    \breif Number of turns within the torus knot. By default 7.
+    \breif Number of turns within the torus knot. By default 3.
     \remarks This must be coprime to 'loops', otherwise the mesh will not be a valid torus knot.
     */
     unsigned int    turns           = 3;
