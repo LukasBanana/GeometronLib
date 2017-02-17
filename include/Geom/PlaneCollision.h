@@ -25,22 +25,22 @@ namespace Gm
 /* --- Distance to Plane --- */
 
 //! Returns the signed distance between the specified plane and point.
-template <typename T>
-T SgnDistanceToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point)
+template <typename T, typename PlaneEq>
+T SgnDistanceToPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point)
 {
-    return Gs::Dot(plane.normal, point) + plane.distance;
+    return Gs::Dot(plane.normal, point) - PlaneEq::DistanceSign(plane.distance);
 }
 
 //! Returns the (unsigned) distance between the specified plane and point.
-template <typename T>
-T DistanceToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point)
+template <typename T, typename PlaneEq>
+T DistanceToPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point)
 {
     return std::abs(SgnDistanceToPlane(plane, point));
 }
 
 //! Returns the (unsigned) distance between the specified plane and AABB.
-template <typename T>
-T DistanceToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
+template <typename T, typename PlaneEq>
+T DistanceToPlane(const PlaneT<T, PlaneEq>& plane, const AABB3T<T>& aabb)
 {
     /* Compute box center and maximal extents */
     const auto center = aabb.Center();
@@ -48,17 +48,19 @@ T DistanceToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
 
     /* Compute the projection interval radius of aabb onto L(t) = C + N * t */
     const T radius =
+    (
         extent.x * std::abs(plane.normal.x) +
         extent.y * std::abs(plane.normal.y) +
-        extent.z * std::abs(plane.normal.z);
+        extent.z * std::abs(plane.normal.z)
+    );
 
     /* Compute distance of box center to plane and subtract interval radius */
-    return DistanceToPlane(plane, center) - radius;
+    return (DistanceToPlane(plane, center) - radius);
 }
 
 //! Computes the (unsigned) distance between the specified plane and OBB.
-template <typename T>
-T DistanceToPlane(const PlaneT<T>& plane, const OBB3T<T>& obb)
+template <typename T, typename PlaneEq>
+T DistanceToPlane(const PlaneT<T, PlaneEq>& plane, const OBB3T<T>& obb)
 {
     /* Compute the projection interval radius of the box */
     const T radius =
@@ -67,17 +69,17 @@ T DistanceToPlane(const PlaneT<T>& plane, const OBB3T<T>& obb)
         obb.halfSize.z * std::abs(Gs::Dot(plane.normal, obb.axes.z));
 
     /* Compute distance of box center to plane and subtract interval radius */
-    return DistanceToPlane(plane, obb.center) - radius;
+    return (DistanceToPlane(plane, obb.center) - radius);
 }
 
 
 /* --- Closest Point on Plane --- */
 
 //! Computes the point on the plane which is the closest one to the specified point.
-template <typename T>
-Gs::Vector3T<T> ClosestPointOnPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point)
+template <typename T, typename PlaneEq>
+Gs::Vector3T<T> ClosestPointOnPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point)
 {
-    return point - plane.normal * SgnDistanceToPlane(plane, plane.normal);
+    return (point - plane.normal * SgnDistanceToPlane(plane, plane.normal));
 }
 
 
@@ -88,18 +90,19 @@ Gs::Vector3T<T> ClosestPointOnPlane(const PlaneT<T>& plane, const Gs::Vector3T<T
 \param[in] plane Specifies the plane.
 \param[in] origin Specifies the ray origin.
 \param[in] direction Specifies the ray direction. This vector does not need to be normalized.
+\return Interpolation factor for the ray.
 \remarks This is the base function for the "IntersectionWithPlane" variantes.
 \see IntersectionWithPlane
 */
-template <typename T>
-T IntersectionWithPlaneInterp(const PlaneT<T>& plane, const Gs::Vector3T<T>& origin, const Gs::Vector3T<T>& direction)
+template <typename T, typename PlaneEq>
+T IntersectionWithPlaneInterp(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& origin, const Gs::Vector3T<T>& direction)
 {
-    return -(Gs::Dot(plane.normal, origin) + plane.distance) / Gs::Dot(plane.normal, direction);
+    return (-SgnDistanceToPlane(plane, origin) / Gs::Dot(plane.normal, direction));
 }
 
 //! Computes the intersection between the specified plane and ray.
-template <typename T>
-bool IntersectionWithPlane(const PlaneT<T>& plane, const Ray3T<T>& ray, Gs::Vector3T<T>& intersection)
+template <typename T, typename PlaneEq>
+bool IntersectionWithPlane(const PlaneT<T, PlaneEq>& plane, const Ray3T<T>& ray, Gs::Vector3T<T>& intersection)
 {
     /* Compute interpolation factor */
     const auto t = IntersectionWithPlaneInterp(plane, ray.origin, ray.direction);
@@ -114,8 +117,8 @@ bool IntersectionWithPlane(const PlaneT<T>& plane, const Ray3T<T>& ray, Gs::Vect
 }
 
 //! Computes the intersection between the specified plane and line segment.
-template <typename T>
-bool IntersectionWithPlane(const PlaneT<T>& plane, const Line3T<T>& line, Gs::Vector3T<T>& intersection)
+template <typename T, typename PlaneEq>
+bool IntersectionWithPlane(const PlaneT<T, PlaneEq>& plane, const Line3T<T>& line, Gs::Vector3T<T>& intersection)
 {
     /* Compute interpolation factor */
     const auto t = IntersectionWithPlaneInterp(plane, line.a, line.Direction());
@@ -130,8 +133,8 @@ bool IntersectionWithPlane(const PlaneT<T>& plane, const Line3T<T>& line, Gs::Ve
 }
 
 //! Computes the intersection between the specified two planes. The result is a ray.
-template <typename T>
-bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray3T<T>& intersection, const T& epsilon = Gs::Epsilon<T>())
+template <typename T, typename PlaneEq>
+bool IntersectionWithPlane(const PlaneT<T, PlaneEq>& planeA, const PlaneT<T, PlaneEq>& planeB, Ray3T<T>& intersection, const T& epsilon = Gs::Epsilon<T>())
 {
     /* Compute direction of intersection */
     intersection.direction = Gs::Cross(planeA.normal, planeB.normal);
@@ -139,28 +142,30 @@ bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, Ray
     /* Compute denominator, if zero => planes are parallel (and separated) */
     const T denom = Gs::Dot(intersection.direction, intersection.direction);
 
-    if (denom <= epsilon)
-        return false;
+    if (denom > epsilon)
+    {
+        /* Compute point on intersection ray: p = ((Nb*Da - Na*Db) x R) / denom */
+        intersection.origin = planeB.normal;
+        intersection.origin *= PlaneEq::DistanceSign(planeA.distance);
+        intersection.origin -= (planeA.normal * PlaneEq::DistanceSign(planeB.distance));
+        intersection.origin = Gs::Cross(intersection.origin, intersection.direction);
+        intersection.origin /= denom;
+        return true;
+    }
 
-    /* Compute point on intersection ray: p = ((Na*Db - Nb*Da) x R) / denom */
-    intersection.origin = planeA.normal;
-    intersection.origin *= planeB.distance;
-    intersection.origin -= (planeB.normal * planeA.distance);
-    intersection.origin = Gs::Cross(intersection.origin, intersection.direction);
-    intersection.origin /= denom;
-
-    return true;
+    return false;
 }
 
 //! Computes the intersection between the specified three planes. The result is a point.
-template <typename T>
-bool IntersectionWithPlane(const PlaneT<T>& planeA, const PlaneT<T>& planeB, const PlaneT<T>& planeC, Gs::Vector3T<T>& intersection, const T& epsilon = Gs::Epsilon<T>())
+template <typename T, typename PlaneEq>
+bool IntersectionWithPlane(const PlaneT<T, PlaneEq>& planeA, const PlaneT<T, PlaneEq>& planeB, const PlaneT<T, PlaneEq>& planeC, Gs::Vector3T<T>& intersection, const T& epsilon = Gs::Epsilon<T>())
 {
     /* Make two interleaved intersection tests */
     Ray3T<T> ray;
     if (IntersectionWithPlane<T>(planeA, planeB, ray, epsilon))
         return IntersectionWithPlane<T>(planeC, ray, intersection);
-    return false;
+    else
+        return false;
 }
 
 
@@ -176,8 +181,8 @@ enum class PlaneRelation
 };
 
 //! Computes the relation between the specified plane and AABB.
-template <typename T>
-PlaneRelation RelationToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
+template <typename T, typename PlaneEq>
+PlaneRelation RelationToPlane(const PlaneT<T, PlaneEq>& plane, const AABB3T<T>& aabb)
 {
     /* Compute near- and far points of the box to the plane */
     auto near = aabb.max;
@@ -208,8 +213,8 @@ PlaneRelation RelationToPlane(const PlaneT<T>& plane, const AABB3T<T>& aabb)
 }
 
 //! Computes the relation between the specified plane and point.
-template <typename T>
-PlaneRelation RelationToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point, const T& epsilon = Gs::Epsilon<T>())
+template <typename T, typename PlaneEq>
+PlaneRelation RelationToPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point, const T& epsilon = Gs::Epsilon<T>())
 {
     const auto d = SgnDistanceToPlane(plane, point);
 
@@ -222,8 +227,8 @@ PlaneRelation RelationToPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& poi
 }
 
 //! Returns true if the specified point is on the front side of the plane.
-template <typename T>
-bool IsFrontFacingPlane(const PlaneT<T>& plane, const Gs::Vector3T<T>& point)
+template <typename T, typename PlaneEq>
+bool IsFrontFacingPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point)
 {
     return SgnDistanceToPlane(plane, point) > T(0);
 }

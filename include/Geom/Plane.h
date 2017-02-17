@@ -11,6 +11,7 @@
 
 #include "Macros.h"
 #include "Triangle.h"
+#include "Config.h"
 
 #include <Gauss/Vector3.h>
 #include <Gauss/RotateVector.h>
@@ -21,6 +22,70 @@ namespace Gm
 {
 
 
+/*
+\brief Template structure for the plane equation n*x = d
+\remarks ASCII art example of such a plane with positive distance (d > 0):
+\code
+//  Y
+//  ^              n
+//  |              ^
+//  |              |
+//  |   plane ---------------
+//  |               
+//  |               
+//--0--------------------------------->X
+//  |
+\endcode
+*/
+template <typename T>
+struct PlaneEquation_NX_eq_D
+{
+    //! Returns 'd' (i.e. identity function).
+    static T DistanceSign(const T& d)
+    {
+        return d;
+    }
+};
+
+/*
+\brief Template structure for the plane equation n*x + d = 0
+\remarks ASCII art example of such a plane with positive distance (d > 0):
+\code
+//  Y
+//  ^
+//  |
+//--0--------------------------------->X
+//  |
+//  |              n
+//  |              ^
+//  |              |
+//  |   plane ---------------
+//  |
+\endcode
+*/
+template <typename T>
+struct PlaneEquation_NXD_eq_Zero
+{
+    //! Returns '-d' (i.e. negation function).
+    static T DistanceSign(const T& d)
+    {
+        return -d;
+    }
+};
+
+#ifdef GM_DEFAULT_PLANE_EQUATION_ALT
+
+template <typename T>
+using DefaultPlaneEquation = PlaneEquation_NXD_eq_Zero<T>;
+
+#else
+
+template <typename T>
+using DefaultPlaneEquation = PlaneEquation_NX_eq_D<T>;
+
+#endif
+
+
 /**
 \brief Plane base class with components: 'normal' and 'distance'.
 \tparam T Specifies the data type of the vector components.
@@ -28,7 +93,7 @@ This should be a primitive data type such as float or double.
 \remarks The plane equation is: ax + by + cz + d = 0,
 where (a, b, c) is a point on the plane, (x, y, z) is the normal vector and d is the (signed) distance to the origin.
 */
-template <typename T>
+template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
 class PlaneT
 {
     
@@ -46,9 +111,13 @@ class PlaneT
             Build(a, b, c);
         }
 
+        /**
+        \brief Always initializes the plane with the equation n*x + d = 0, no matter which equation this plane has as template argument.
+        \see PlaneEquation_NXD_eq_Zero
+        */
         PlaneT(const T& x, const T& y, const T& z, const T& d) :
-            normal  ( x, y, z ),
-            distance( d       )
+            normal  ( x, y, z                  ),
+            distance( PlaneEq::DistanceSign(d) )
         {
         }
 
@@ -88,7 +157,7 @@ class PlaneT
         //! Updates the (signed) distance for the new specified member point.
         void UpdateDistance(const Gs::Vector3T<T>& memberPoint)
         {
-            distance = -Gs::Dot(normal, memberPoint);
+            distance = PlaneEq::DistanceSign(Gs::Dot(normal, memberPoint));
         }
 
         //! Normalizes the normal vector and distance of this plane.
@@ -109,7 +178,7 @@ class PlaneT
         */
         Gs::Vector3T<T> MemberPoint() const
         {
-            return normal * (-distance);
+            return normal * PlaneEq::DistanceSign(distance);
         }
 
         //! Flips this plane.
@@ -120,16 +189,16 @@ class PlaneT
         }
 
         //! Returns a flipped instance of this plane.
-        PlaneT<T> Flipped() const
+        PlaneT<T, PlaneEq> Flipped() const
         {
-            return PlaneT<T>(-normal, -distance);
+            return PlaneT<T, PlaneEq>(-normal, -distance);
         }
 
         template <typename C>
-        PlaneT<C> Cast() const
+        PlaneT<C, PlaneEq> Cast() const
         {
             // Hint: "template" keyword is required here for clang and g++
-            return PlaneT<C>(normal.template Cast<C>(), static_cast<C>(distance));
+            return PlaneT<C, PlaneEq>(normal.template Cast<C>(), static_cast<C>(distance));
         }
 
         Gs::Vector3T<T> normal;     //!< Normal vector of the plane.
@@ -141,13 +210,13 @@ class PlaneT
 /* --- Global Functions --- */
 
 //! Transforms the specified plane with the 4x4 matrix.
-template <typename M, typename T>
-PlaneT<T> TransformPlane(const M& mat, const PlaneT<T>& plane)
+template <typename M, typename T, typename PlaneEq>
+PlaneT<T, PlaneEq> TransformPlane(const M& mat, const PlaneT<T, PlaneEq>& plane)
 {
     const auto member = Gs::TransformVector(mat, plane.MemberPoint());
     const auto invMat = mat.Inverse().Transposed();
     const auto normal = Gs::RotateVector(mat, plane.normal);
-    return PlaneT<T>(normal, Gs::Dot(normal, member));
+    return PlaneT<T, PlaneEq>(normal, Gs::Dot(normal, member));
 }
 
 

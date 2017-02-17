@@ -23,6 +23,14 @@ macro(ADD_TEST_PROJECT TEST_NAME TEST_FILES)
 	target_compile_features(${TEST_NAME} PRIVATE cxx_range_for)
 endmacro()
 
+macro(ADD_DEFINE IDENT)
+	if(MSVC)
+		add_definitions("/D${IDENT}")
+	else()
+		add_definitions("-D${IDENT}")
+	endif()
+endmacro()
+
 
 # === Global files ===
 
@@ -30,6 +38,20 @@ file(GLOB_RECURSE HeadersAll "${PROJECT_SOURCE_DIR}/include/*.*")
 file(GLOB_RECURSE SourcesAll "${PROJECT_SOURCE_DIR}/sources/*.*")
 
 set(FilesAll ${HeadersAll} ${SourcesAll})
+
+
+# === Options ===
+
+option(Geometron_DEFAULT_PLANE_EQUATION_ALT "Enables the alternative plane euqation as default (i.e. 'n*x + d = 0' instead of 'n*x = d')" OFF)
+option(Geometron_ENABLE_MULTI_THREADING "Enables multi-threading for a couple of functions (currently only for VisualC++)" ON)
+
+if(Geometron_ENABLE_MULTI_THREADING)
+	ADD_DEFINE(GM_ENABLE_MULTI_THREADING)
+endif()
+
+if(Geometron_DEFAULT_PLANE_EQUATION_ALT)
+	ADD_DEFINE(GM_DEFAULT_PLANE_EQUATION_ALT)
+endif()
 
 
 # === Include directories ===

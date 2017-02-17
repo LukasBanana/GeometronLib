@@ -33,14 +33,14 @@ enum class FrustumPlane
 };
 
 //! Base frustum class.
-template <typename T>
-class FrustumT : private ConvexHullT<T>
+template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
+class FrustumT : private ConvexHullT<T, PlaneEq>
 {
     
     public:
         
         FrustumT() :
-            ConvexHullT<T>( 6 )
+            ConvexHullT<T, PlaneEq>( 6 )
         {
         }
 
@@ -102,7 +102,7 @@ class FrustumT : private ConvexHullT<T>
             };
 
             /* Normalize plane normal vectors */
-            ConvexHullT<T>::Normalize();
+            ConvexHullT<T, PlaneEq>::Normalize();
         }
 
         //! Returns the left-top corner on the far plane.
@@ -138,15 +138,15 @@ class FrustumT : private ConvexHullT<T>
         }
 
         //! Returns the specified plane of this frustum.
-        const PlaneT<T>& GetPlane(const FrustumPlane plane) const
+        const PlaneT<T, PlaneEq>& GetPlane(const FrustumPlane plane) const
         {
-            return ConvexHullT<T>::planes[static_cast<std::size_t>(plane)];
+            return ConvexHullT<T, PlaneEq>::planes[static_cast<std::size_t>(plane)];
         }
 
         //! Returns the specified plane of this frustum.
-        PlaneT<T>& GetPlane(const FrustumPlane plane)
+        PlaneT<T, PlaneEq>& GetPlane(const FrustumPlane plane)
         {
-            return ConvexHullT<T>::planes[static_cast<std::size_t>(plane)];
+            return ConvexHullT<T, PlaneEq>::planes[static_cast<std::size_t>(plane)];
         }
 
         //! Computes the bounding box of this frustum with the specified origin of the frustum.

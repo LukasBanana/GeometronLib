@@ -24,7 +24,7 @@ namespace Gm
 Convex hull base class. Here a convex hull is constructed
 so that all plane normals point out of the hull.
 */
-template <typename T>
+template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
 class ConvexHullT
 {
     
@@ -77,7 +77,7 @@ class ConvexHullT
         List of all planes which form the convex hull.
         This must be at least 3 planes to form a valid convex hull.
         */
-        std::vector< PlaneT<T> > planes;
+        std::vector< PlaneT<T, PlaneEq> > planes;
 
 };
 

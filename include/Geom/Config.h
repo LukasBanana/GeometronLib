@@ -11,8 +11,11 @@
 
 //! Enables multi-threading features.
 #ifndef __GNUC__
-#   define GM_ENABLE_MULTI_THREADING
+//#   define GM_ENABLE_MULTI_THREADING
 #endif
+
+//! Enables the alternative plane euqation as default (i.e. "n*x + d = 0" instead of "n*x = d").
+//#define GM_DEFAULT_PLANE_EQUATION_ALT
 
 
 #endif
