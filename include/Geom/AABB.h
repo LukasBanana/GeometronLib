@@ -122,6 +122,13 @@ class AABB
             return AABBEdges(*this);
         }
 
+        template <typename C>
+        AABB<Vec, C> Cast() const
+        {
+            // Hint: "template" keyword is required here for clang and g++
+            return AABB<Vec, C>(min.template Cast<C>(), max.template Cast<C>());
+        }
+
         Vec<T> min, max;
 
 };
