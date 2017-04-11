@@ -188,6 +188,29 @@ static void uniformSplineTest1()
         std::cout << "spline(" << t << ") = " << spline(t) << std::endl;
 }
 
+static void testRayCollision()
+{
+    Ray<Gs::Vector<float, 5>> r;
+
+    Ray2f a, b;
+    auto segment = ClosestSegmentBetweenRays(a, b);
+}
+
+static void testLineCollision()
+{
+    Line2f line;
+    Gs::Vector2f point;
+    ClosestPointToLine(line, point);
+    DistanceToLine(line, point);
+}
+
+static void testAABBCollision()
+{
+    AABB3f aabb;
+    Line3f line;
+    IntersectionWithAABB(aabb, line);
+}
+
 int main()
 {
     std::cout << "GeometronLib Test 1" << std::endl;

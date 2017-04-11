@@ -32,6 +32,9 @@
 
 #include "PlaneCollision.h"
 #include "TriangleCollision.h"
+#include "LineCollision.h"
+#include "RayCollision.h"
+#include "AABBCollision.h"
 
 #include "BezierCurve.h"
 #include "BezierTriangle.h"
