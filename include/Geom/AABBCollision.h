@@ -28,14 +28,14 @@ Computes the intersection linear-interpolation factor with the specified ray and
 \param[out] lerp Specifies the resulting linear-interpolation factor.
 \return True if an intersection occurs, otherwise false.
 */
-template <typename T>
-bool IntersectionLerpWithAABB(const AABB3T<T>& box, const Ray3T<T>& ray, T& lerp)
+template <typename Box, typename Vec, typename T>
+bool IntersectionLerpWithAABB(const Box& box, const Ray<Vec>& ray, T& lerp)
 {
     T tmin = T(0);
     T tmax = std::numeric_limits<T>::max();
 
     /* Loop for all three slabs */
-    for (std::size_t i = 0; i < 3; ++i)
+    for (std::size_t i = 0; i < typename Vec::components; ++i)
     {
         if (std::abs(ray.direction[i]) < Gs::Epsilon<T>())
         {
@@ -78,17 +78,19 @@ Makes an intersection test with the specified line and AABB.
 This will only be written if an intersection occurs.
 \return True if an intersection occurs, otherwise false.
 */
-template <typename T>
-bool IntersectionWithAABB(const AABB3T<T>& box, const Line3T<T>& line, Gs::Vector3T<T>& intersection)
+template <typename Box, typename Vec>
+bool IntersectionWithAABB(const Box& box, const Line<Vec>& line, Vec& intersection)
 {
+    using T = Gs::ScalarType<Vec>::Type;
+
     T lerp = T(0);
-    Ray3T<T> ray(line);
+    Ray<Vec> ray(line.a, line.Direction());
 
     if (!IntersectionLerpWithAABB(box, ray, lerp))
         return false;
 
     /* Check if intersection is outside line */
-    lerp /= line.Length();
+    //lerp /= line.Length();
 
     if (lerp < T(0) || lerp > T(1))
         return false;
@@ -105,11 +107,13 @@ Makes an intersection test with the specified line and AABB.
 \param[in] line Specifies the line whose intersection with the box is to be tested.
 \return True if an intersection occurs, otherwise false.
 */
-template <typename T>
-bool IntersectionWithAABB(const AABB3T<T>& box, const Line3T<T>& line)
+template <typename Box, typename Vec>
+bool IntersectionWithAABB(const Box& box, const Line<Vec>& line)
 {
+    using T = Gs::ScalarType<Vec>::Type;
+
     T lerp = T(0);
-    Ray3T<T> ray(line.a, line.Direction().Normalized());
+    Ray<Vec> ray(line.a, line.Direction());
 
     if (!IntersectionLerpWithAABB(box, ray, lerp))
         return false;
@@ -128,10 +132,11 @@ Makes an intersection test with the specified line and AABB.
 This will only be written if an intersection occurs.
 \return True if an intersection occurs, otherwise false.
 */
-template <typename T>
-bool IntersectionWithAABB(
-    const AABB3T<T>& box, const Ray3T<T>& ray, Gs::Vector3T<T>& intersection)
+template <typename Box, typename Vec>
+bool IntersectionWithAABB(const Box& box, const Ray<Vec>& ray, Vec& intersection)
 {
+    using T = Gs::ScalarType<Vec>::Type;
+
     T lerp = T(0);
     if (!IntersectionLerpWithAABB(box, ray, lerp))
         return false;
@@ -151,9 +156,11 @@ Makes an intersection test with the specified line and AABB.
 \param[in] ray Specifies the ray whose intersection with the box is to be tested.
 \return True if an intersection occurs, otherwise false.
 */
-template <typename T>
-bool IntersectionWithAABB(const AABB3T<typename T>& box, const Ray3T<typename T>& ray)
+template <typename Box, typename Vec>
+bool IntersectionWithAABB(const Box& box, const Ray<Vec>& ray)
 {
+    using T = Gs::ScalarType<Vec>::Type;
+
     T lerp = T(0);
     if (IntersectionLerpWithAABB(box, ray, lerp))
         return (lerp >= T(0));

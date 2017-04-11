@@ -209,6 +209,12 @@ static void testAABBCollision()
     AABB3f aabb;
     Line3f line;
     IntersectionWithAABB(aabb, line);
+
+    AABB2f aabb2 { Gs::Vector2(-1, -1), Gs::Vector2(1, 1) };
+    Line2T<float> line2 { Gs::Vector2(-1, 3.01f), Gs::Vector2(2, 0) };
+    Gs::Vector2f p;
+    if (IntersectionWithAABB(aabb2, line2, p))
+        std::cout << "Line-AABB Interection: " << p << std::endl;
 }
 
 int main()
@@ -221,9 +227,10 @@ int main()
     //meshTest1();
     //sphereTest1();
     //planeTest1();
-    barycentricTest1();
-    barycentricTest2();
+    //barycentricTest1();
+    //barycentricTest2();
     //uniformSplineTest1();
+    testAABBCollision();
 
     #ifdef _WIN32
     system("pause");
