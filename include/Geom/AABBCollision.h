@@ -25,12 +25,14 @@ namespace Gm
 Computes the intersection linear-interpolation factor with the specified ray and AABB.
 \param[in] box Specifies the axis-aligned bounding box against the intersection test is to be done.
 \param[in] ray Specifies the ray whose intersection with the box is to be computed.
-\param[out] lerp Specifies the resulting linear-interpolation factor.
+\param[out] t Specifies the resulting linear-interpolation factor.
 \return True if an intersection occurs, otherwise false.
 */
-template <typename Box, typename Vec, typename T>
-bool IntersectionLerpWithAABB(const Box& box, const Ray<Vec>& ray, T& lerp)
+template <typename Box, typename Vec>
+bool IntersectionWithAABBInterp(const Box& box, const Ray<Vec>& ray, typename Gs::ScalarType<Vec>::Type& t)
 {
+    using T = Gs::ScalarType<Vec>::Type;
+
     T tmin = T(0);
     T tmax = std::numeric_limits<T>::max();
 
@@ -65,7 +67,7 @@ bool IntersectionLerpWithAABB(const Box& box, const Ray<Vec>& ray, T& lerp)
     }
 
     /* Return intersection interpolation factor */
-    lerp = tmin;
+    t = tmin;
 
     return true;
 }
@@ -83,20 +85,18 @@ bool IntersectionWithAABB(const Box& box, const Line<Vec>& line, Vec& intersecti
 {
     using T = Gs::ScalarType<Vec>::Type;
 
-    T lerp = T(0);
+    T t = T(0);
     Ray<Vec> ray(line.a, line.Direction());
 
-    if (!IntersectionLerpWithAABB(box, ray, lerp))
+    if (!IntersectionWithAABBInterp(box, ray, t))
         return false;
 
     /* Check if intersection is outside line */
-    //lerp /= line.Length();
-
-    if (lerp < T(0) || lerp > T(1))
+    if (t < T(0) || t > T(1))
         return false;
 
     /* Compute the intersection point */
-    intersection = ray.Lerp(lerp);
+    intersection = ray.Lerp(t);
 
     return true;
 }
@@ -112,16 +112,19 @@ bool IntersectionWithAABB(const Box& box, const Line<Vec>& line)
 {
     using T = Gs::ScalarType<Vec>::Type;
 
-    T lerp = T(0);
+    T t = T(0);
     Ray<Vec> ray(line.a, line.Direction());
 
-    if (!IntersectionLerpWithAABB(box, ray, lerp))
+    if (!IntersectionWithAABBInterp(box, ray, t))
         return false;
 
     /* Check if intersection is outside line */
-    lerp /= line.Length();
+    if (t < T(0))
+        return false;
+    if (t > line.Length())
+        return false;
 
-    return (lerp >= T(0) && lerp <= T(1));
+    return true;
 }
 
 /**
@@ -137,15 +140,15 @@ bool IntersectionWithAABB(const Box& box, const Ray<Vec>& ray, Vec& intersection
 {
     using T = Gs::ScalarType<Vec>::Type;
 
-    T lerp = T(0);
-    if (!IntersectionLerpWithAABB(box, ray, lerp))
+    T t = T(0);
+    if (!IntersectionWithAABBInterp(box, ray, t))
         return false;
 
-    if (lerp < T(0))
+    if (t < T(0))
         return false;
 
     /* Compute the intersection point */
-    intersection = ray.Lerp(lerp);
+    intersection = ray.Lerp(t);
 
     return true;
 }
@@ -161,9 +164,9 @@ bool IntersectionWithAABB(const Box& box, const Ray<Vec>& ray)
 {
     using T = Gs::ScalarType<Vec>::Type;
 
-    T lerp = T(0);
-    if (IntersectionLerpWithAABB(box, ray, lerp))
-        return (lerp >= T(0));
+    T t = T(0);
+    if (IntersectionWithAABBInterp(box, ray, t))
+        return (t >= T(0));
     else
         return false;
 }

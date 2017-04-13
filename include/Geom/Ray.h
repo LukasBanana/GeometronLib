@@ -11,6 +11,7 @@
 
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>
+#include <Gauss/ScalarType.h>
 
 
 namespace Gm
@@ -39,13 +40,19 @@ class Ray
             // do nothing
         }
 
-        template <typename I>
-        T Lerp(const I& t) const
+        // Returns the linear-interpolation from the ray origin along its direction vector where t is in the range [0, inf+).
+        T Lerp(const typename Gs::ScalarType<T>::Type& t) const
         {
             auto result = direction;
             result *= t;
             result += origin;
             return result;
+        }
+
+        // Equivalent to: Lerp(t).
+        T operator () (const typename Gs::ScalarType<T>::Type& t) const
+        {
+            return Lerp(t);
         }
 
         T origin, direction;

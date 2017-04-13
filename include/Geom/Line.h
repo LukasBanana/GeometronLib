@@ -71,24 +71,34 @@ class Line< Gs::Vector2T<T> >
             // do nothing
         }
 
+        // Returns the unnormalized direction vector: b - a.
         Gs::Vector2T<T> Direction() const
         {
             return b - a;
         }
 
+        // Returns the linear-interpolation from the line point a to b where t is in the range [0, 1].
         Gs::Vector2T<T> Lerp(const T& t) const
         {
             return Gs::Lerp(a, b, t);
         }
 
+        // Returns the squared length of this line.
         T LengthSq() const
         {
             return Gs::DistanceSq(a, b);
         }
 
+        // Returns the length of this line.
         T Length() const
         {
             return Gs::Distance(a, b);
+        }
+
+        // Equivalent to: Lerp(t).
+        Gs::Vector2T<T> operator () (const T& t) const
+        {
+            return Lerp(t);
         }
 
         Gs::Vector2T<T> a, b;
@@ -118,24 +128,34 @@ class Line< Gs::Vector3T<T> >
             // do nothing
         }
 
+        // Returns the unnormalized direction vector: b - a.
         Gs::Vector3T<T> Direction() const
         {
             return b - a;
         }
 
+        // Returns the linear-interpolation from the line point a to b where t is in the range [0, 1].
         Gs::Vector3T<T> Lerp(const T& t) const
         {
             return Gs::Lerp(a, b, t);
         }
 
+        // Returns the squared length of this line.
         T LengthSq() const
         {
             return Gs::DistanceSq(a, b);
         }
 
+        // Returns the length of this line.
         T Length() const
         {
             return Gs::Distance(a, b);
+        }
+
+        // Equivalent to: Lerp(t).
+        Gs::Vector3T<T> operator () (const T& t) const
+        {
+            return Lerp(t);
         }
 
         Gs::Vector3T<T> a, b;

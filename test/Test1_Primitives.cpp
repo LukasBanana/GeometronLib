@@ -211,7 +211,7 @@ static void testAABBCollision()
     IntersectionWithAABB(aabb, line);
 
     AABB2f aabb2 { Gs::Vector2(-1, -1), Gs::Vector2(1, 1) };
-    Line2T<float> line2 { Gs::Vector2(-1, 3.01f), Gs::Vector2(2, 0) };
+    Line2T<float> line2 { Gs::Vector2(-1, 3), Gs::Vector2(2, 0) };
     Gs::Vector2f p;
     if (IntersectionWithAABB(aabb2, line2, p))
         std::cout << "Line-AABB Interection: " << p << std::endl;
