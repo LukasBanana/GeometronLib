@@ -96,7 +96,7 @@ bool IntersectionWithAABB(const Box& box, const Line<Vec>& line, Vec& intersecti
         return false;
 
     /* Compute the intersection point */
-    intersection = ray.Lerp(t);
+    intersection = ray(t);
 
     return true;
 }
@@ -148,7 +148,7 @@ bool IntersectionWithAABB(const Box& box, const Ray<Vec>& ray, Vec& intersection
         return false;
 
     /* Compute the intersection point */
-    intersection = ray.Lerp(t);
+    intersection = ray(t);
 
     return true;
 }
