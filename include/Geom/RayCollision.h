@@ -27,7 +27,7 @@ the end point of the resulting segment will lie onto the second ray 'rayB'.
 template <typename Vec>
 Line<Vec> ClosestSegmentBetweenRays(const Ray<Vec>& rayA, const Ray<Vec>& rayB)
 {
-    using T = Gs::ScalarType<Vec>::Type;
+    using T = typename Gs::ScalarType<Vec>::Type;
 
     const auto r = (rayA.origin - rayB.origin);
     

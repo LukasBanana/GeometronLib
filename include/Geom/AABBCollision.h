@@ -31,13 +31,13 @@ Computes the intersection linear-interpolation factor with the specified ray and
 template <typename Box, typename Vec>
 bool IntersectionWithAABBInterp(const Box& box, const Ray<Vec>& ray, typename Gs::ScalarType<Vec>::Type& t)
 {
-    using T = Gs::ScalarType<Vec>::Type;
+    using T = typename Gs::ScalarType<Vec>::Type;
 
     T tmin = T(0);
     T tmax = std::numeric_limits<T>::max();
 
     /* Loop for all three slabs */
-    for (std::size_t i = 0; i < typename Vec::components; ++i)
+    for (std::size_t i = 0; i < Vec::components; ++i)
     {
         if (std::abs(ray.direction[i]) < Gs::Epsilon<T>())
         {
@@ -83,7 +83,7 @@ This will only be written if an intersection occurs.
 template <typename Box, typename Vec>
 bool IntersectionWithAABB(const Box& box, const Line<Vec>& line, Vec& intersection)
 {
-    using T = Gs::ScalarType<Vec>::Type;
+    using T = typename Gs::ScalarType<Vec>::Type;
 
     T t = T(0);
     Ray<Vec> ray(line.a, line.Direction());
@@ -110,7 +110,7 @@ Makes an intersection test with the specified line and AABB.
 template <typename Box, typename Vec>
 bool IntersectionWithAABB(const Box& box, const Line<Vec>& line)
 {
-    using T = Gs::ScalarType<Vec>::Type;
+    using T = typename Gs::ScalarType<Vec>::Type;
 
     T t = T(0);
     Ray<Vec> ray(line.a, line.Direction());
@@ -138,7 +138,7 @@ This will only be written if an intersection occurs.
 template <typename Box, typename Vec>
 bool IntersectionWithAABB(const Box& box, const Ray<Vec>& ray, Vec& intersection)
 {
-    using T = Gs::ScalarType<Vec>::Type;
+    using T = typename Gs::ScalarType<Vec>::Type;
 
     T t = T(0);
     if (!IntersectionWithAABBInterp(box, ray, t))
@@ -162,7 +162,7 @@ Makes an intersection test with the specified line and AABB.
 template <typename Box, typename Vec>
 bool IntersectionWithAABB(const Box& box, const Ray<Vec>& ray)
 {
-    using T = Gs::ScalarType<Vec>::Type;
+    using T = typename Gs::ScalarType<Vec>::Type;
 
     T t = T(0);
     if (IntersectionWithAABBInterp(box, ray, t))

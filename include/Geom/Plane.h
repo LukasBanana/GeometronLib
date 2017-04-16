@@ -214,7 +214,7 @@ template <typename M, typename T, typename PlaneEq>
 PlaneT<T, PlaneEq> TransformPlane(const M& mat, const PlaneT<T, PlaneEq>& plane)
 {
     const auto member = Gs::TransformVector(mat, plane.MemberPoint());
-    const auto invMat = mat.Inverse().Transposed();
+    //const auto invMat = mat.Inverse().Transposed();
     const auto normal = Gs::RotateVector(mat, plane.normal);
     return PlaneT<T, PlaneEq>(normal, Gs::Dot(normal, member));
 }

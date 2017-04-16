@@ -70,10 +70,10 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
     const auto f = Gs::Dot(dir2, r);
     
     /* Check if either or both segments degenerate into points */
-    if (a <= Epsilon<T>() && e <= Epsilon<T>())
+    if (a <= Gs::Epsilon<T>() && e <= Gs::Epsilon<T>())
     {
         /* Both segments degenerate into points */
-        return Line<Vec<T>>(lineA.a, lineB.a);
+        return Line<Vec>(lineA.a, lineB.a);
     }
     
     T s, t;
@@ -129,7 +129,7 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
             {
                 t = T(0);
                 s = -c / a;
-                s = Gs:Saturate(s);
+                s = Gs::Saturate(s);
             }
             else if (t > T(1))
             {
@@ -141,7 +141,7 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
     }
     
     /* Return final line segment */
-    return Line<Vec<T>>(
+    return Line<Vec>(
         lineA.a + dir1 * s,
         lineB.a + dir2 * t
     );
