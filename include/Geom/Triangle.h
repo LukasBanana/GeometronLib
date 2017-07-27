@@ -39,18 +39,18 @@ class Triangle
     public:
         
         Triangle() :
-            a( T(0) ),
-            b( T(0) ),
-            c( T(0) )
+            a { T(0) },
+            b { T(0) },
+            c { T(0) }
         {
         }
 
         Triangle(const Triangle<T>&) = default;
 
         Triangle(const T& a, const T& b, const T& c) :
-            a( a ),
-            b( b ),
-            c( c )
+            a { a },
+            b { b },
+            c { c }
         {
         }
 
@@ -86,16 +86,16 @@ class Triangle< Gs::Vector2T<T> >
         Triangle(const Triangle< Gs::Vector2T<T> >&) = default;
 
         Triangle(const Gs::Vector2T<T>& a, const Gs::Vector2T<T>& b, const Gs::Vector2T<T>& c) :
-            a( a ),
-            b( b ),
-            c( c )
+            a { a },
+            b { b },
+            c { c }
         {
         }
 
         Triangle(Gs::UninitializeTag) :
-            a( Gs::UninitializeTag{} ),
-            b( Gs::UninitializeTag{} ),
-            c( Gs::UninitializeTag{} )
+            a { Gs::UninitializeTag{} },
+            b { Gs::UninitializeTag{} },
+            c { Gs::UninitializeTag{} }
         {
             // do nothing
         }
@@ -209,16 +209,16 @@ class Triangle< Gs::Vector3T<T> >
         Triangle(const Triangle< Gs::Vector3T<T> >&) = default;
 
         Triangle(const Gs::Vector3T<T>& a, const Gs::Vector3T<T>& b, const Gs::Vector3T<T>& c) :
-            a( a ),
-            b( b ),
-            c( c )
+            a { a },
+            b { b },
+            c { c }
         {
         }
 
         Triangle(Gs::UninitializeTag) :
-            a( Gs::UninitializeTag{} ),
-            b( Gs::UninitializeTag{} ),
-            c( Gs::UninitializeTag{} )
+            a { Gs::UninitializeTag{} },
+            b { Gs::UninitializeTag{} },
+            c { Gs::UninitializeTag{} }
         {
             // do nothing
         }

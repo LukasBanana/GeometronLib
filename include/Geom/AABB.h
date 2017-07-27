@@ -37,15 +37,15 @@ class AABB
         and max has the minimal values possible.
         */
         AABB() :
-            min( Gs::UninitializeTag{} ),
-            max( Gs::UninitializeTag{} )
+            min { Gs::UninitializeTag{} },
+            max { Gs::UninitializeTag{} }
         {
             Reset();
         }
 
         AABB(const Vec<T>& min, const Vec<T>& max) :
-            min( min ),
-            max( max )
+            min { min },
+            max { max }
         {
         }
 

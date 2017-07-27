@@ -40,7 +40,7 @@ class FrustumT : private ConvexHullT<T, PlaneEq>
     public:
         
         FrustumT() :
-            ConvexHullT<T, PlaneEq>( 6 )
+            ConvexHullT<T, PlaneEq> { 6 }
         {
         }
 

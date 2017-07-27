@@ -29,8 +29,8 @@ struct VertexAttributeDescriptor
 {
     VertexAttributeDescriptor() = default;
     VertexAttributeDescriptor(std::size_t offset, unsigned int components) :
-        offset      ( offset     ),
-        components  ( components )
+        offset     { offset     },
+        components { components }
     {
     }
 
@@ -46,8 +46,8 @@ struct VertexDescriptor
 {
     VertexDescriptor() = default;
     VertexDescriptor(const std::vector<VertexAttributeDescriptor>& attributes, std::size_t stride = 0) :
-        attributes  ( attributes ),
-        stride      ( stride     )
+        attributes { attributes },
+        stride     { stride     }
     {
     }
 

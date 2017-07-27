@@ -33,7 +33,7 @@ class ConvexHullT
         ConvexHullT() = default;
 
         ConvexHullT(std::size_t planeCount) :
-            planes( planeCount )
+            planes { planeCount }
         {
         }
 

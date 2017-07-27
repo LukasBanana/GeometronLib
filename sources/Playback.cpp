@@ -71,7 +71,7 @@ void Playback::ListLoop::OnNextFrame(Playback& sender)
 /* ----- Playback class ----- */
 
 Playback::Playback() :
-    eventListener_( std::make_shared<Playback::OneShot>() )
+    eventListener_ { std::make_shared<Playback::OneShot>() }
 {
 }
 

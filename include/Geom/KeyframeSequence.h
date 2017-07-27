@@ -29,8 +29,8 @@ struct Keyframe
     Keyframe(const Keyframe<T>&) = default;
 
     Keyframe(const T& key, std::size_t frame) :
-        key     ( key   ),
-        frame   ( frame )
+        key   { key   },
+        frame { frame }
     {
     }
 

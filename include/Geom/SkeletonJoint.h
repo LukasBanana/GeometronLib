@@ -42,9 +42,9 @@ class SkeletonJoint
             VertexWeight() = default;
             VertexWeight(const VertexWeight&) = default;
 
-            VertexWeight(TriangleMesh::VertexIndex index, Gs::Real weight) :
-                index   ( index  ),
-                weight  ( weight )
+            inline VertexWeight(TriangleMesh::VertexIndex index, Gs::Real weight) :
+                index  { index  },
+                weight { weight }
             {
             }
 

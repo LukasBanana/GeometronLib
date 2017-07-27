@@ -26,16 +26,16 @@ class Line
     public:
         
         Line() :
-            a( T(0) ),
-            b( T(0) )
+            a { T(0) },
+            b { T(0) }
         {
         }
 
         Line(const Line<T>&) = default;
 
         Line(const T& a, const T& b) :
-            a( a ),
-            b( b )
+            a { a },
+            b { b }
         {
         }
 
@@ -59,14 +59,14 @@ class Line< Gs::Vector2T<T> >
         Line(const Line< Gs::Vector2T<T> >&) = default;
 
         Line(const Gs::Vector2T<T>& a, const Gs::Vector2T<T>& b) :
-            a( a ),
-            b( b )
+            a { a },
+            b { b }
         {
         }
 
         Line(Gs::UninitializeTag) :
-            a( Gs::UninitializeTag{} ),
-            b( Gs::UninitializeTag{} )
+            a { Gs::UninitializeTag{} },
+            b { Gs::UninitializeTag{} }
         {
             // do nothing
         }
@@ -116,14 +116,14 @@ class Line< Gs::Vector3T<T> >
         Line(const Line< Gs::Vector3T<T> >&) = default;
 
         Line(const Gs::Vector3T<T>& a, const Gs::Vector3T<T>& b) :
-            a( a ),
-            b( b )
+            a { a },
+            b { b }
         {
         }
 
         Line(Gs::UninitializeTag) :
-            a( Gs::UninitializeTag{} ),
-            b( Gs::UninitializeTag{} )
+            a { Gs::UninitializeTag{} },
+            b { Gs::UninitializeTag{} }
         {
             // do nothing
         }

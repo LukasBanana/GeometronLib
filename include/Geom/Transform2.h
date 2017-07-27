@@ -35,9 +35,9 @@ class Transform2T
         using MatrixType = Gs::AffineMatrix3T<T>;
 
         Transform2T() :
-            rotation_   ( T(0) ),
-            scale_      ( T(1) ),
-            hasChanged_ ( true )
+            rotation_   { T(0) },
+            scale_      { T(1) },
+            hasChanged_ { true }
         {
         }
 

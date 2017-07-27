@@ -109,7 +109,7 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
             if (denom != T(0))
             {
                 s = (b*f - c*e) / denom;
-                s = Saturate(s);
+                s = Gs::Saturate(s);
             }
             else
                 s = T(0);

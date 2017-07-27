@@ -26,15 +26,15 @@ class OBB
         OBB() = default;
 
         OBB(Gs::UninitializeTag) :
-            center  ( Gs::UninitializeTag{} ),
-            halfSize( Gs::UninitializeTag{} ),
-            axes    ( Gs::UninitializeTag{} )
+            center   { Gs::UninitializeTag{} },
+            halfSize { Gs::UninitializeTag{} },
+            axes     { Gs::UninitializeTag{} }
         {
         }
 
         OBB(const Vec<T>& min, const Vec<T>& max) :
-            center  ( (min + max) / T(2) ),
-            halfSize( (max - min) / T(2) )
+            center   { (min + max) / T(2) },
+            halfSize { (max - min) / T(2) }
         {
             /* Setup 'identity matrix' */
             for (std::size_t i = 0; i < Vec<T>::components; ++i)
@@ -42,8 +42,8 @@ class OBB
         }
 
         OBB(const Vec<T>& center, const Vec<T>& xAxis, const Vec<T>& yAxis, const Vec<T>& zAxis) :
-            center  ( center ),
-            axes    ( xAxis, yAxis, zAxis )
+            center { center              },
+            axes   { xAxis, yAxis, zAxis }
         {
             UpdateHalfSize();
         }

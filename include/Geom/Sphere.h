@@ -25,7 +25,7 @@ class SphereT
     public:
         
         SphereT() :
-            radius( T(0) )
+            radius { T(0) }
         {
         }
 

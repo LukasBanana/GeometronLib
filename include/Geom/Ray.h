@@ -28,14 +28,14 @@ class Ray
         Ray() = default;
 
         Ray(const T& origin, const T& direction) :
-            origin      ( origin    ),
-            direction   ( direction )
+            origin    { origin    },
+            direction { direction }
         {
         }
 
         Ray(Gs::UninitializeTag) :
-            origin      ( Gs::UninitializeTag{} ),
-            direction   ( Gs::UninitializeTag{} )
+            origin    { Gs::UninitializeTag{} },
+            direction { Gs::UninitializeTag{} }
         {
             // do nothing
         }
@@ -71,14 +71,14 @@ class Ray< Gs::Vector2T<T> >
         Ray() = default;
 
         Ray(const Gs::Vector2T<T>& origin, const Gs::Vector2T<T>& direction) :
-            origin      ( origin    ),
-            direction   ( direction )
+            origin    { origin    },
+            direction { direction }
         {
         }
 
         Ray(Gs::UninitializeTag) :
-            origin      ( Gs::UninitializeTag{} ),
-            direction   ( Gs::UninitializeTag{} )
+            origin    { Gs::UninitializeTag{} },
+            direction { Gs::UninitializeTag{} }
         {
             // do nothing
         }

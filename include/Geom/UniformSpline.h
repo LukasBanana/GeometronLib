@@ -23,7 +23,6 @@ namespace Gm
 {
 
 
-
 /**
 \brief Spline class with uniform weights.
 \see Spline

@@ -102,7 +102,7 @@ class PlaneT
         GM_ASSERT_FLOAT_TYPE("PlaneT");
 
         PlaneT() :
-            distance( T(0) )
+            distance { T(0) }
         {
         }
 
@@ -116,8 +116,8 @@ class PlaneT
         \see PlaneEquation_NXD_eq_Zero
         */
         PlaneT(const T& x, const T& y, const T& z, const T& d) :
-            normal  ( x, y, z                  ),
-            distance( PlaneEq::DistanceSign(d) )
+            normal   { x, y, z                  },
+            distance { PlaneEq::DistanceSign(d) }
         {
         }
 
@@ -127,13 +127,13 @@ class PlaneT
         }
 
         PlaneT(const Gs::Vector3T<T>& normal, const T& distance) :
-            normal  ( normal   ),
-            distance( distance )
+            normal   { normal   },
+            distance { distance }
         {
         }
 
         PlaneT(Gs::UninitializeTag) :
-            normal( Gs::UninitializeTag{} )
+            normal { Gs::UninitializeTag{} }
         {
             // do nothing
         }
