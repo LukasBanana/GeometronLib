@@ -63,7 +63,7 @@ struct EllipsoidDescriptor
 
     /**
     Segmentation in U (x component), and V (y component) direction.
-    Each component will be clamped to [3, +inf). By default (20, 10).
+    X component will be clamped to [3, +inf), Y component will be clamped to [2, +inf). By default (20, 10).
     */
     Gs::Vector2ui   segments        = Gs::Vector2ui(20, 10);
 
@@ -134,7 +134,6 @@ struct PipeDescriptor
     bool            alternateGrid       = false;
 };
 
-#if 0
 struct CapsuleDescriptor
 {
     //! Radius of the top- and bottom half-ellipsoids in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
@@ -148,14 +147,13 @@ struct CapsuleDescriptor
 
     /**
     Segmentation of the top- and bottom half-ellipsoids.
-    Each component will be clamped to [3, +inf). By default 10.
+    Each component will be clamped to [2, +inf). By default 10.
     */
     unsigned int    ellipsoidSegments   = 10;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid       = false;
 };
-#endif
 
 struct TorusDescriptor
 {
@@ -298,8 +296,8 @@ TriangleMesh GenerateCylinder(const CylinderDescriptor& desc);
 void GeneratePipe(const PipeDescriptor& desc, TriangleMesh& mesh);
 TriangleMesh GeneratePipe(const PipeDescriptor& desc);
 
-//void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh);
-//TriangleMesh GenerateCapsule(const CapsuleDescriptor& desc);
+void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh);
+TriangleMesh GenerateCapsule(const CapsuleDescriptor& desc);
 
 void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh);
 TriangleMesh GenerateTorus(const TorusDescriptor& desc);

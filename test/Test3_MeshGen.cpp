@@ -23,6 +23,9 @@
 // write models to .obj files
 //#define WRITE_MODELS_TO_FILE
 
+// show vertical scaled window (600x800 instead of 800x600)
+#define VERTICAL_SCALED_WINDOW
+
 
 // ----- STRUCTURES -----
 
@@ -62,7 +65,13 @@ class Texture
 
 int                         winID = 0;
 
+#if defined ENABLE_PRESENTATION
+Gs::Vector2i                resolution(600, 600);
+#elif defined VERTICAL_SCALED_WINDOW
+Gs::Vector2i                resolution(600, 800);
+#else
 Gs::Vector2i                resolution(800, 600);
+#endif
 Gs::ProjectionMatrix4       projection;
 Gs::AffineMatrix4           viewMatrix;
 Gm::Transform3              viewTransform;
@@ -409,6 +418,26 @@ void addModelPipe()
     mdl->mesh = Gm::MeshGenerator::GeneratePipe(desc);
 }
 
+void addModelCapsule()
+{
+    auto mdl = addModel("Capsule");
+
+    Gm::MeshGenerator::CapsuleDescriptor desc;
+
+    #ifdef ENABLE_PRESENTATION
+    desc.mantleSegments     = { 40, 5 };
+    desc.ellipsoidSegments  = 20;
+    desc.alternateGrid      = true;
+    #else
+    desc.radius             = { 0.5f, 0.75f, 0.35f };
+    desc.mantleSegments     = { 20, 4 };
+    desc.ellipsoidSegments  = 9;
+    desc.alternateGrid      = true;
+    #endif
+
+    mdl->mesh = Gm::MeshGenerator::GenerateCapsule(desc);
+}
+
 void addModelTorus()
 {
     auto mdl = addModel("Torus");
@@ -649,6 +678,7 @@ void initScene()
     addModelCone();
     addModelCylinder();
     addModelPipe();
+    addModelCapsule();
     addModelTorus();
     addModelSpiral();
     addModelTorusKnot();
