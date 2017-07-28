@@ -44,6 +44,7 @@ using CurveFunction = std::function<Gs::Vector3(Gs::Real t)>;
 
 /* --- Descriptors --- */
 
+//! Descriptor structure for a cuboid (also cube) mesh.
 struct CuboidDescriptor
 {
     //! Cuboid size. By default (1, 1, 1).
@@ -56,6 +57,7 @@ struct CuboidDescriptor
     bool            alternateGrid   = false;
 };
 
+//! Descriptor structure for an ellispoid (also sphere) mesh.
 struct EllipsoidDescriptor
 {
     //! Radius in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
@@ -71,6 +73,7 @@ struct EllipsoidDescriptor
     bool            alternateGrid   = false;
 };
 
+//! Descriptor structure for a cone mesh.
 struct ConeDescriptor
 {
     //! Cone radius in U (x component), and V (y component) direction. By default (0.5, 0.5).
@@ -89,6 +92,7 @@ struct ConeDescriptor
     bool            alternateGrid   = false;
 };
 
+//! Descriptor structure for a cylinder mesh.
 struct CylinderDescriptor
 {
     //! Cylinder radius in U (x component), and V (y component) direction. By default (0.5, 0.5).
@@ -110,6 +114,7 @@ struct CylinderDescriptor
     bool            alternateGrid       = false;
 };
 
+//! Descriptor structure for a pipe mesh (i.e. cylinder with a hole).
 struct PipeDescriptor
 {
     //! Radius of the inner cylinder in U (x component), and V (y component) direction. By default (0.25, 0.25).
@@ -134,6 +139,7 @@ struct PipeDescriptor
     bool            alternateGrid       = false;
 };
 
+//! Descriptor structure for a capsule mesh (i.e. cylinder with a half-sphere at top and bottom).
 struct CapsuleDescriptor
 {
     //! Radius of the top- and bottom half-ellipsoids in X, Y, and Z direction. By default (0.5, 0.5, 0.5).
@@ -155,6 +161,7 @@ struct CapsuleDescriptor
     bool            alternateGrid       = false;
 };
 
+//! Descriptor structure for a torus mesh.
 struct TorusDescriptor
 {
     //! Radius of the torus ring in X, and Y direction. By default (0.5, 0.5).
@@ -173,6 +180,7 @@ struct TorusDescriptor
     bool            alternateGrid   = false;
 };
 
+//! Descriptor structure for a torus-knot mesh (uses the curve generator).
 struct TorusKnotDescriptor
 {
     //! Radius of the torus ring in X, and Y direction. By default (0.25, 0.25, 0.25).
@@ -209,6 +217,7 @@ struct TorusKnotDescriptor
     VertexModifier  vertexModifier  = nullptr;
 };
 
+//! Descriptor structure for a spiral mesh.
 struct SpiralDescriptor
 {
     //! Radius of the torus ring in X, and Y direction. By default (0.5, 0.5).
@@ -239,6 +248,7 @@ struct SpiralDescriptor
     bool            alternateGrid       = false;
 };
 
+//! Descriptor structure for a curve mesh (as a rope along a given curve function).
 struct CurveDescriptor
 {
     //! Curve progression function.
@@ -260,6 +270,7 @@ struct CurveDescriptor
     VertexModifier  vertexModifier  = nullptr;
 };
 
+//! Descriptor structure for a Bezier patch mesh.
 struct BezierPatchDescriptor
 {
     //! Bezier patch control points.
@@ -281,37 +292,90 @@ struct BezierPatchDescriptor
 
 /* --- Global Functions --- */
 
+//! Generates a cuboid (also cube) mesh with the specified descriptor and appends the result to the specified output mesh.
 void GenerateCuboid(const CuboidDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new cuboid (also cube) mesh with the specified descriptor.
 TriangleMesh GenerateCuboid(const CuboidDescriptor& desc);
 
+
+
+//! Generates an ellipsoid (also sphere) mesh with the specified descriptor and appends the result to the specified output mesh.
 void GenerateEllipsoid(const EllipsoidDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new ellipsoid (also sphere) mesh with the specified descriptor.
 TriangleMesh GenerateEllipsoid(const EllipsoidDescriptor& desc);
 
+
+
+//! Generates a cone mesh with the specified descriptor and appends the result to the specified output mesh.
 void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new cone mesh with the specified descriptor.
 TriangleMesh GenerateCone(const ConeDescriptor& desc);
 
+
+
+//! Generates a cylinder mesh with the specified descriptor and appends the result to the specified output mesh.
 void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new cylinder mesh with the specified descriptor.
 TriangleMesh GenerateCylinder(const CylinderDescriptor& desc);
 
+
+
+//! Generates a pipe mesh (i.e. cylinder with a hole) with the specified descriptor and appends the result to the specified output mesh.
 void GeneratePipe(const PipeDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new pipe (i.e. cylinder with a hole) mesh with the specified descriptor.
 TriangleMesh GeneratePipe(const PipeDescriptor& desc);
 
+
+
+//! Generates a capsule mesh (i.e. cylinder with a half-sphere at top and bottom) with the specified descriptor and appends the result to the specified output mesh.
 void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new capsule mesh (i.e. cylinder with a half-sphere at top and bottom) with the specified descriptor.
 TriangleMesh GenerateCapsule(const CapsuleDescriptor& desc);
 
+
+
+//! Generates a torus mesh with the specified descriptor and appends the result to the specified output mesh.
 void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new torus mesh with the specified descriptor.
 TriangleMesh GenerateTorus(const TorusDescriptor& desc);
 
+
+
+//! Generates a torus-knot mesh with the specified descriptor and appends the result to the specified output mesh.
 void GenerateTorusKnot(const TorusKnotDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new torus-knot mesh with the specified descriptor.
 TriangleMesh GenerateTorusKnot(const TorusKnotDescriptor& desc);
 
+
+
+//! Generates a spiral mesh with the specified descriptor and appends the result to the specified output mesh.
 void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new spiral mesh with the specified descriptor.
 TriangleMesh GenerateSpiral(const SpiralDescriptor& desc);
 
+
+
+//! Generates a curve mesh (as a rope along a given curve function) with the specified descriptor and appends the result to the specified output mesh.
 void GenerateCurve(const CurveDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new curve mesh (as a rope along a given curve function) with the specified descriptor.
 TriangleMesh GenerateCurve(const CurveDescriptor& desc);
 
+
+
+//! Generates a Bezier patch mesh with the specified descriptor and appends the result to the specified output mesh.
 void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new Bezier patch mesh with the specified descriptor.
 TriangleMesh GenerateBezierPatch(const BezierPatchDescriptor& desc);
 
 

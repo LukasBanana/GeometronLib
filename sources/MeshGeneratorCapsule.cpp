@@ -100,6 +100,7 @@ void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh)
                 coord *= desc.radius;
                 coord.y += halfHeight * coverSide[i];
 
+                //TODO: texCoord wrong for bottom half-sphere!!!
                 /* Add new vertex */
                 mesh.AddVertex(coord, normal, texCoord);
             }
