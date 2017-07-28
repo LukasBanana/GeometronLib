@@ -17,6 +17,7 @@
 #include "Plane.h"
 #include "Ray.h"
 #include "Sphere.h"
+#include "Cone.h"
 #include "Spline.h"
 #include "UniformSpline.h"
 #include "Triangle.h"
@@ -35,6 +36,7 @@
 #include "LineCollision.h"
 #include "RayCollision.h"
 #include "AABBCollision.h"
+#include "ConeCollision.h"
 
 #include "BezierCurve.h"
 #include "BezierTriangle.h"

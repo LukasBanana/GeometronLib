@@ -14,6 +14,7 @@
 #include "OBB.h"
 #include "Line.h"
 #include "Ray.h"
+#include "Cone.h"
 
 #include <Gauss/Epsilon.h>
 
@@ -28,7 +29,7 @@ namespace Gm
 template <typename T, typename PlaneEq>
 T SgnDistanceToPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point)
 {
-    return Gs::Dot(plane.normal, point) - PlaneEq::DistanceSign(plane.distance);
+    return (Gs::Dot(plane.normal, point) - PlaneEq::DistanceSign(plane.distance));
 }
 
 //! Returns the (unsigned) distance between the specified plane and point.
@@ -230,7 +231,28 @@ PlaneRelation RelationToPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3
 template <typename T, typename PlaneEq>
 bool IsFrontFacingPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point)
 {
-    return SgnDistanceToPlane(plane, point) > T(0);
+    return (Gs::Dot(plane.normal, point) > PlaneEq::DistanceSign(plane.distance));
+}
+
+//! Returns true if the specified cone is on the front side of the plane.
+template <typename T, typename PlaneEq>
+bool IsFrontFacingPlane(const PlaneT<T, PlaneEq>& plane, const ConeT<T>& cone)
+{
+    /* Check tip of the cone against plane */
+    if (!IsFrontFacingPlane(plane, cone.point))
+        return false;
+
+    /* Compute offset vector */
+    auto offsetVec = Gs::Cross(plane.normal, cone.direction);
+    offsetVec.Normalize();
+
+    offsetVec = Gs::Cross(offsetVec, cone.direction);
+    offsetVec.Normalize();
+
+    /* Check closest point against plane */
+    auto closestPoint = cone.point + (cone.direction * cone.height) + (offsetVec * cone.radius);
+
+    return IsFrontFacingPlane(plane, closestPoint);
 }
 
 
