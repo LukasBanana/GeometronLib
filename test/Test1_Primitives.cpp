@@ -217,6 +217,17 @@ static void testAABBCollision()
         std::cout << "Line-AABB Interection: " << p << std::endl;
 }
 
+static void testConeCollision()
+{
+    Planef plane { { 0, 1, 0 }, 0.0f };
+    Conef cone { { 0, 1.5f, 0 }, Gs::Vector3f{ 1, -1, 0 }.Normalized(), 1.8f, 0.5f };
+
+    if (IsFrontFacingPlane(plane, cone))
+        std::cout << "cone is on front side of the plane" << std::endl;
+    else
+        std::cout << "cone is NOT on front side of the plane" << std::endl;
+}
+
 int main()
 {
     std::cout << "GeometronLib Test 1" << std::endl;
@@ -230,7 +241,8 @@ int main()
     //barycentricTest1();
     //barycentricTest2();
     //uniformSplineTest1();
-    testAABBCollision();
+    //testAABBCollision();
+    testConeCollision();
 
     #ifdef _WIN32
     system("pause");

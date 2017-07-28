@@ -35,7 +35,7 @@ struct JointVertex
 struct Model
 {
     Model() :
-        skeleton( std::make_shared<Gm::Skeleton>() )
+        skeleton { std::make_shared<Gm::Skeleton>() }
     {
     }
 

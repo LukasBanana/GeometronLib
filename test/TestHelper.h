@@ -29,7 +29,7 @@ void emitVertex(const Gm::TriangleMesh::Vertex& vert)
     glVertex3fv(vert.position.Ptr());
 }
 
-void drawLine(const Gs::Vector3& a, const Gs::Vector3& b)
+void drawLine(const Gs::Vector3f& a, const Gs::Vector3f& b)
 {
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     glVertex3fv(a.Ptr());
@@ -38,13 +38,25 @@ void drawLine(const Gs::Vector3& a, const Gs::Vector3& b)
     glVertex3fv(b.Ptr());
 }
 
-void drawLine(const Gs::Vector3& a, const Gs::Vector3& b, const Gs::Vector4f& color)
+void drawLine(const Gs::Vector3f& a, const Gs::Vector3f& b, const Gs::Vector4f& color)
 {
     glColor4fv(color.Ptr());
     glVertex3fv(a.Ptr());
 
     glColor4fv(color.Ptr());
     glVertex3fv(b.Ptr());
+}
+
+void drawPoint(const Gs::Vector3f& p, const Gs::Vector4f& color, float size = 5.0f)
+{
+    glPointSize(size);
+    glBegin(GL_POINTS);
+    {
+        glColor4fv(color.Ptr());
+        glVertex3fv(p.Ptr());
+    }
+    glEnd();
+    glPointSize(1.0f);
 }
 
 

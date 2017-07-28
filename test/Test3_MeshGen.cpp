@@ -18,7 +18,7 @@
 // ----- MACROS -----
 
 // show models in pre-defined orientation
-#define ENABLE_PRESENTATION
+//#define ENABLE_PRESENTATION
 
 // write models to .obj files
 //#define WRITE_MODELS_TO_FILE

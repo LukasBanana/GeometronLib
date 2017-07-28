@@ -31,7 +31,7 @@ class SphereT
 
         T GetVolume() const
         {
-            return T(4)/T(3) * T(Gs::pi) * radius*radius*radius;
+            return T(4)/T(3) * T(Gs::pi) * radius * radius * radius;
         }
 
         void SetVolume(const T& volume)
@@ -41,7 +41,7 @@ class SphereT
 
         T GetArea() const
         {
-            return T(4) * T(Gs::pi) * radius*radius;
+            return T(4) * T(Gs::pi) * radius * radius;
         }
 
         void SetArea(const T& area)
