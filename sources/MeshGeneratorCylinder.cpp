@@ -22,8 +22,8 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
     const auto segsHorz = std::max(3u, desc.mantleSegments.x);
     const auto segsVert = std::max(1u, desc.mantleSegments.y);
 
-    const auto invHorz  = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert  = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
     const auto angleSteps = invHorz * pi_2;
 
@@ -152,10 +152,10 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
 
             for (unsigned int v = 1; v < segsCov[i]; ++v)
             {
-                auto i1 = v - 1 + segsCov[i];
                 auto i0 = v - 1;
-                auto i3 = v;
+                auto i1 = v - 1 + segsCov[i];
                 auto i2 = v + segsCov[i];
+                auto i3 = v;
 
                 if (i == 0)
                     AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i0, i1, i2, i3, idxOffset);

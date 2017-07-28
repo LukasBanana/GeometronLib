@@ -21,10 +21,10 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
 
     const auto segsHorz = std::max(3u, desc.mantleSegments.x);
     const auto segsVert = std::max(1u, desc.mantleSegments.y);
-    const auto segsCov  = desc.coverSegments;
+    const auto segsCov = desc.coverSegments;
 
-    const auto invHorz  = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert  = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
     const auto angleSteps = invHorz * pi_2;
 

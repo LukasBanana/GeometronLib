@@ -18,7 +18,7 @@
 // ----- MACROS -----
 
 // show models in pre-defined orientation
-//#define ENABLE_PRESENTATION
+#define ENABLE_PRESENTATION
 
 // write models to .obj files
 //#define WRITE_MODELS_TO_FILE
@@ -396,6 +396,30 @@ void addModelCylinder()
     mdl->mesh = Gm::MeshGenerator::GenerateCylinder(desc);
 }
 
+void addModelPie()
+{
+    auto mdl = addModel("Pie");
+
+    Gm::MeshGenerator::PieDescriptor desc;
+
+    #ifdef ENABLE_PRESENTATION
+    desc.mantleSegments         = { 40, 5 };
+    desc.angle                  = Gs::pi * 0.5f;
+    desc.angleOffset            = Gs::pi * 0.5f;
+    desc.alternateGrid          = true;
+    #else
+    desc.radius                 = Gs::Vector2{ 1, 1 }*0.5f;
+    desc.height                 = 0.25f;
+    desc.mantleSegments         = { 16, 3 };
+    desc.coverSegments          = 3;
+    desc.angle                  = Gs::pi * 0.5f;
+    desc.angleOffset            = Gs::pi * 0.25f;
+    desc.alternateGrid          = true;
+    #endif
+
+    mdl->mesh = Gm::MeshGenerator::GeneratePie(desc);
+}
+
 void addModelPipe()
 {
     auto mdl = addModel("Pipe");
@@ -677,11 +701,12 @@ void initScene()
     addModelEllipsoid();
     addModelCone();
     addModelCylinder();
+    addModelPie();
     addModelPipe();
     addModelCapsule();
     addModelTorus();
     addModelSpiral();
-    addModelTorusKnot();
+    //addModelTorusKnot();
     //addModelCurve();
     //addModelBezierPatch();
     //addModelTeapot();

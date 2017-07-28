@@ -114,6 +114,31 @@ struct CylinderDescriptor
     bool            alternateGrid       = false;
 };
 
+//! Descriptor structure for a pie (also pie-diagram) mesh.
+struct PieDescriptor
+{
+    //! Cylinder radius in U (x component), and V (y component) direction. By default (0.5, 0.5).
+    Gs::Vector2     radius              = Gs::Vector2(Gs::Real(0.5));
+
+    //! Cylinder height. By default 1.
+    Gs::Real        height              = Gs::Real(1);
+
+    //! Segmentation around the cylinder (x component), and height (y component). By default (20, 1).
+    Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(20, 1);
+
+    //! Segmentation of the top and bottom cover. If 0, no covers are generated. By default 1.
+    unsigned int    coverSegments       = 1;
+
+    //! Angle (in radians) of the missing piece in the pie in clock-wise. This will be clamped to [0, 2*pi]. By default 0.
+    Gs::Real        angle               = Gs::Real(0);
+
+    //! Angle offset (in radians) to start with the missing piece in the pie in clock-wise. By default 0.
+    Gs::Real        angleOffset         = Gs::Real(0);
+
+    //! Specifies whether the face grids are to be alternating or uniform. By default false.
+    bool            alternateGrid       = false;
+};
+
 //! Descriptor structure for a pipe mesh (i.e. cylinder with a hole).
 struct PipeDescriptor
 {
@@ -321,6 +346,14 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh);
 
 //! Generates and returns a new cylinder mesh with the specified descriptor.
 TriangleMesh GenerateCylinder(const CylinderDescriptor& desc);
+
+
+
+//! Generates a pie (also pie-diagram) mesh with the specified descriptor and appends the result to the specified output mesh.
+void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh);
+
+//! Generates and returns a new (also pie-diagram) mesh with the specified descriptor.
+TriangleMesh GeneratePie(const PieDescriptor& desc);
 
 
 
