@@ -24,6 +24,7 @@ There is a generic mesh generator for the following 3D models:
 ![Ellipsoid](docu/images/mesh/ellipsoid.png)
 ![Cone](docu/images/mesh/cone.png)
 ![Cylinder](docu/images/mesh/cylinder.png)
+![Pie](docu/images/mesh/pie.png)
 ![Pipe](docu/images/mesh/pipe.png)
 ![Capsule](docu/images/mesh/capsule.png)
 ![Torus](docu/images/mesh/torus.png)
