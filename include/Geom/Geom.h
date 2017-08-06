@@ -37,6 +37,7 @@
 #include "RayCollision.h"
 #include "AABBCollision.h"
 #include "ConeCollision.h"
+#include "SphereCollision.h"
 
 #include "BezierCurve.h"
 #include "BezierTriangle.h"

@@ -31,11 +31,7 @@ class AABB
         
         using ThisType = AABB<Vec, T>;
 
-        /**
-        Constructs a maximal invald bounding-box,
-        i.e. min has the maximal values possible,
-        and max has the minimal values possible.
-        */
+        //! Constructs a maximal invald bounding-box, i.e. min has the maximal values possible, and max has the minimal values possible.
         AABB() :
             min { Gs::UninitializeTag{} },
             max { Gs::UninitializeTag{} }

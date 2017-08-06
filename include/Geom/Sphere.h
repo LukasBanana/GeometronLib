@@ -29,6 +29,15 @@ class SphereT
         {
         }
 
+        SphereT(const Gs::Vector3T<T>& origin, const T& radius) :
+            origin { origin },
+            radius { radius }
+        {
+        }
+
+        SphereT(const SphereT&) = default;
+        SphereT& operator = (const SphereT&) = default;
+
         T GetVolume() const
         {
             return T(4)/T(3) * T(Gs::pi) * radius * radius * radius;

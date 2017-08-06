@@ -67,8 +67,8 @@ class BasicByteBuffer
         using OutputType = typename ByteBufferDetails<T>::OutputType;
 
         BasicByteBuffer(T buffer, const VertexDescriptor& vertexDesc) :
-            buffer_( reinterpret_cast<ByteType>(buffer) ),
-            stride_( GetVertexStride(vertexDesc)        )
+            buffer_ { reinterpret_cast<ByteType>(buffer) },
+            stride_ { GetVertexStride(vertexDesc)        }
         {
         }
 
@@ -83,17 +83,18 @@ using ByteBuffer = BasicByteBuffer<void*>;
 using ConstByteBuffer = BasicByteBuffer<const void*>;
 
 
-/* ----- Gloval functions ----- */
+/* ----- Global functions ----- */
 
 const VertexDescriptor& GetDefaultVertexDesc()
 {
-    static const VertexDescriptor desc(
+    static const VertexDescriptor desc
+    {
         {
             { 0, 3 },
             { 3 * sizeof(Gs::Real), 3 },
             { 6 * sizeof(Gs::Real), 2 },
         }
-    );
+    };
     return desc;
 }
 

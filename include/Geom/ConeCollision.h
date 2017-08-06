@@ -27,8 +27,6 @@ Gs::Vector3T<T> ClosestPointOnCone(const ConeT<T>& cone, const PlaneT<T, PlaneEq
 {
     /* Compute offset vector */
     auto offsetVec = Gs::Cross(plane.normal, cone.direction);
-    offsetVec.Normalize();
-
     offsetVec = Gs::Cross(offsetVec, cone.direction);
     offsetVec.Normalize();
 

@@ -89,10 +89,10 @@ Model* createCuboidModel(const Gm::MeshGenerator::CuboidDescriptor& desc)
     models.resize(models.size() + 1);
     auto mdl = &(models.back());
 
-    #if 0
+    #if 1
     mdl->mesh = Gm::MeshGenerator::GenerateCuboid(desc);
     #else
-    mdl->mesh = Gm::MeshGenerator::GenerateEllipsoid({});
+    mdl->mesh = Gm::MeshGenerator::GenerateCapsule({});
     #endif
 
     return mdl;

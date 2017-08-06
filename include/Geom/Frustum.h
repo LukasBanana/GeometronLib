@@ -45,7 +45,7 @@ class FrustumT : private ConvexHullT<T, PlaneEq>
         }
 
         explicit FrustumT(const Gs::Matrix4T<T>& m) :
-            FrustumT()
+            FrustumT {}
         {
             SetFromMatrix(m);
         }

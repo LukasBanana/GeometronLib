@@ -43,6 +43,16 @@ class ConeT
             return T(1)/T(3) * T(Gs::pi) * radius * radius * height;
         }
 
+        void SetAngle(const T& angle)
+        {
+            radius = height * std::tan(angle);
+        }
+
+        T GetAngle() const
+        {
+            return std::atan(radius / height);
+        }
+
         Gs::Vector3T<T> point;      //!< Point of the tip.
         Gs::Vector3T<T> direction;  //!< Normalized direction vector from tip (point) to its bottom.
         T               height;     //!< Cone height.

@@ -244,8 +244,6 @@ bool IsFrontFacingPlane(const PlaneT<T, PlaneEq>& plane, const ConeT<T>& cone)
 
     /* Compute offset vector */
     auto offsetVec = Gs::Cross(plane.normal, cone.direction);
-    offsetVec.Normalize();
-
     offsetVec = Gs::Cross(offsetVec, cone.direction);
     offsetVec.Normalize();
 

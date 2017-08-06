@@ -12,6 +12,8 @@
 #include <Geom/Geom.h>
 
 #if defined(_WIN32)
+#   define NOMINMAX
+#   define WIN32_LEAN_AND_MEAN
 #   include <Windows.h>
 #   include <gl/glut.h>
 #elif defined(__APPLE__)
