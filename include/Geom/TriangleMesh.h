@@ -20,6 +20,7 @@
 #include <Gauss/Epsilon.h>
 #include <algorithm>
 #include <set>
+#include <cstdint>
 
 
 namespace Gm
@@ -51,11 +52,12 @@ class TriangleMesh
             Gs::Vector2 texCoord;
         };
 
-        using VertexIndex   = std::size_t;
-        using TriangleIndex = std::size_t;
+        using VertexIndex   = std::vector<Vertex>::size_type;
 
         using Edge          = Gm::Line<VertexIndex>;
         using Triangle      = Gm::Triangle<VertexIndex>;
+
+        using TriangleIndex = std::vector<Triangle>::size_type;
 
         TriangleMesh() = default;
 

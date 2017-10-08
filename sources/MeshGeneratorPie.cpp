@@ -41,7 +41,7 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
 
     auto angle = pieAngleOffset;
 
-    for (unsigned int u = 0; u <= segsHorz; ++u)
+    for (std::uint32_t u = 0; u <= segsHorz; ++u)
     {
         /* Compute X- and Z coordinates */
         texCoord.x = std::sin(angle);
@@ -59,7 +59,7 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
         /* Add top and bottom vertex */
         texCoord.x = static_cast<Gs::Real>(segsHorz - u) * invHorz;
 
-        for (unsigned int v = 0; v <= segsVert; ++v)
+        for (std::uint32_t v = 0; v <= segsVert; ++v)
         {
             texCoord.y = static_cast<Gs::Real>(v) * invVert;
             coord.y = Gs::Lerp(halfHeight, -halfHeight, texCoord.y);
@@ -88,7 +88,7 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
         normal.y = Gs::Real(0);
         normal.z = std::cos(angleNormal);
 
-        for (unsigned int u = 0; u <= segsCovMantle; ++u)
+        for (std::uint32_t u = 0; u <= segsCovMantle; ++u)
         {
             /* Compute X- and Z coordinates */
             const auto r = static_cast<Gs::Real>(u) * invCovMantle;
@@ -98,7 +98,7 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
             coord.x = std::sin(mantleSideAngles[i]) * desc.radius.x * r;
             coord.z = std::cos(mantleSideAngles[i]) * desc.radius.y * r;
 
-            for (unsigned int v = 0; v <= segsVert; ++v)
+            for (std::uint32_t v = 0; v <= segsVert; ++v)
             {
                 /* Vertical coordinates */
                 texCoord.y = static_cast<Gs::Real>(v) * invVert;
@@ -132,7 +132,7 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
                 { Gs::Real(0.5), Gs::Real(0.5) }
             );
 
-            for (unsigned int u = 0; u <= segsHorz; ++u)
+            for (std::uint32_t u = 0; u <= segsHorz; ++u)
             {
                 /* Compute X- and Z coordinates */
                 texCoord.x = std::sin(angle);
@@ -142,7 +142,7 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
                 coord.z = texCoord.y * desc.radius.y;
 
                 /* Add vertex around the top and bottom */
-                for (unsigned int v = 1; v <= segsCov; ++v)
+                for (std::uint32_t v = 1; v <= segsCov; ++v)
                 {
                     auto interp = static_cast<Gs::Real>(v) * invCov;
                     auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
@@ -166,9 +166,9 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
     /* Generate indices for the outer mantle */
     auto idxOffset = idxBaseOffset;
 
-    for (unsigned int u = 0; u < segsHorz; ++u)
+    for (std::uint32_t u = 0; u < segsHorz; ++u)
     {
-        for (unsigned int v = 0; v < segsVert; ++v)
+        for (std::uint32_t v = 0; v < segsVert; ++v)
         {
             auto i0 = v + 1 + segsVert;
             auto i1 = v;
@@ -186,9 +186,9 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
     {
         idxOffset = mantleIndexOffset[i];
 
-        for (unsigned int u = 0; u < segsCovMantle; ++u)
+        for (std::uint32_t u = 0; u < segsCovMantle; ++u)
         {
-            for (unsigned int v = 0; v < segsVert; ++v)
+            for (std::uint32_t v = 0; v < segsVert; ++v)
             {
                 auto i0 = v + 1 + segsVert;
                 auto i1 = v;
@@ -212,14 +212,14 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
         {
             idxOffset = coverIndexOffset[i] + 1;
 
-            for (unsigned int u = 0; u < segsHorz; ++u)
+            for (std::uint32_t u = 0; u < segsHorz; ++u)
             {
                 if (i == 0)
                     mesh.AddTriangle(idxOffset + segsCov, idxOffset, coverIndexOffset[i]);
                 else
                     mesh.AddTriangle(coverIndexOffset[i], idxOffset, idxOffset + segsCov);
 
-                for (unsigned int v = 1; v < segsCov; ++v)
+                for (std::uint32_t v = 1; v < segsCov; ++v)
                 {
                     auto i0 = v - 1;
                     auto i1 = v - 1 + segsCov;

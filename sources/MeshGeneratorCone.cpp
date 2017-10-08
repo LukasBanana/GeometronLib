@@ -39,7 +39,7 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
 
     auto angle = Gs::Real(0);
 
-    for (unsigned int u = 0; u <= segsHorz; ++u)
+    for (std::uint32_t u = 0; u <= segsHorz; ++u)
     {
         /* Compute X- and Z coordinates */
         texCoord.x = std::sin(angle);
@@ -57,7 +57,7 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
         /* Add bottom vertex */
         texCoord.x = static_cast<Gs::Real>(segsHorz - u) * invHorz;
 
-        for (unsigned int v = 1; v <= segsVert; ++v)
+        for (std::uint32_t v = 1; v <= segsVert; ++v)
         {
             texCoord.y = static_cast<Gs::Real>(v) * invVert;
 
@@ -90,7 +90,7 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
         /* Add centered bottom vertex */
         coverIndexOffset = mesh.AddVertex({ 0, -halfHeight, 0 }, { 0, -1, 0 }, { Gs::Real(0.5), Gs::Real(0.5) });
 
-        for (unsigned int u = 0; u <= segsHorz; ++u)
+        for (std::uint32_t u = 0; u <= segsHorz; ++u)
         {
             /* Compute X- and Z coordinates */
             texCoord.x = std::sin(angle);
@@ -100,7 +100,7 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
             coord.z = texCoord.y * desc.radius.y;
 
             /* Add vertex around the bottom */
-            for (unsigned int v = 1; v <= segsCov; ++v)
+            for (std::uint32_t v = 1; v <= segsCov; ++v)
             {
                 auto interp = static_cast<Gs::Real>(v) * invCov;
                 auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
@@ -120,11 +120,11 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
     /* Generate indices for the mantle */
     auto idxOffset = idxBaseOffset;
 
-    for (unsigned int u = 0; u < segsHorz; ++u)
+    for (std::uint32_t u = 0; u < segsHorz; ++u)
     {
         mesh.AddTriangle(idxOffset + segsVert, idxOffset, idxOffset + 1 + segsVert);
         
-        for (unsigned int v = 1; v < segsVert; ++v)
+        for (std::uint32_t v = 1; v < segsVert; ++v)
         {
             auto i0 = v + segsVert;
             auto i1 = v - 1;
@@ -142,11 +142,11 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
         /* Generate indices for the bottom */
         idxOffset = coverIndexOffset + 1;
 
-        for (unsigned int u = 0; u < segsHorz; ++u)
+        for (std::uint32_t u = 0; u < segsHorz; ++u)
         {
             mesh.AddTriangle(idxOffset + segsCov, idxOffset, coverIndexOffset);
 
-            for (unsigned int v = 1; v < segsCov; ++v)
+            for (std::uint32_t v = 1; v < segsCov; ++v)
             {
                 auto i1 = v - 1 + segsCov;
                 auto i0 = v - 1;

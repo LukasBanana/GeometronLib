@@ -11,6 +11,7 @@
 
 #include "TriangleMesh.h"
 #include "Plane.h"
+#include <cstdint>
 
 
 namespace Gm
@@ -28,7 +29,7 @@ namespace MeshModifier
 struct VertexAttributeDescriptor
 {
     VertexAttributeDescriptor() = default;
-    VertexAttributeDescriptor(std::size_t offset, unsigned int components) :
+    VertexAttributeDescriptor(std::size_t offset, std::uint32_t components) :
         offset     { offset     },
         components { components }
     {
@@ -38,7 +39,7 @@ struct VertexAttributeDescriptor
     std::size_t     offset      = 0;
 
     //! Number of components of this vertex attribute. By default 1.
-    unsigned int    components  = 1;
+    std::uint32_t   components  = 1;
 };
 
 //! Vertex descriptor structure.

@@ -29,7 +29,7 @@ void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh)
     Gs::Vector3 coord, normal;
     Gs::Vector2 texCoord;
 
-    for (unsigned int v = 0; v <= segsV; ++v)
+    for (std::uint32_t v = 0; v <= segsV; ++v)
     {
         /* Compute theta of spherical coordinate */
         texCoord.y = static_cast<Gs::Real>(v) * invSegsV;
@@ -40,7 +40,7 @@ void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh)
 
         coord.y = c0 * desc.tubeRadius.y;
 
-        for (unsigned int u = 0; u <= segsU; ++u)
+        for (std::uint32_t u = 0; u <= segsU; ++u)
         {
             /* Compute phi of spherical coordinate */
             texCoord.x = static_cast<Gs::Real>(u) * invSegsU;
@@ -65,9 +65,9 @@ void GenerateTorus(const TorusDescriptor& desc, TriangleMesh& mesh)
     }
 
     /* Generate indices */
-    for (unsigned int v = 0; v < segsV; ++v)
+    for (std::uint32_t v = 0; v < segsV; ++v)
     {
-        for (unsigned int u = 0; u < segsU; ++u)
+        for (std::uint32_t u = 0; u < segsU; ++u)
         {
             /* Compute indices for current face */
             auto i0 = v*(segsU + 1) + u;

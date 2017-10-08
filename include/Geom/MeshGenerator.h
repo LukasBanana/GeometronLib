@@ -13,6 +13,7 @@
 #include "BezierPatch.h"
 
 #include <functional>
+#include <cstdint>
 
 
 namespace Gm
@@ -86,7 +87,7 @@ struct ConeDescriptor
     Gs::Vector2ui   mantleSegments  = Gs::Vector2ui(20, 1);
 
     //! Segmentation of the bottom cover. If 0, no bottom cover is generated. By default 1.
-    unsigned int    coverSegments   = 1;
+    std::uint32_t   coverSegments   = 1;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid   = false;
@@ -105,10 +106,10 @@ struct CylinderDescriptor
     Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(20, 1);
 
     //! Segmentation of the top cover. If 0, no top cover is generated. By default 1.
-    unsigned int    topCoverSegments    = 1;
+    std::uint32_t   topCoverSegments    = 1;
 
     //! Segmentation of the bottom cover. If 0, no bottom cover is generated. By default 1.
-    unsigned int    bottomCoverSegments = 1;
+    std::uint32_t   bottomCoverSegments = 1;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid       = false;
@@ -127,7 +128,7 @@ struct PieDescriptor
     Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(20, 1);
 
     //! Segmentation of the top and bottom cover. If 0, no covers are generated. By default 1.
-    unsigned int    coverSegments       = 1;
+    std::uint32_t   coverSegments       = 1;
 
     //! Angle (in radians) of the missing piece in the pie in clock-wise. This will be clamped to [0, 2*pi]. By default 0.
     Gs::Real        angle               = Gs::Real(0);
@@ -155,10 +156,10 @@ struct PipeDescriptor
     Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(20, 1);
 
     //! Segmentation of the top cover. If 0, no top cover is generated. By default 1.
-    unsigned int    topCoverSegments    = 1;
+    std::uint32_t   topCoverSegments    = 1;
 
     //! Segmentation of the top cover. If 0, no bottom cover is generated. By default 1.
-    unsigned int    bottomCoverSegments = 1;
+    std::uint32_t   bottomCoverSegments = 1;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid       = false;
@@ -180,7 +181,7 @@ struct CapsuleDescriptor
     Segmentation of the top- and bottom half-ellipsoids.
     Each component will be clamped to [2, +inf). By default 10.
     */
-    unsigned int    ellipsoidSegments   = 10;
+    std::uint32_t   ellipsoidSegments   = 10;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid       = false;
@@ -221,13 +222,13 @@ struct TorusKnotDescriptor
     \breif Number of loops within the torus knot. By default 2.
     \remarks This must be coprime to 'turns', otherwise the mesh will not be a valid torus knot.
     */
-    unsigned int    loops           = 2;
+    std::uint32_t   loops           = 2;
 
     /**
     \breif Number of turns within the torus knot. By default 3.
     \remarks This must be coprime to 'loops', otherwise the mesh will not be a valid torus knot.
     */
-    unsigned int    turns           = 3;
+    std::uint32_t   turns           = 3;
 
     /**
     \brief Segmentation in U (x component), and V (y component) direction.
@@ -264,10 +265,10 @@ struct SpiralDescriptor
     Gs::Vector2ui   mantleSegments      = Gs::Vector2ui(40, 20);
 
     //! Segmentation of the top cover. If 0, no top cover is generated. By default 1.
-    unsigned int    topCoverSegments    = 1;
+    std::uint32_t   topCoverSegments    = 1;
 
     //! Segmentation of the top cover. If 0, no bottom cover is generated. By default 1.
-    unsigned int    bottomCoverSegments = 1;
+    std::uint32_t   bottomCoverSegments = 1;
 
     //! Specifies whether the face grids are to be alternating or uniform. By default false.
     bool            alternateGrid       = false;

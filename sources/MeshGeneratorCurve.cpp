@@ -31,7 +31,7 @@ void GenerateCurve(const CurveDescriptor& desc, TriangleMesh& mesh)
     /* Sample curve progression function */
     std::vector<Gs::Vector3> curveSamples(segsU, Gs::Vector3());
 
-    for (unsigned int i = 0; i < segsU; ++i)
+    for (std::uint32_t i = 0; i < segsU; ++i)
     {
         auto t = static_cast<Gs::Real>(i) / (segsU - 1);
         curveSamples[i] = desc.curveFunction(t);
@@ -41,12 +41,12 @@ void GenerateCurve(const CurveDescriptor& desc, TriangleMesh& mesh)
     Gs::Vector3 coord, normal, tangent, bitangent;
     Gs::Vector2 texCoord;
 
-    for (unsigned int u = 0; u < segsU; ++u)
+    for (std::uint32_t u = 0; u < segsU; ++u)
     {
         /* Compute texture X coordinate */
         texCoord.x = static_cast<Gs::Real>(u) / (segsU - 1);
 
-        for (unsigned int v = 0; v < segsV; ++v)
+        for (std::uint32_t v = 0; v < segsV; ++v)
         {
             /* Compute tangent vector from center of this ring to the next center */
             tangent = curveSamples[(u + 1) % (segsU - 1)] - curveSamples[u];
@@ -80,9 +80,9 @@ void GenerateCurve(const CurveDescriptor& desc, TriangleMesh& mesh)
     /* Generate indices */
     VertexIndex i0, i1, i2, i3;
 
-    for (unsigned int u = 0; u < segsU; ++u)
+    for (std::uint32_t u = 0; u < segsU; ++u)
     {
-        for (unsigned int v = 0; v < segsV; ++v)
+        for (std::uint32_t v = 0; v < segsV; ++v)
         {
             i0 = u*segsV + v;
             

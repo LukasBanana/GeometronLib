@@ -39,7 +39,7 @@ void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh)
 
     auto angle = Gs::Real(0);
 
-    for (unsigned int u = 0; u <= segsHorz; ++u)
+    for (std::uint32_t u = 0; u <= segsHorz; ++u)
     {
         /* Compute X- and Z coordinates */
         texCoord.x = std::sin(angle);
@@ -57,7 +57,7 @@ void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh)
         /* Add top and bottom vertex */
         texCoord.x = static_cast<Gs::Real>(segsHorz - u) * invHorz;
 
-        for (unsigned int v = 0; v <= segsVert; ++v)
+        for (std::uint32_t v = 0; v <= segsVert; ++v)
         {
             texCoord.y = static_cast<Gs::Real>(v) * invVert;
             coord.y = Gs::Lerp(halfHeight, -halfHeight, texCoord.y);
@@ -76,13 +76,13 @@ void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh)
     {
         idxBaseOffsetEllipsoid[i] = mesh.vertices.size();
 
-        for (unsigned int v = 0; v <= segsV; ++v)
+        for (std::uint32_t v = 0; v <= segsV; ++v)
         {
             /* Compute theta of spherical coordinate */
             texCoord.y = static_cast<Gs::Real>(v) * invSegsV;
             point.theta = texCoord.y * pi_0_5;
 
-            for (unsigned int u = 0; u <= segsHorz; ++u)
+            for (std::uint32_t u = 0; u <= segsHorz; ++u)
             {
                 /* Compute phi of spherical coordinate */
                 texCoord.x = static_cast<Gs::Real>(u) * invHorz;
@@ -110,9 +110,9 @@ void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh)
     /* Generate indices for the mantle */
     auto idxOffset = idxBaseOffset;
 
-    for (unsigned int u = 0; u < segsHorz; ++u)
+    for (std::uint32_t u = 0; u < segsHorz; ++u)
     {
-        for (unsigned int v = 0; v < segsVert; ++v)
+        for (std::uint32_t v = 0; v < segsVert; ++v)
         {
             auto i0 = v + 1 + segsVert;
             auto i1 = v;
@@ -128,9 +128,9 @@ void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh)
     /* Generate indices for the top and bottom */
     for (std::size_t i = 0; i < 2; ++i)
     {
-        for (unsigned int v = 0; v < segsV; ++v)
+        for (std::uint32_t v = 0; v < segsV; ++v)
         {
-            for (unsigned int u = 0; u < segsHorz; ++u)
+            for (std::uint32_t u = 0; u < segsHorz; ++u)
             {
                 /* Compute indices for current face */
                 auto i0 = v*(segsHorz + 1) + u;

@@ -115,7 +115,7 @@ void InterpolateBarycentric(
         auto in1 = input.Attrib(attribDesc, v1);
         auto in2 = input.Attrib(attribDesc, v2);
 
-        for (unsigned int i = 0; i < attribDesc.components; ++i)
+        for (std::uint32_t i = 0; i < attribDesc.components; ++i)
         {
             out[i] = (
                 in0[i] * barycentricCoords.x +

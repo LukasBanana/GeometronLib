@@ -14,6 +14,7 @@
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>
 #include <vector>
+#include <cstdint>
 
 
 namespace Gm
@@ -49,9 +50,9 @@ class BezierPatch
         {
             P result;
             
-            for (unsigned int i = 0; i <= order_; ++i)
+            for (std::uint32_t i = 0; i <= order_; ++i)
             {
-                for (unsigned int j = 0; j <= order_; ++j)
+                for (std::uint32_t j = 0; j <= order_; ++j)
                 {
                     /* Accumulate bernstein-bezier transformed control points */
                     auto point = GetControlPoint(i, j);
@@ -69,7 +70,7 @@ class BezierPatch
         \param[in] v Specifies the index in V direction. Must be in the range [0, GetOrder()].
         \param[in] point Specifies the new control point.
         */
-        void SetControlPoint(unsigned int u, unsigned int v, const P& point)
+        void SetControlPoint(std::uint32_t u, std::uint32_t v, const P& point)
         {
             auto idx = GetIndex(u, v);
             if (idx < controlPoints_.size())
@@ -81,7 +82,7 @@ class BezierPatch
         \param[in] u Specifies the index in U direction. Must be in the range [0, GetOrder()].
         \param[in] v Specifies the index in V direction. Must be in the range [0, GetOrder()].
         */
-        P GetControlPoint(unsigned int u, unsigned int v) const
+        P GetControlPoint(std::uint32_t u, std::uint32_t v) const
         {
             auto idx = GetIndex(u, v);
             return (idx < controlPoints_.size() ? controlPoints_[idx] : P());
@@ -94,7 +95,7 @@ class BezierPatch
         }
 
         //! Sets the order of this bezier patch. By default 0.
-        void SetOrder(unsigned int order)
+        void SetOrder(std::uint32_t order)
         {
             order_ = order;
             controlPoints_.clear();
@@ -102,7 +103,7 @@ class BezierPatch
         }
 
         //! Returns the order of this bezier triangle.
-        unsigned int GetOrder() const
+        std::uint32_t GetOrder() const
         {
             return order_;
         }
@@ -110,12 +111,12 @@ class BezierPatch
     private:
         
         //! Returns the control point index for the specified two indices.
-        unsigned int GetIndex(unsigned int u, unsigned int v) const
+        std::uint32_t GetIndex(std::uint32_t u, std::uint32_t v) const
         {
             return (v*(order_ + 1) + u);
         }
 
-        unsigned int    order_ = 0;
+        std::uint32_t   order_ = 0;
 
         std::vector<P>  controlPoints_;
 

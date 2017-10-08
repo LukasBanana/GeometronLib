@@ -23,6 +23,7 @@ using SkeletonJointConstIterationFunction = std::function<void(const SkeletonJoi
 using MakeSkeletonJointFunction = std::function<SkeletonJointPtr()>;
 
 
+//! Data model class for skeletal animations.
 class Skeleton
 {
     

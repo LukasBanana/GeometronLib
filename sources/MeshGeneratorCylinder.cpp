@@ -35,7 +35,7 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
 
     auto angle = Gs::Real(0);
 
-    for (unsigned int u = 0; u <= segsHorz; ++u)
+    for (std::uint32_t u = 0; u <= segsHorz; ++u)
     {
         /* Compute X- and Z coordinates */
         texCoord.x = std::sin(angle);
@@ -53,7 +53,7 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
         /* Add top and bottom vertex */
         texCoord.x = static_cast<Gs::Real>(segsHorz - u) * invHorz;
 
-        for (unsigned int v = 0; v <= segsVert; ++v)
+        for (std::uint32_t v = 0; v <= segsVert; ++v)
         {
             texCoord.y = static_cast<Gs::Real>(v) * invVert;
             coord.y = Gs::Lerp(halfHeight, -halfHeight, texCoord.y);
@@ -65,7 +65,7 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
     }
 
     /* Generate bottom and top cover vertices */
-    const unsigned int segsCov[2]   = { desc.bottomCoverSegments, desc.topCoverSegments };
+    const std::uint32_t segsCov[2]  = { desc.bottomCoverSegments, desc.topCoverSegments };
     const Gs::Real coverSide[2]     = { -1, 1 };
 
     VertexIndex coverIndexOffset[2] = { 0 };
@@ -87,7 +87,7 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
             { Gs::Real(0.5), Gs::Real(0.5) }
         );
 
-        for (unsigned int u = 0; u <= segsHorz; ++u)
+        for (std::uint32_t u = 0; u <= segsHorz; ++u)
         {
             /* Compute X- and Z coordinates */
             texCoord.x = std::sin(angle);
@@ -97,7 +97,7 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
             coord.z = texCoord.y * desc.radius.y;
 
             /* Add vertex around the top and bottom */
-            for (unsigned int v = 1; v <= segsCov[i]; ++v)
+            for (std::uint32_t v = 1; v <= segsCov[i]; ++v)
             {
                 auto interp = static_cast<Gs::Real>(v) * invCov;
                 auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
@@ -120,9 +120,9 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
     /* Generate indices for the mantle */
     auto idxOffset = idxBaseOffset;
 
-    for (unsigned int u = 0; u < segsHorz; ++u)
+    for (std::uint32_t u = 0; u < segsHorz; ++u)
     {
-        for (unsigned int v = 0; v < segsVert; ++v)
+        for (std::uint32_t v = 0; v < segsVert; ++v)
         {
             auto i0 = v + 1 + segsVert;
             auto i1 = v;
@@ -143,14 +143,14 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
 
         idxOffset = coverIndexOffset[i] + 1;
 
-        for (unsigned int u = 0; u < segsHorz; ++u)
+        for (std::uint32_t u = 0; u < segsHorz; ++u)
         {
             if (i == 0)
                 mesh.AddTriangle(idxOffset + segsCov[i], idxOffset, coverIndexOffset[i]);
             else
                 mesh.AddTriangle(coverIndexOffset[i], idxOffset, idxOffset + segsCov[i]);
 
-            for (unsigned int v = 1; v < segsCov[i]; ++v)
+            for (std::uint32_t v = 1; v < segsCov[i]; ++v)
             {
                 auto i0 = v - 1;
                 auto i1 = v - 1 + segsCov[i];

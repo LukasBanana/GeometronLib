@@ -30,13 +30,13 @@ void GenerateEllipsoid(const EllipsoidDescriptor& desc, TriangleMesh& mesh)
     Gs::Spherical point(1, 0, 0);
     Gs::Vector2 texCoord;
 
-    for (unsigned int v = 0; v <= segsV; ++v)
+    for (std::uint32_t v = 0; v <= segsV; ++v)
     {
         /* Compute theta of spherical coordinate */
         texCoord.y = static_cast<Gs::Real>(v) * invSegsV;
         point.theta = texCoord.y * pi;
 
-        for (unsigned int u = 0; u <= segsU; ++u)
+        for (std::uint32_t u = 0; u <= segsU; ++u)
         {
             /* Compute phi of spherical coordinate */
             texCoord.x = static_cast<Gs::Real>(u) * invSegsU;
@@ -52,9 +52,9 @@ void GenerateEllipsoid(const EllipsoidDescriptor& desc, TriangleMesh& mesh)
     }
 
     /* Generate indices */
-    for (unsigned int v = 0; v < segsV; ++v)
+    for (std::uint32_t v = 0; v < segsV; ++v)
     {
-        for (unsigned int u = 0; u < segsU; ++u)
+        for (std::uint32_t u = 0; u < segsU; ++u)
         {
             /* Compute indices for current face */
             auto i0 = v*(segsU + 1) + u;

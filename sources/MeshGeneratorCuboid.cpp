@@ -19,7 +19,7 @@ namespace MeshGenerator
 static void BuildFace(
     TriangleMesh& mesh, const Gs::Quaternion& rotation,
     Gs::Real sizeHorz, Gs::Real sizeVert, Gs::Real sizeOffsetZ,
-    unsigned int segsHorz, unsigned int segsVert,
+    std::uint32_t segsHorz, std::uint32_t segsVert,
     bool alternateGrid)
 {
     sizeOffsetZ /= 2;
@@ -29,15 +29,15 @@ static void BuildFace(
 
     auto idxOffset = mesh.vertices.size();
 
-    auto AddQuad = [&](unsigned int u, unsigned int v, VertexIndex i0, VertexIndex i1, VertexIndex i2, VertexIndex i3)
+    auto AddQuad = [&](std::uint32_t u, std::uint32_t v, VertexIndex i0, VertexIndex i1, VertexIndex i2, VertexIndex i3)
     {
         AddTriangulatedQuad(mesh, alternateGrid, u, v, i0, i1, i2, i3, idxOffset);
     };
 
     /* Generate vertices */
-    for (unsigned int i = 0; i <= segsVert; ++i)
+    for (std::uint32_t i = 0; i <= segsVert; ++i)
     {
-        for (unsigned int j = 0; j <= segsHorz; ++j)
+        for (std::uint32_t j = 0; j <= segsHorz; ++j)
         {
             auto u = invHorz * static_cast<Gs::Real>(j);
             auto v = invVert * static_cast<Gs::Real>(i);
@@ -56,9 +56,9 @@ static void BuildFace(
     /* Generate indices */
     const auto strideHorz = segsHorz + 1;
 
-    for (unsigned int v = 0; v < segsVert; ++v)
+    for (std::uint32_t v = 0; v < segsVert; ++v)
     {
-        for (unsigned int u = 0; u < segsHorz; ++u)
+        for (std::uint32_t u = 0; u < segsHorz; ++u)
         {
             AddQuad(
                 u, v,

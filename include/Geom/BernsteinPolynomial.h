@@ -11,6 +11,7 @@
 
 #include <cstdlib>
 #include <cmath>
+#include <cstdint>
 
 
 namespace Gm
@@ -20,12 +21,12 @@ namespace Gm
 namespace Details
 {
 
-constexpr unsigned long long Factorial(unsigned long long n)
+constexpr std::uint64_t Factorial(std::uint64_t n)
 {
     return (n <= 1 ? 1 : (n * Factorial(n - 1)));
 }
 
-constexpr unsigned long long BinomialCoefficient(unsigned long long i, unsigned long long n)
+constexpr std::uint64_t BinomialCoefficient(std::uint64_t i, std::uint64_t n)
 {
     return Factorial(n) / (Factorial(i) * Factorial(n - i));
 }
@@ -40,7 +41,7 @@ constexpr unsigned long long BinomialCoefficient(unsigned long long i, unsigned 
 \param[in] n Specifies the polynomial order which must be greater than zero.
 */
 template <typename T>
-T BernsteinPolynomial(const T& t, unsigned int i, unsigned int n)
+T BernsteinPolynomial(const T& t, std::uint32_t i, std::uint32_t n)
 {
     if (i <= n && n > 0)
     {

@@ -31,7 +31,7 @@ using VertexIndex = TriangleMesh::VertexIndex;
 void AddTriangulatedQuad(
     TriangleMesh& mesh,
     bool alternateGrid,
-    unsigned int u, unsigned int v,
+    std::uint32_t u, std::uint32_t v,
     VertexIndex i0, VertexIndex i1,
     VertexIndex i2, VertexIndex i3,
     VertexIndex indexOffset = 0

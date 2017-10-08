@@ -25,7 +25,7 @@ void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh)
     const auto invHorz  = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
     const auto invVert  = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
-    auto AddQuad = [&](unsigned int u, unsigned int v, VertexIndex i0, VertexIndex i1, VertexIndex i2, VertexIndex i3)
+    auto AddQuad = [&](std::uint32_t u, std::uint32_t v, VertexIndex i0, VertexIndex i1, VertexIndex i2, VertexIndex i3)
     {
         if (desc.backFacing)
             AddTriangulatedQuad(mesh, desc.alternateGrid, u, v, i1, i0, i3, i2, idxOffset);
@@ -39,9 +39,9 @@ void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh)
     Gs::Vector3 coord, normal;
     Gs::Vector2 texCoord;
 
-    for (unsigned int i = 0; i <= segsVert; ++i)
+    for (std::uint32_t i = 0; i <= segsVert; ++i)
     {
-        for (unsigned int j = 0; j <= segsHorz; ++j)
+        for (std::uint32_t j = 0; j <= segsHorz; ++j)
         {
             /* Compute coordinate and texture-coordinate */
             texCoord.x = static_cast<Gs::Real>(j) * invHorz;
@@ -68,9 +68,9 @@ void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh)
     /* Generate indices */
     const auto strideHorz = segsHorz + 1;
 
-    for (unsigned int v = 0; v < segsVert; ++v)
+    for (std::uint32_t v = 0; v < segsVert; ++v)
     {
-        for (unsigned int u = 0; u < segsHorz; ++u)
+        for (std::uint32_t u = 0; u < segsHorz; ++u)
         {
             AddQuad(
                 u, v,

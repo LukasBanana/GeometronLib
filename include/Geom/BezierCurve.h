@@ -36,7 +36,7 @@ class BezierCurve
         {
             P point;
 
-            for (unsigned int i = 0, n = static_cast<unsigned int>(controlPoints.size()); i < n; ++i)
+            for (std::uint32_t i = 0, n = static_cast<std::uint32_t>(controlPoints.size()); i < n; ++i)
                 point += controlPoints[i] * BernsteinPolynomial(t, i, n - 1);
 
             return point;

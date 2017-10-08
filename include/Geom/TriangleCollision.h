@@ -14,6 +14,7 @@
 
 #include <Gauss/Epsilon.h>
 #include <array>
+#include <cstdint>
 
 
 namespace Gm
@@ -32,7 +33,7 @@ struct ClippedPolygon
     }
 
     //! Number of vertices, used for this clipped triangle. This is either 3 or 4.
-    unsigned char                   count = 0;
+    std::uint8_t                    count       = 0;
     std::array<Gs::Vector3T<T>, 4>  vertices;
 };
 

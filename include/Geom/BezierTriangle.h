@@ -12,6 +12,7 @@
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>
 #include <vector>
+#include <cstdint>
 
 
 namespace Gm
@@ -55,7 +56,7 @@ class BezierTriangle
         \param[in] point Specifies the new control point.
         \remarks The index parameters must always satisfy the following equation: 0 <= i + j <= GetOrder()
         */
-        void SetControlPoint(std::size_t i, std::size_t j, const P& point)
+        void SetControlPoint(std::uint32_t i, std::uint32_t j, const P& point)
         {
             auto idx = GetIndex(i, j);
             if (idx < controlPoints_.size())
@@ -68,7 +69,7 @@ class BezierTriangle
         \param[in] j Specifies the second index.
         \remarks The index parameters must always satisfy the following equation: 0 <= i + j <= GetOrder()
         */
-        P GetControlPoint(std::size_t i, std::size_t j) const
+        P GetControlPoint(std::uint32_t i, std::uint32_t j) const
         {
             auto idx = GetIndex(i, j);
             return (idx < controlPoints_.size() ? controlPoints_[idx] : P());
@@ -81,7 +82,7 @@ class BezierTriangle
         }
 
         //! Sets the order of this bezier triangle. By default 0.
-        void SetOrder(std::size_t order)
+        void SetOrder(std::uint32_t order)
         {
             order_ = order;
             controlPoints_.clear();
@@ -89,7 +90,7 @@ class BezierTriangle
         }
 
         //! Returns the order of this bezier triangle.
-        std::size_t GetOrder() const
+        std::uint32_t GetOrder() const
         {
             return order_;
         }
@@ -100,12 +101,12 @@ class BezierTriangle
         \brief Returns the control point index for the specified two indices.
         \remarks The values must always satisfy the equation: 0 <= i + j <= order;
         */
-        std::size_t GetIndex(std::size_t i, std::size_t j) const
+        std::uint32_t GetIndex(std::uint32_t i, std::uint32_t j) const
         {
             return (j > 0 ? j*(order_ + 1) - j + 1 + i : i);
         }
 
-        std::size_t     order_ = 0;
+        std::uint32_t   order_          = 0;
 
         std::vector<P>  controlPoints_;
 

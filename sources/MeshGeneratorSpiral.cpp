@@ -27,7 +27,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
     const auto invSegsU = Gs::Real(1) / static_cast<Gs::Real>(segsU);
     const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
 
-    const auto totalSegsU = static_cast<unsigned int>(turns * static_cast<Gs::Real>(segsU));
+    const auto totalSegsU = static_cast<std::uint32_t>(turns * static_cast<Gs::Real>(segsU));
 
     auto GetCoverCoordAndNormal = [&](Gs::Real theta, Gs::Real phi, Gs::Vector3& coord, Gs::Vector3& normal, bool center)
     {
@@ -59,7 +59,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
     Gs::Vector3 coord, normal;
     Gs::Vector2 texCoord;
 
-    for (unsigned int v = 0; v <= segsV; ++v)
+    for (std::uint32_t v = 0; v <= segsV; ++v)
     {
         /* Compute theta of spherical coordinate */
         texCoord.y = static_cast<Gs::Real>(v) * invSegsV;
@@ -68,7 +68,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
         auto s0 = std::sin(theta);
         auto c0 = std::cos(theta);
 
-        for (unsigned int u = 0; u <= totalSegsU; ++u)
+        for (std::uint32_t u = 0; u <= totalSegsU; ++u)
         {
             /* Compute phi of spherical coordinate */
             texCoord.x = static_cast<Gs::Real>(u) * invSegsU;
@@ -94,7 +94,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
     }
 
     /* Generate bottom and top cover vertices */
-    const unsigned int segsCov[2]   = { desc.bottomCoverSegments, desc.topCoverSegments };
+    const std::uint32_t segsCov[2]  = { desc.bottomCoverSegments, desc.topCoverSegments };
     const Gs::Real coverPhi[2]      = { 0, turns * pi_2 };
     const Gs::Real coverSide[2]     = { -1, 1 };
 
@@ -118,14 +118,14 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
 
         auto centerCoord = coord;
 
-        for (unsigned int v = 0; v <= segsV; ++v)
+        for (std::uint32_t v = 0; v <= segsV; ++v)
         {
             /* Compute texture coordinates */
             texCoord.x = std::sin(theta);
             texCoord.y = std::cos(theta);
 
             /* Add vertex around the top and bottom */
-            for (unsigned int j = 1; j <= segsCov[i]; ++j)
+            for (std::uint32_t j = 1; j <= segsCov[i]; ++j)
             {
                 auto interp = static_cast<Gs::Real>(j) * invCov;
                 auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
@@ -147,9 +147,9 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
     }
 
     /* Generate indices for the mantle */
-    for (unsigned int v = 0; v < segsV; ++v)
+    for (std::uint32_t v = 0; v < segsV; ++v)
     {
-        for (unsigned int u = 0; u < totalSegsU; ++u)
+        for (std::uint32_t u = 0; u < totalSegsU; ++u)
         {
             /* Compute indices for current face */
             auto i0 = v*(totalSegsU + 1) + u;
@@ -171,14 +171,14 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
 
         auto idxOffset = coverIndexOffset[i] + 1;
 
-        for (unsigned int v = 0; v < segsV; ++v)
+        for (std::uint32_t v = 0; v < segsV; ++v)
         {
             if (i == 0)
                 mesh.AddTriangle(idxOffset + segsCov[i], idxOffset, coverIndexOffset[i]);
             else
                 mesh.AddTriangle(coverIndexOffset[i], idxOffset, idxOffset + segsCov[i]);
 
-            for (unsigned int j = 1; j < segsCov[i]; ++j)
+            for (std::uint32_t j = 1; j < segsCov[i]; ++j)
             {
                 auto i1 = j - 1 + segsCov[i];
                 auto i0 = j - 1;
