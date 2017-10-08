@@ -5,11 +5,6 @@
  * See "LICENSE.txt" for license information.
  */
 
-//#define GS_ROW_MAJOR_STORAGE
-#define GS_ENABLE_SWIZZLE_OPERATOR
-//#define GS_HIGH_PRECISION_FLOAT
-//#define GS_ROW_VECTORS
-
 #include <Gauss/Gauss.h>
 #include <Gauss/GLSLTypes.h>
 #include <Geom/Geom.h>
