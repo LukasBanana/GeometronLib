@@ -92,9 +92,9 @@ struct AABBGeometry : public Geometry
         {
             for (size_t i = 0; i < 3; ++i)
             {
-                if (intersect.point[i] <= aabb.min[i])
+                if (intersect.point[i] <= aabb.min[i] + Gs::Epsilon<float>())
                     intersect.normal[i] = -1.0f;
-                else if (intersect.point[i] >= aabb.max[i])
+                else if (intersect.point[i] >= aabb.max[i] - Gs::Epsilon<float>())
                     intersect.normal[i] = 1.0f;
                 else
                     intersect.normal[i] = 0.0f;
@@ -212,8 +212,8 @@ void initScene()
     obj2.material.albedo = { 0.2f, 0.3f, 0.8f };
     obj2.material.roughness = 0.6f;
 
-    //auto& obj3 = addAABB(AABB3{ { -3, -1.5f, -1 }, { -2.5f, 0.5f, 1 } });
-    //obj3.material.albedo = { 0.2f, 0.3f, 0.8f };
+    auto& obj3 = addAABB(AABB3{ { -3, -1.5f, -1 }, { -2.5f, 0.5f, 1 } });
+    obj3.material.albedo = { 0.2f, 0.3f, 0.8f };
 
     // create light sources
     addPointLight({ -1, 3, -2 });

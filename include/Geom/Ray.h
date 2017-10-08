@@ -102,6 +102,7 @@ class Ray< Gs::Vector2T<T> >
 
 template <typename T> using Ray2T = Ray<Gs::Vector2T<T>>;
 template <typename T> using Ray3T = Ray<Gs::Vector3T<T>>;
+template <typename T> using Ray4T = Ray<Gs::Vector4T<T>>;
 
 using Ray2  = Ray2T<Gs::Real>;
 using Ray2f = Ray2T<float>;
@@ -110,6 +111,10 @@ using Ray2d = Ray2T<double>;
 using Ray3  = Ray3T<Gs::Real>;
 using Ray3f = Ray3T<float>;
 using Ray3d = Ray3T<double>;
+
+using Ray4  = Ray4T<Gs::Real>;
+using Ray4f = Ray4T<float>;
+using Ray4d = Ray4T<double>;
 
 
 } // /namespace Gm

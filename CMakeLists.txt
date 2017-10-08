@@ -42,14 +42,14 @@ set(FilesAll ${HeadersAll} ${SourcesAll})
 
 # === Options ===
 
-option(Geometron_DEFAULT_PLANE_EQUATION_ALT "Enables the alternative plane euqation as default (i.e. 'n*x + d = 0' instead of 'n*x = d')" OFF)
-option(Geometron_ENABLE_MULTI_THREADING "Enables multi-threading for a couple of functions (currently only for VisualC++)" ON)
+option(GeomLib_DEFAULT_PLANE_EQUATION_ALT "Enables the alternative plane euqation as default (i.e. 'n*x + d = 0' instead of 'n*x = d')" OFF)
+option(GeomLib_ENABLE_MULTI_THREADING "Enables multi-threading for a couple of functions (currently only for VisualC++)" ON)
 
-if(Geometron_ENABLE_MULTI_THREADING)
+if(GeomLib_ENABLE_MULTI_THREADING)
 	ADD_DEFINE(GM_ENABLE_MULTI_THREADING)
 endif()
 
-if(Geometron_DEFAULT_PLANE_EQUATION_ALT)
+if(GeomLib_DEFAULT_PLANE_EQUATION_ALT)
 	ADD_DEFINE(GM_DEFAULT_PLANE_EQUATION_ALT)
 endif()
 
@@ -58,8 +58,7 @@ endif()
 
 include_directories("${PROJECT_INCLUDE_DIR}")
 
-find_path(GaussianLib_INCLUDE_DIR NAMES Gauss/Gauss.h)
-include_directories(${GaussianLib_INCLUDE_DIR})
+include(cmake/FindGaussianLib.cmake)
 
 
 # === Source groups ===
