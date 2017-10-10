@@ -19,6 +19,8 @@ namespace Gm
 {
 
 
+/* --- Distance to Line --- */
+
 //! Computes the point onto the line with the nearest distance between the specified line and point.
 template <typename Vec>
 Vec ClosestPointToLine(const Line<Vec>& line, const Vec& point)
@@ -60,14 +62,14 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
 {
     using T = typename Gs::ScalarType<Vec>::Type;
 
-    const auto dir1 = lineA.Direction();
-    const auto dir2 = lineB.Direction();
+    const auto dirA = lineA.Direction();
+    const auto dirB = lineB.Direction();
     const auto r    = (lineA.a - lineB.a);
     
     /* Compute squared length of segment A and B */
-    const auto a = dir1.LengthSq();
-    const auto e = dir2.LengthSq();
-    const auto f = Gs::Dot(dir2, r);
+    const auto a = dirA.LengthSq();
+    const auto e = dirB.LengthSq();
+    const auto f = Gs::Dot(dirB, r);
     
     /* Check if either or both segments degenerate into points */
     if (a <= Gs::Epsilon<T>() && e <= Gs::Epsilon<T>())
@@ -82,30 +84,27 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
     {
         /* First segment degenerates into a point */
         s = T(0);
-        t = f / e; // s = 0 => t = (b*s + f) / e = f / e
+        t = f / e;
         t = Gs::Saturate(t);
     }
     else
     {
-        const auto c = Gs::Dot(dir1, r);
+        const auto c = Gs::Dot(dirA, r);
         
         if (e <= Gs::Epsilon<T>())
         {
             /* Second segment degenerates into a point */
             t = T(0);
             s = -c / a;
-            s = Gs::Saturate(s); // t = 0 => s = (b*t - c) / a = -c / a
+            s = Gs::Saturate(s);
         }
         else
         {
             /* The general nondegenerate case starts here */
-            const auto b = Gs::Dot(dir1, dir2);
+            const auto b = Gs::Dot(dir1, dirB);
             const auto denom = a*e - b*b;
             
-            /*
-            If segments not parallel, compute closest point on L1 to L2, and
-            clamp to segment S1. Else pick arbitrary s (here 0)
-            */
+            /* If segments not parallel, compute closest point on L1 to L2, and clamp to segment S1, or pick arbitrary s (here 0) otherwise */
             if (denom != T(0))
             {
                 s = (b*f - c*e) / denom;
@@ -114,17 +113,10 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
             else
                 s = T(0);
             
-            /*
-            Compute point on L2 closest to S1(s) using
-            t = Dot((P1+D1*s)-P2,D2) / Dot(D2,D2) = (b*s + f) / e
-            */
+            /* Compute point on L2 closest to S1(s) */
             t = (b*s + f) / e;
             
-            /*
-            If t in [0,1] done. Else clamp t, recompute s for the new value
-            of t using s = Dot((P2 + D2*t) - P1, D1) / Dot(D1, D1) = (t*b - c) / a
-            and clamp s to [0, 1]
-            */
+            /* If t in [0,1] done. Else clamp t, recompute s for the new value of t and clamp s to [0, 1] */
             if (t < T(0))
             {
                 t = T(0);
@@ -141,10 +133,15 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
     }
     
     /* Return final line segment */
-    return Line<Vec>(
-        lineA.a + dir1 * s,
-        lineB.a + dir2 * t
-    );
+    Line<Vec> result { dirA, dirB };
+
+    result.a *= s;
+    result.a += lineA.a;
+
+    result.b *= t;
+    result.b += lineB.a;
+
+    return result;
 }
 
 //TODO: add this when the enum "LinePointRelations" is added

@@ -143,10 +143,7 @@ class Triangle< Gs::Vector2T<T> >
         */
         Gs::Vector2T<T> BarycentricToCartesian(const Gs::Vector3T<T>& barycentricCoord) const
         {
-            return Gs::Vector2T<T>(
-                a.x*barycentricCoord.x + b.x*barycentricCoord.y + c.x*barycentricCoord.z,
-                a.y*barycentricCoord.x + b.y*barycentricCoord.y + c.y*barycentricCoord.z
-            );
+            return (a * barycentricCoord.x + b * barycentricCoord.y + c * barycentricCoord.z);
         }
 
         /**
@@ -264,11 +261,7 @@ class Triangle< Gs::Vector3T<T> >
         */
         Gs::Vector3T<T> BarycentricToCartesian(const Gs::Vector3T<T>& barycentricCoord) const
         {
-            return Gs::Vector3T<T>(
-                a.x*barycentricCoord.x + b.x*barycentricCoord.y + c.x*barycentricCoord.z,
-                a.y*barycentricCoord.x + b.y*barycentricCoord.y + c.y*barycentricCoord.z,
-                a.z*barycentricCoord.x + b.z*barycentricCoord.y + c.z*barycentricCoord.z
-            );
+            return (a * barycentricCoord.x + b * barycentricCoord.y + c * barycentricCoord.z);
         }
 
         /**

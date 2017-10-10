@@ -16,6 +16,8 @@
 // number of threads for ray casting (no threading if <= 1)
 #define NUM_THREADS ( 8 )
 
+#define ENABLE_PRECOMPUTED_TRIANGLES
+
 using namespace Gs;
 using namespace Gm;
 
@@ -124,6 +126,40 @@ struct SphereGeometry : public Geometry
     Sphere sphere;
 };
 
+struct TriangleGeometry : public Geometry
+{
+    bool RayCast(const Ray3& ray, Intersection& intersect) const override
+    {
+        #ifdef ENABLE_PRECOMPUTED_TRIANGLES
+
+        PrecomputedIntersectionRay<Gs::Real> precomputedRay;
+        precomputedRay.ray = ray;
+        precomputedRay.Update();
+
+        if (IntersectionWithPrecomputedTriangleBarycentric(precomputed, precomputedRay, intersect.point))
+        {
+            intersect.point = precomputed.triangle.BarycentricToCartesian(intersect.point);
+            intersect.normal = precomputed.triangle.UnitNormal();
+            intersect.material = &material;
+            return true;
+        }
+        return false;
+
+        #else
+
+        if (IntersectionWithTriangle(precomputed.triangle, ray, intersect.point))
+        {
+            intersect.normal = precomputed.triangle.UnitNormal();
+            intersect.material = &material;
+            return true;
+        }
+        return false;
+
+        #endif
+    }
+    PrecomputedIntersectionTriangle<Gs::Real> precomputed;
+};
+
 struct Light
 {
     virtual ~Light()
@@ -175,6 +211,15 @@ Geometry& addSphere(const Sphere& sphere)
     return *(geometries.back());
 }
 
+Geometry& addTriangle(const Triangle3& triangle)
+{
+    auto geom = makeUnique<TriangleGeometry>();
+    geom->precomputed.triangle = triangle;
+    geom->precomputed.Update();
+    geometries.emplace_back(std::move(geom));
+    return *(geometries.back());
+}
+
 Light& addPointLight(const Vector3& position, const Vector3& color = { 1.0f, 1.0f, 1.0f })
 {
     auto light = makeUnique<PointLight>();
@@ -214,6 +259,9 @@ void initScene()
 
     auto& obj3 = addAABB(AABB3{ { -3, -1.5f, -1 }, { -2.5f, 0.5f, 1 } });
     obj3.material.albedo = { 0.2f, 0.3f, 0.8f };
+
+    auto& obj4 = addTriangle(Triangle3{ { -3, 4, 2 }, { 3, 4, 2 }, { 0, 0, 1 } });
+    obj4.material.albedo = { 0.0f, 0.7f, 0.0f };
 
     // create light sources
     addPointLight({ -1, 3, -2 });
