@@ -23,7 +23,7 @@ namespace Gm
 
 //! Computes the point onto the line with the nearest distance between the specified line and point.
 template <typename Vec>
-Vec ClosestPointToLine(const Line<Vec>& line, const Vec& point)
+Vec ClosestPointOnLine(const Line<Vec>& line, const Vec& point)
 {
     using T = typename Gs::ScalarType<Vec>::Type;
 
@@ -49,7 +49,14 @@ Vec ClosestPointToLine(const Line<Vec>& line, const Vec& point)
 template <typename Vec>
 typename Gs::ScalarType<Vec>::Type DistanceToLine(const Line<Vec>& line, const Vec& point)
 {
-    return Gs::Distance(ClosestPointToLine(line, point), point);
+    return Gs::Distance(ClosestPointOnLine(line, point), point);
+}
+
+//! Computes the squared distance between the specified line and point.
+template <typename Vec>
+typename Gs::ScalarType<Vec>::Type DistanceSqToLine(const Line<Vec>& line, const Vec& point)
+{
+    return Gs::DistanceSq(ClosestPointOnLine(line, point), point);
 }
 
 /**
@@ -75,7 +82,7 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
     if (a <= Gs::Epsilon<T>() && e <= Gs::Epsilon<T>())
     {
         /* Both segments degenerate into points */
-        return Line<Vec>(lineA.a, lineB.a);
+        return Line<Vec> { lineA.a, lineB.a };
     }
     
     T s, t;
@@ -101,7 +108,7 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
         else
         {
             /* The general nondegenerate case starts here */
-            const auto b = Gs::Dot(dir1, dirB);
+            const auto b = Gs::Dot(dirA, dirB);
             const auto denom = a*e - b*b;
             
             /* If segments not parallel, compute closest point on L1 to L2, and clamp to segment S1, or pick arbitrary s (here 0) otherwise */
@@ -142,6 +149,20 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
     result.b += lineB.a;
 
     return result;
+}
+
+//! Computes the distance between the two lines.
+template <typename Vec>
+typename Gs::ScalarType<Vec>::Type DistanceBetweenLines(const Line<Vec>& lineA, const Line<Vec>& lineB)
+{
+    return Gs::Length(ClosestSegmentBetweenLines(lineA, lineB));
+}
+
+//! Computes the squared distance between the two lines.
+template <typename Vec>
+typename Gs::ScalarType<Vec>::Type DistanceSqBetweenLines(const Line<Vec>& lineA, const Line<Vec>& lineB)
+{
+    return Gs::LengthSq(ClosestSegmentBetweenLines(lineA, lineB));
 }
 
 //TODO: add this when the enum "LinePointRelations" is added

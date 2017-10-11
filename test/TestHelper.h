@@ -25,10 +25,21 @@
 
 void emitVertex(const Gm::TriangleMesh::Vertex& vert)
 {
+    #ifdef GS_REAL_DOUBLE
+
+    // emit vertex data
+    glNormal3dv(vert.normal.Ptr());
+    glTexCoord2dv(vert.texCoord.Ptr());
+    glVertex3dv(vert.position.Ptr());
+
+    #else
+
     // emit vertex data
     glNormal3fv(vert.normal.Ptr());
     glTexCoord2fv(vert.texCoord.Ptr());
     glVertex3fv(vert.position.Ptr());
+
+    #endif
 }
 
 void drawLine(const Gs::Vector3f& a, const Gs::Vector3f& b)

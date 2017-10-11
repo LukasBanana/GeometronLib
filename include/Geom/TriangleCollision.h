@@ -12,6 +12,7 @@
 #include "Triangle.h"
 #include "Plane.h"
 #include "Ray.h"
+#include "Line.h"
 #include "PlaneCollision.h"
 #include "LineCollision.h"
 
@@ -24,8 +25,160 @@ namespace Gm
 {
 
 
-/* --- Closest Point on Triangle --- */
+/* --- Relation to Triangle --- */
 
+//! Returns true if the specified point is inside the triangle (assumed that the point is already on the triangle's plane).
+template <typename T>
+bool IsInsideTriangle(const Triangle3T<T>& triangle, const Gs::Vector3T<T>& point)
+{
+    auto IsOneSameSide = [](const Gs::Vector3T<T>& p, const Gs::Vector3T<T>& q, const Gs::Vector3T<T>& a, const Gs::Vector3T<T>& b) -> bool
+    {
+        auto diff = b - a;
+        auto v0 = Gs::Cross(diff, p - a);
+        auto v1 = Gs::Cross(diff, q - a);
+        return Gs::Dot(v0, v1) >= T(0);
+    };
+    return
+    (
+        IsOneSameSide(point, triangle.a, triangle.b, triangle.c) &&
+        IsOneSameSide(point, triangle.b, triangle.a, triangle.c) &&
+        IsOneSameSide(point, triangle.c, triangle.a, triangle.b)
+    );
+}
+
+
+/* --- Distance to Triangle --- */
+
+//! Computes the point on the triangle which is the closest one to the specified point.
+template <typename T>
+Gs::Vector3T<T> ClosestPointOnTriangle(const Triangle3T<T>& triangle, const Gs::Vector3T<T>& point)
+{
+    auto ab = triangle.b - triangle.a;
+    auto ac = triangle.c - triangle.a;
+
+    /* Check if P is in vertex region outside A */
+    auto ap = point - triangle.a;
+    auto d1 = Gs::Dot(ab, ap);
+    auto d2 = Gs::Dot(ac, ap);
+    if (d1 <= T(0) && d2 <= T(0))
+        return triangle.a;
+
+    /* Check if P is in vertex region outside B */
+    auto bp = point - triangle.b;
+    auto d3 = Gs::Dot(ab, bp);
+    auto d4 = Gs::Dot(ac, bp);
+    if (d3 >= T(0) && d4 <= d3)
+        return triangle.b;
+
+    /* Check if P is in edge region of AB, if so return projection of P onto AB */
+    auto vc = d1*d4 - d3*d2;
+    if (vc <= T(0) && d1 > T(0) && d3 <= T(0))
+    {
+        auto v = d1 / (d1 - d3);
+        return triangle.a + ab * v;
+    }
+
+    /* Check if P is in vertex region outside C */
+    auto cp = point - triangle.c;
+    auto d5 = Gs::Dot(ab, cp);
+    auto d6 = Gs::Dot(ac, cp);
+    if (d6 >= T(0) && d5 <= d6)
+        return triangle.c;
+
+    /* Check if P is in edge region of AC, if so return projection of P onto AC */
+    auto vb = d5*d2 - d1*d6;
+    if (vb <= T(0) && d2 > T(0) && d6 <= T(0))
+    {
+        auto w = d2 / (d2 - d6);
+        return triangle.a + ac * w;
+    }
+
+    /* Check if P is in edge region of BC, if so return projection of P onto BC */
+    auto va = d3*d6 - d5*d4;
+    if (va <= T(0) && (d4 - d3) > T(0) && (d5 - d6) >= T(0))
+    {
+        auto w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+        return triangle.b + (triangle.c - triangle.b) * w;
+    }
+
+    /* P is inside face region. Compute Q through its barycentric coordinates (u, v, w) */
+    auto denom = T(1) / (va + vb + vc);
+    auto v = vb * denom;
+    auto w = vc * denom;
+
+    return triangle.a + ab * v + ac * w;
+}
+
+//! Computes the closest line segment between the line and the triangle (with the triangle's plane).
+template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
+Line3T<T> ClosestSegmentToTriangle(const Triangle3T<T>& triangle, const PlaneT<T, PlaneEq>& trianglePlane, const Line3T<T>& line)
+{
+    /* Get closest point between line and all three triangle edges */
+    auto segmentToAB = ClosestSegmentBetweenLines(Line3T<T> { triangle.a, triangle.b }, line);
+    auto segmentToBC = ClosestSegmentBetweenLines(Line3T<T> { triangle.b, triangle.c }, line);
+    auto segmentToCA = ClosestSegmentBetweenLines(Line3T<T> { triangle.c, triangle.a }, line);
+
+    auto distToAB = segmentToAB.LengthSq();
+    auto distToBC = segmentToBC.LengthSq();
+    auto distToCA = segmentToCA.LengthSq();
+    
+    /* Get closest points between line start/end and triangle's plane */
+    auto planePointA = ClosestPointOnPlane(trianglePlane, line.a);
+    auto planePointB = ClosestPointOnPlane(trianglePlane, line.b);
+    
+    auto planeDistA = Gs::DistanceSq(planePointA, line.a);
+    auto planeDistB = Gs::DistanceSq(planePointB, line.b);
+    
+    /* Determine which point is closest to line */
+    auto dist = std::numeric_limits<T>::max();
+
+    const Gs::Vector3T<T>* closestA = nullptr;
+    const Gs::Vector3T<T>* closestB = nullptr;
+    
+    if (IsInsideTriangle(triangle, planePointA))
+    {
+        closestA = &planePointA;
+        closestB = &line.a;
+        dist = planeDistA;
+    }
+    if (IsInsideTriangle(triangle, planePointB) && planeDistB < dist)
+    {
+        closestA = &planePointB;
+        closestB = &line.b;
+        dist = planeDistB;
+    }
+    
+    if (distToAB < dist)
+    {
+        closestA = &segmentToAB.a;
+        closestB = &segmentToAB.b;
+        dist = distToAB;
+    }
+    if (distToBC < dist)
+    {
+        closestA = &segmentToBC.a;
+        closestB = &segmentToBC.b;
+        dist = distToBC;
+    }
+    if (distToCA < dist)
+    {
+        closestA = &segmentToCA.a;
+        closestB = &segmentToCA.b;
+    }
+    
+    if (!closestA || !closestB)
+        return {};
+    
+    return { *closestA, *closestB };
+}
+
+
+//! Computes the closest line segment between the line and the triangle.
+template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
+Line3T<T> ClosestSegmentToTriangle(const Triangle3T<T>& triangle, const Line3T<T>& line)
+{
+    return ClosestSegmentToTriangle(triangle, PlaneT<T, PlaneEq> { triangle }, line);
+}
 
 
 /* --- Intersection with Triangle --- */

@@ -33,7 +33,7 @@ Transform3              viewTransform;
 Real                    viewPitch = 0;
 Real                    viewYaw = 0;
 
-std::vector<Vector3>    colorBuffer;
+std::vector<Vector3f>   colorBuffer;
 
 bool                    orthoProj = false;
 
@@ -94,9 +94,9 @@ struct AABBGeometry : public Geometry
         {
             for (size_t i = 0; i < 3; ++i)
             {
-                if (intersect.point[i] <= aabb.min[i] + Gs::Epsilon<float>())
+                if (intersect.point[i] <= aabb.min[i] + Epsilon<float>())
                     intersect.normal[i] = -1.0f;
-                else if (intersect.point[i] >= aabb.max[i] - Gs::Epsilon<float>())
+                else if (intersect.point[i] >= aabb.max[i] - Epsilon<float>())
                     intersect.normal[i] = 1.0f;
                 else
                     intersect.normal[i] = 0.0f;
@@ -132,7 +132,7 @@ struct TriangleGeometry : public Geometry
     {
         #ifdef ENABLE_PRECOMPUTED_TRIANGLES
 
-        PrecomputedIntersectionRay<Gs::Real> precomputedRay;
+        PrecomputedIntersectionRay<Real> precomputedRay;
         precomputedRay.ray = ray;
         precomputedRay.Update();
 
@@ -157,7 +157,7 @@ struct TriangleGeometry : public Geometry
 
         #endif
     }
-    PrecomputedIntersectionTriangle<Gs::Real> precomputed;
+    PrecomputedIntersectionTriangle<Real> precomputed;
 };
 
 struct Light
@@ -318,8 +318,8 @@ Vector3 PointLight::Shade(const Ray3& viewRay, const Intersection& intersect, in
     halfRay.Normalize();
 
     // compute diffuse and specular lighting
-    auto NoL = std::max(0.0f, Dot(intersect.normal, lightRay));
-    auto NoH = std::max(0.0f, Dot(intersect.normal, halfRay));
+    auto NoL = std::max(Real(0), Dot(intersect.normal, lightRay));
+    auto NoH = std::max(Real(0), Dot(intersect.normal, halfRay));
 
     auto specularTerm = (1.0f - intersect.material->roughness) * std::pow(NoH, intersect.material->SpecularPower());
 
@@ -331,7 +331,7 @@ Vector3 PointLight::Shade(const Ray3& viewRay, const Intersection& intersect, in
         Intersection nextIntersect;
 
         // compute reflection vector with biasing
-        ray.origin = intersect.point + intersect.normal * 0.01f;
+        ray.origin = intersect.point + intersect.normal * Real(0.01);
 
         ray.direction = Reflect(viewRay.direction, intersect.normal);
         ray.direction.Normalize();
@@ -339,7 +339,7 @@ Vector3 PointLight::Shade(const Ray3& viewRay, const Intersection& intersect, in
         // compute fresnel term
         static const Real f0 = 0.3f;
 
-        auto NoV = std::max(0.0f, -Dot(intersect.normal, viewRay.direction));
+        auto NoV = std::max(Real(0), -Dot(intersect.normal, viewRay.direction));
 
         auto fresnelTerm = SchlickFresnel(f0, NoV);
 
@@ -398,7 +398,7 @@ void rayCastWorker(std::size_t begin, std::size_t end)
         }
 
         // set final pixel color
-        colorBuffer[begin] = color;
+        colorBuffer[begin] = color.Cast<float>();
     }
 }
 
@@ -543,15 +543,15 @@ void storePrevMousePos(int x, int y)
 
 void motionCallback(int x, int y)
 {
-    static const Gs::Real rotationSpeed = Gs::pi*0.002f;
+    static const Real rotationSpeed = pi*0.002f;
 
     auto dx = x - prevMouseX;
     auto dy = y - prevMouseY;
 
-    viewPitch += static_cast<float>(dy) * rotationSpeed;
-    viewYaw   += static_cast<float>(dx) * rotationSpeed;
+    viewPitch += static_cast<Real>(dy) * rotationSpeed;
+    viewYaw   += static_cast<Real>(dx) * rotationSpeed;
 
-    viewPitch = std::max(-pi, std::min(viewPitch, pi));
+    //viewPitch = std::max(-pi, std::min(viewPitch, pi));
 
     viewTransform.SetRotation(Quaternion::EulerAngles({ viewPitch, viewYaw, 0 }));
 
@@ -582,8 +582,8 @@ int main(int argc, char* argv[])
         glutIdleFunc(idleCallback);
         glutKeyboardFunc(keyboardCallback);
         glutKeyboardUpFunc(keyboardUpCallback);
-        glutMotionFunc(motionCallback);
         glutPassiveMotionFunc(storePrevMousePos);
+        glutMotionFunc(motionCallback);
         glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 
         initGL();

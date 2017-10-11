@@ -112,6 +112,7 @@ class Triangle< Gs::Vector2T<T> >
             return *((&a) + vertex);
         }
 
+        //! Returns the area of this triangle.
         T Area() const
         {
             return Gs::Cross(b - a, c - a)/T(2);

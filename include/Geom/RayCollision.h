@@ -44,10 +44,10 @@ Line<Vec> ClosestSegmentBetweenRays(const Ray<Vec>& rayA, const Ray<Vec>& rayB)
     {
         const auto s = (b*f - c) / denom;
         const auto t = b*s + f;
-        return Line<Vec>(rayA.Lerp(s), rayB.Lerp(t));
+        return Line<Vec> { rayA.Lerp(s), rayB.Lerp(t) };
     }
     else
-        return Line<Vec>(rayA.origin, rayB.origin);
+        return Line<Vec> { rayA.origin, rayB.origin };
 }
 
 

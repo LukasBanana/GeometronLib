@@ -73,9 +73,6 @@ T DistanceToPlane(const PlaneT<T, PlaneEq>& plane, const OBB3T<T>& obb)
     return (DistanceToPlane(plane, obb.center) - radius);
 }
 
-
-/* --- Closest Point on Plane --- */
-
 //! Computes the point on the plane which is the closest one to the specified point.
 template <typename T, typename PlaneEq>
 Gs::Vector3T<T> ClosestPointOnPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point)

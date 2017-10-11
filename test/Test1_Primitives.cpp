@@ -200,7 +200,7 @@ static void testLineCollision()
 {
     Line2f line;
     Gs::Vector2f point;
-    ClosestPointToLine(line, point);
+    ClosestPointOnLine(line, point);
     DistanceToLine(line, point);
 }
 
