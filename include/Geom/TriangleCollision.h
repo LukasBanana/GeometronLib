@@ -344,7 +344,7 @@ bool IntersectionWithTriangle(const Triangle3T<T>& triangle, const PlaneT<T, Pla
     {
         if (t >= T(0) && t <= T(1))
         {
-            intersection = ray.Lerp(t);
+            intersection = line.Lerp(t);
             return true;
         }
     }
