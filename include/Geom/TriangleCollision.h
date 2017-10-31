@@ -358,6 +358,50 @@ bool IntersectionWithTriangle(const Triangle3T<T>& triangle, const Line3T<T>& li
     return IntersectionWithTriangle(triangle, PlaneT<T, PlaneEq> { triangle }, line, intersection);
 }
 
+//! Computes the intersection between the two triangles.
+template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
+bool IntersectionWithTriangle(const Triangle3T<T>& triangleA, const Triangle3T<T>& triangleB, Line3T<T>& intersection)
+{
+    Gs::Vector3T<T> point { Gs::UninitializeTag{} };
+    Line3T<T> edge { Gs::UninitializeTag{} };
+
+    Gs::Vector3T<T> intersectionPoints[2] { Gs::UninitializeTag{}, Gs::UninitializeTag{} };
+    std::size_t intersectionIndex = 0;
+
+    const Triangle3T<T>* triangleRefList[] = { &triangleA, &triangleB };
+
+    for (std::size_t i = 0; i < 2; ++i)
+    {
+        auto triangleRef = triangleRefList[i];
+        auto triangleOpponentRef = triangleRefList[(i + 1) % 2];
+
+        for (std::size_t j = 0; j < 3; ++j)
+        {
+            /* Get current edge from opposite triangle */
+            edge.a = (*triangleOpponentRef)[j];
+            edge.b = (*triangleOpponentRef)[(j + 1) % 3];
+
+            if ( IntersectionWithTriangle<T, PlaneEq>(*triangleRef, edge, point) ||
+                 IntersectionWithTriangle<T, PlaneEq>(*triangleRef, Line3T<T>(edge.b, edge.a), point) )
+            {
+                /* Store new intersection point in list */
+                intersectionPoints[intersectionIndex] = point;
+                ++intersectionIndex;
+
+                /* Check if intersection is complete */
+                if (intersectionIndex == 2)
+                {
+                    intersection.a = intersectionPoints[0];
+                    intersection.b = intersectionPoints[1];
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 
 /* --- Clip Triangle --- */
 

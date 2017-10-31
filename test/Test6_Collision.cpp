@@ -15,6 +15,7 @@
 #include <algorithm>
 
 #define TEST_TRIANGLE_COLLISION
+#define TEST_TRIANGLE_TRIANGLE_COLLISION
 
 using namespace Gs;
 using namespace Gm;
@@ -310,6 +311,60 @@ void drawScene()
     // draw model
     for (const auto& mdl : models)
         drawModel(mdl);
+
+    #ifdef TEST_TRIANGLE_TRIANGLE_COLLISION
+
+    // setup world-view matrix
+    AffineMatrix4 transform;
+    Gs::Translate(transform, Vector3(2, 0, -1));
+
+    auto modelView = (viewMatrix * transform).ToMatrix4();
+    glLoadMatrixf(modelView.Ptr());
+
+    Triangle3 tris[] =
+    {
+        { { -1.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 1.0f, -1.0f, 0.0f } },
+        { { -0.5f, 0.0f, -0.5f }, { 0.5f, 0.0f, 0.5f }, { 1.5f, 0.0f, -0.5f } },
+    };
+    Line3 line;
+
+    Vector4f trisColor[] =
+    {
+        { 1.0f, 0.0f, 0.0f, 1.0f },
+        { 0.0f, 0.0f, 1.0f, 1.0f },
+    };
+
+    // draw triangles
+    for (std::size_t i = 0; i < 2; ++i)
+    {
+        glBegin(GL_TRIANGLES);
+        {
+            for (std::size_t j = 0; j < 3; ++j)
+            {
+                glColor4fv(trisColor[i].Ptr());
+                glVertex3fv((tris[i])[j].Ptr());
+            }
+        }
+        glEnd();
+    }
+
+    if (IntersectionWithTriangle(tris[0], tris[1], line))
+    {
+        // draw intersection line
+        glLineWidth(3);
+        glDisable(GL_DEPTH_TEST);
+
+        glBegin(GL_LINES);
+        {
+            drawLine(line.a, line.b, { 1, 1, 0, 1 });
+        }
+        glEnd();
+
+        glEnable(GL_DEPTH_TEST);
+        glLineWidth(1);
+    }
+
+    #endif
 }
 
 void updateScene()
