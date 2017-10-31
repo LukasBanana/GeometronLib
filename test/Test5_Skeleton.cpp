@@ -143,9 +143,17 @@ Gs::Quaternion makeRotation(Gs::Real pitch, Gs::Real yaw, Gs::Real roll)
 
 void genVertexWeights(const Gm::TriangleMesh& mesh, Gm::SkeletonJoint& joint)
 {
+    float weight = 0.0f;
+    
     for (std::size_t i = 0, n = mesh.vertices.size(); i < n; ++i)
     {
-        auto weight = 1.0f / Gs::Distance(mesh.vertices[i].position, joint.poseTransform.GetPosition());
+        auto dist = Gs::Distance(mesh.vertices[i].position, joint.poseTransform.GetPosition());
+        
+        if (dist > 0.5f)
+            weight = 1.0f / dist;
+        else
+            weight = 2.0f;
+        
         joint.vertexWeights.push_back({ i, weight });
     }
 }
