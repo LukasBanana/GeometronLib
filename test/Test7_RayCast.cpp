@@ -16,7 +16,7 @@
 // number of threads for ray casting (no threading if <= 1)
 #define NUM_THREADS ( 8 )
 
-#define ENABLE_PRECOMPUTED_TRIANGLES
+//#define ENABLE_PRECOMPUTED_TRIANGLES
 
 using namespace Gs;
 using namespace Gm;
@@ -25,7 +25,12 @@ using namespace Gm;
 
 int                     winID = 0;
 
+#ifdef _DEBUG
+Vector2i                resolution(320, 240);
+#else
 Vector2i                resolution(800, 600);
+#endif
+
 Real                    aspectRatio = 1;
 
 AffineMatrix4           viewMatrix;
@@ -153,6 +158,19 @@ struct TriangleGeometry : public Geometry
             intersect.material = &material;
             return true;
         }
+
+        #if 1
+        auto raySegment = Line3(ray.origin, ray.Lerp(100.0f));
+        auto closestSegment = ClosestSegmentToTriangle(precomputed.triangle, raySegment);
+        if (closestSegment.Length() < 0.1f)
+        {
+            intersect.normal    = precomputed.triangle.UnitNormal();
+            intersect.point     = closestSegment.b;
+            intersect.material  = &material;
+            return true;
+        }
+        #endif
+
         return false;
 
         #endif
@@ -260,7 +278,7 @@ void initScene()
     auto& obj3 = addAABB(AABB3{ { -3, -1.5f, -1 }, { -2.5f, 0.5f, 1 } });
     obj3.material.albedo = { 0.2f, 0.3f, 0.8f };
 
-    auto& obj4 = addTriangle(Triangle3{ { -3, 4, 2 }, { 3, 4, 2 }, { 0, 0, 1 } });
+    auto& obj4 = addTriangle(Triangle3{ { -3, 4, 2 }, { 3, 4, 2 }, { 0, 0, 1.2f } });
     obj4.material.albedo = { 0.0f, 0.7f, 0.0f };
 
     // create light sources

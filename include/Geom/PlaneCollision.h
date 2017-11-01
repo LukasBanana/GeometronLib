@@ -77,7 +77,7 @@ T DistanceToPlane(const PlaneT<T, PlaneEq>& plane, const OBB3T<T>& obb)
 template <typename T, typename PlaneEq>
 Gs::Vector3T<T> ClosestPointOnPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point)
 {
-    return (point - plane.normal * SgnDistanceToPlane(plane, plane.normal));
+    return (point - plane.normal * SgnDistanceToPlane(plane, point));
 }
 
 

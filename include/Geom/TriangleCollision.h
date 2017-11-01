@@ -31,18 +31,18 @@ namespace Gm
 template <typename T>
 bool IsInsideTriangle(const Triangle3T<T>& triangle, const Gs::Vector3T<T>& point)
 {
-    auto IsOneSameSide = [](const Gs::Vector3T<T>& p, const Gs::Vector3T<T>& q, const Gs::Vector3T<T>& a, const Gs::Vector3T<T>& b) -> bool
+    auto IsOnSameSide = [](const Gs::Vector3T<T>& p, const Gs::Vector3T<T>& q, const Gs::Vector3T<T>& a, const Gs::Vector3T<T>& b) -> bool
     {
         auto diff = b - a;
         auto v0 = Gs::Cross(diff, p - a);
         auto v1 = Gs::Cross(diff, q - a);
-        return Gs::Dot(v0, v1) >= T(0);
+        return (Gs::Dot(v0, v1) >= T(0));
     };
     return
     (
-        IsOneSameSide(point, triangle.a, triangle.b, triangle.c) &&
-        IsOneSameSide(point, triangle.b, triangle.a, triangle.c) &&
-        IsOneSameSide(point, triangle.c, triangle.a, triangle.b)
+        IsOnSameSide(point, triangle.a, triangle.b, triangle.c) &&
+        IsOnSameSide(point, triangle.b, triangle.a, triangle.c) &&
+        IsOnSameSide(point, triangle.c, triangle.a, triangle.b)
     );
 }
 
@@ -109,7 +109,12 @@ Gs::Vector3T<T> ClosestPointOnTriangle(const Triangle3T<T>& triangle, const Gs::
     return triangle.a + ab * v + ac * w;
 }
 
-//! Computes the closest line segment between the line and the triangle (with the triangle's plane).
+/**
+\brief Computes the closest line segment between the line and the triangle (with the triangle's plane).
+\return Line segment whose first point (i.e. 'a' component) is onto the triangle, and the second point (i.e. 'b' component) is onto the input line.
+\note This function assumes that the line does NOT intersect the triangle. For intersection tests use the 'IntersectWithTriangle' function.
+\see IntersectionWithTriangle
+*/
 template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
 Line3T<T> ClosestSegmentToTriangle(const Triangle3T<T>& triangle, const PlaneT<T, PlaneEq>& trianglePlane, const Line3T<T>& line)
 {
