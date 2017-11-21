@@ -370,7 +370,7 @@ bool IntersectionWithTriangle(const Triangle3T<T>& triangleA, const Triangle3T<T
     Gs::Vector3T<T> point { Gs::UninitializeTag{} };
     Line3T<T> edge { Gs::UninitializeTag{} };
 
-    Gs::Vector3T<T> intersectionPoints[2] { Gs::UninitializeTag{}, Gs::UninitializeTag{} };
+    Gs::Vector3T<T> intersectionPoints[2] { Gs::Vector3T<T>{ Gs::UninitializeTag{} }, Gs::Vector3T<T>{ Gs::UninitializeTag{} } };
     std::size_t intersectionIndex = 0;
 
     const Triangle3T<T>* triangleRefList[] = { &triangleA, &triangleB };
