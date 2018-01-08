@@ -31,6 +31,9 @@ class AABB
         
         using ThisType = AABB<Vec, T>;
 
+        AABB(const AABB<Vec, T>&) = default;
+        AABB& operator = (const AABB<Vec, T>&) = default;
+
         //! Constructs a maximal invald bounding-box, i.e. min has the maximal values possible, and max has the minimal values possible.
         AABB() :
             min { Gs::UninitializeTag{} },
@@ -112,6 +115,21 @@ class AABB
             return center;
         }
 
+        /**
+        \brief Returns true if this AABB is fully inside the specified AABB.
+        \remarks To check if an AABB is only partially inside another AABB, use the "Overlap" function.
+        \see Overlap
+        */
+        bool InsideOf(const AABB<Vec, T>& outerBox) const
+        {
+            for (std::size_t i = 0; i < Vec<T>::components; ++i)
+            {
+                if (min[i] < outerBox.min[i] || max[i] > outerBox.max[i])
+                    return false;
+            }
+            return true;
+        }
+
         //! Returns the list of all edges of this AABB.
         std::vector< Line< Vec<T> > > Edges() const
         {
@@ -146,7 +164,11 @@ using AABB3d    = AABB3T<double>;
 
 /* --- Global Functions --- */
 
-//! Returns true if the two AABBs do overlap.
+/**
+\brief Returns true if the two AABBs do overlap.
+\remarks To check if an AABB is fully inside another AABB, use the "InsideOf" member function.
+\see AABB::InsideOf
+*/
 template <template <typename> class Vec, typename T>
 bool Overlap(const AABB<Vec, T>& a, const AABB<Vec, T>& b)
 {
