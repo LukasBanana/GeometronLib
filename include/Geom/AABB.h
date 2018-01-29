@@ -130,6 +130,27 @@ class AABB
             return true;
         }
 
+        /**
+        \brief Returns true if the specified AABB is fully contained inside this AABB.
+        \remarks This is the opposite function of 'InsideOf'
+        \see InsideOf
+        */
+        bool Contains(const AABB<Vec, T>& innerBox) const
+        {
+            return innerBox.InsideOf(*this);
+        }
+
+        //! Determines whether the specified point is inside this AABB.
+        bool Contains(const Vec<T>& point) const
+        {
+            for (std::size_t i = 0; i < Vec<T>::components; ++i)
+            {
+                if (point[i] < min[i] || point[i] > max[i])
+                    return false;
+            }
+            return true;
+        }
+
         //! Returns the list of all edges of this AABB.
         std::vector< Line< Vec<T> > > Edges() const
         {
@@ -156,10 +177,12 @@ template <typename T> using AABB3T = AABB<Gs::Vector3T, T>;
 using AABB2     = AABB2T<Gs::Real>;
 using AABB2f    = AABB2T<float>;
 using AABB2d    = AABB2T<double>;
+using AABB2i    = AABB2T<std::int32_t>;
 
 using AABB3     = AABB3T<Gs::Real>;
 using AABB3f    = AABB3T<float>;
 using AABB3d    = AABB3T<double>;
+using AABB3i    = AABB3T<std::int32_t>;
 
 
 /* --- Global Functions --- */
