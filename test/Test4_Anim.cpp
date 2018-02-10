@@ -131,10 +131,12 @@ Gm::Transform3 TrackingShot::interpolate(Gs::Real t) const
     auto xVec = Gs::Cross(upVector, zVec).Normalized();
     auto yVec = Gs::Cross(zVec, xVec).Normalized();
 
-    Gs::Matrix3 rotation;
-    rotation << xVec.x, yVec.x, zVec.x,
-                xVec.y, yVec.y, zVec.y,
-                xVec.z, yVec.z, zVec.z;
+    const Gs::Matrix3 rotation
+    {
+        xVec.x, yVec.x, zVec.x,
+        xVec.y, yVec.y, zVec.y,
+        xVec.z, yVec.z, zVec.z
+    };
 
     // setup final transformation
     Gm::Transform3 transform;
