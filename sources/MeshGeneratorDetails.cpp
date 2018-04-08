@@ -28,7 +28,7 @@ void AddTriangulatedQuad(
         mesh.AddTriangle(indexOffset + a, indexOffset + b, indexOffset + c);
     };
 
-    if ( !alternateGrid || ( ( u % 2 == 0 && v % 2 == 0 ) || ( u % 2 == 1 && v % 2 == 1 ) ) )
+    if (!alternateGrid || u % 2 == v % 2)
     {
         /*
         1-----2
