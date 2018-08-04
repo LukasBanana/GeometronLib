@@ -17,15 +17,17 @@ namespace MeshGenerator
 
 void GeneratePipe(const PipeDescriptor& desc, TriangleMesh& mesh)
 {
-    const auto segsHorz = std::max(3u, desc.mantleSegments.x);
-    const auto segsVert = std::max(1u, desc.mantleSegments.y);
+    const auto idxBaseOffset    = mesh.vertices.size();
 
-    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto segsHorz         = std::max(3u, desc.mantleSegments.x);
+    const auto segsVert         = std::max(1u, desc.mantleSegments.y);
 
-    const auto angleSteps = invHorz * pi_2;
+    const auto invHorz          = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert          = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
-    const auto halfHeight = desc.height*Gs::Real(0.5);
+    const auto angleSteps       = invHorz * pi_2;
+
+    const auto halfHeight       = desc.height*Gs::Real(0.5);
 
     /* Generate outer- and inner mantle vertices */
     Gs::Vector3 coord, normal, coordAlt;
@@ -130,7 +132,7 @@ void GeneratePipe(const PipeDescriptor& desc, TriangleMesh& mesh)
     }
 
     /* Generate indices for the outer mantle */
-    VertexIndex idxOffset = 0;
+    auto idxOffset = idxBaseOffset;
 
     for (std::size_t i = 0; i < 2; ++i)
     {

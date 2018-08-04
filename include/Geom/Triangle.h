@@ -35,9 +35,9 @@ T TriangleArea2D(T x1, T y1, T x2, T y2, T x3, T y3)
 template <typename T>
 class Triangle
 {
-    
+
     public:
-        
+
         Triangle() :
             a { T(0) },
             b { T(0) },
@@ -79,9 +79,9 @@ class Triangle
 template <typename T>
 class Triangle< Gs::Vector2T<T> >
 {
-    
+
     public:
-        
+
         Triangle() = default;
         Triangle(const Triangle< Gs::Vector2T<T> >&) = default;
 
@@ -153,13 +153,14 @@ class Triangle< Gs::Vector2T<T> >
         If this input parameter is { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }, the result is equal to this triangle.
         The sum of all components must be one for each triangle vertex, i.e. x+y+z = 1.
         */
-        Triangle< Gs::Vector2T<T> > BarycentricToCartesian(const Triangle< Gs::Vector3T<T> >& barycentricTriangle) const
+        Triangle<Gs::Vector2T<T>> BarycentricToCartesian(const Triangle< Gs::Vector3T<T> >& barycentricTriangle) const
         {
-            return Triangle< Gs::Vector2T<T> >(
+            return Triangle< Gs::Vector2T<T> >
+            {
                 BarycentricToCartesian(barycentricTriangle.a),
                 BarycentricToCartesian(barycentricTriangle.b),
                 BarycentricToCartesian(barycentricTriangle.c)
-            );
+            };
         }
 
         /**
@@ -196,13 +197,13 @@ class Triangle< Gs::Vector2T<T> >
 
 };
 
-//! Template specializationn for 3D triangles.
+//! Template specialization for 3D triangles.
 template <typename T>
 class Triangle< Gs::Vector3T<T> >
 {
-    
+
     public:
-        
+
         Triangle() = default;
         Triangle(const Triangle< Gs::Vector3T<T> >&) = default;
 
@@ -271,13 +272,14 @@ class Triangle< Gs::Vector3T<T> >
         If this input parameter is { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }, the result is equal to this triangle.
         The sum of all components must be one for each triangle vertex, i.e. x+y+z = 1.
         */
-        Triangle< Gs::Vector3T<T> > BarycentricToCartesian(const Triangle< Gs::Vector3T<T> >& barycentricTriangle) const
+        Triangle<Gs::Vector3T<T>> BarycentricToCartesian(const Triangle<Gs::Vector3T<T>>& barycentricTriangle) const
         {
-            return Triangle< Gs::Vector3T<T> >(
+            return Triangle<Gs::Vector3T<T>>
+            {
                 BarycentricToCartesian(barycentricTriangle.a),
                 BarycentricToCartesian(barycentricTriangle.b),
                 BarycentricToCartesian(barycentricTriangle.c)
-            );
+            };
         }
 
         /**

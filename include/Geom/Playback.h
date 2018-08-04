@@ -36,7 +36,7 @@ class Playback
 {
 
     public:
-        
+
         //! Type of the frame indices (unsigned integral type).
         using FrameIndex = std::size_t;
 
@@ -96,7 +96,7 @@ class Playback
                 virtual void OnNextFrame(Playback& sender)
                 {
                 }
-                
+
         };
 
         /**
@@ -107,7 +107,7 @@ class Playback
         {
 
             public:
-                
+
                 void OnNextFrame(Playback& sender) override;
 
         };
@@ -120,7 +120,7 @@ class Playback
         {
 
             public:
-                
+
                 void OnNextFrame(Playback& sender) override;
 
         };
@@ -133,7 +133,7 @@ class Playback
         {
 
             public:
-                
+
                 void OnNextFrame(Playback& sender) override;
 
         };
@@ -146,7 +146,7 @@ class Playback
         {
 
             public:
-                
+
                 void OnStop(Playback& sender) override;
                 void OnNextFrame(Playback& sender) override;
 
@@ -283,7 +283,7 @@ class Playback
         Gs::Real    speed           = Gs::Real(1);
 
     private:
-        
+
         void SetState(const State state);
         void PostNextFrame();
 

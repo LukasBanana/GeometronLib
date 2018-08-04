@@ -17,13 +17,13 @@ namespace Gm
 {
 
 
-//! Base sphere class.
+//! Base sphere class with origin and radius.
 template <typename T>
 class SphereT
 {
-    
+
     public:
-        
+
         SphereT() :
             radius { T(0) }
         {
@@ -38,27 +38,34 @@ class SphereT
         SphereT(const SphereT&) = default;
         SphereT& operator = (const SphereT&) = default;
 
+        // Returns the volume depending on the radius.
         T GetVolume() const
         {
-            return T(4)/T(3) * T(Gs::pi) * radius * radius * radius;
+            return (T(4)/T(3) * T(Gs::pi) * radius * radius * radius);
         }
 
+        // Sets the radius depending on the specified volume.
         void SetVolume(const T& volume)
         {
             radius = std::pow(volume * T(3)/(T(4) * T(Gs::pi)), T(1)/T(3));
         }
 
+        // Returns the surface area of this sphere depending on the radius.
         T GetArea() const
         {
             return T(4) * T(Gs::pi) * radius * radius;
         }
 
+        // Sets the radius depending on the specified surface area.
         void SetArea(const T& area)
         {
             radius = std::sqrt(area / (T(4) * T(Gs::pi)));
         }
 
+        //! Sphere origin as 3D vector.
         Gs::Vector3T<T> origin;
+
+        //! Sphere radius. by default 0.
         T               radius;
 
 };

@@ -17,18 +17,18 @@ namespace MeshGenerator
 
 void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
 {
-    const auto idxBaseOffset = mesh.vertices.size();
+    const auto idxBaseOffset    = mesh.vertices.size();
 
-    const auto segsHorz = std::max(3u, desc.mantleSegments.x);
-    const auto segsVert = std::max(1u, desc.mantleSegments.y);
-    const auto segsCov = desc.coverSegments;
+    const auto segsHorz         = std::max(3u, desc.mantleSegments.x);
+    const auto segsVert         = std::max(1u, desc.mantleSegments.y);
+    const auto segsCov          = desc.coverSegments;
 
-    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invHorz          = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert          = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
-    const auto angleSteps = invHorz * pi_2;
+    const auto angleSteps       = invHorz * pi_2;
 
-    const auto halfHeight = desc.height*Gs::Real(0.5);
+    const auto halfHeight       = desc.height*Gs::Real(0.5);
 
     /* Generate mantle vertices */
     Gs::Vector3 coord, normal;
@@ -86,7 +86,7 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
     if (segsCov > 0)
     {
         const auto invCov = Gs::Real(1) / static_cast<Gs::Real>(segsCov);
-        
+
         /* Add centered bottom vertex */
         coverIndexOffset = mesh.AddVertex({ 0, -halfHeight, 0 }, { 0, -1, 0 }, { Gs::Real(0.5), Gs::Real(0.5) });
 
@@ -123,7 +123,7 @@ void GenerateCone(const ConeDescriptor& desc, TriangleMesh& mesh)
     for (std::uint32_t u = 0; u < segsHorz; ++u)
     {
         mesh.AddTriangle(idxOffset + segsVert, idxOffset, idxOffset + 1 + segsVert);
-        
+
         for (std::uint32_t v = 1; v < segsVert; ++v)
         {
             auto i0 = v + segsVert;

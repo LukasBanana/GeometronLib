@@ -29,9 +29,9 @@ namespace Gm
 template <typename P, typename T>
 class BezierCurve
 {
-    
+
     public:
-        
+
         P Evaluate(const T& t) const
         {
             P point;

@@ -95,9 +95,9 @@ void KeyframeSequence::ClearKeys()
 }
 
 void KeyframeSequence::BuildKeys(
-    std::vector<PositionKeyframe> positionKeyframes,
-    std::vector<RotationKeyframe> rotationKeyframes,
-    std::vector<ScaleKeyframe> scaleKeyframes)
+    std::vector<PositionKeyframe>   positionKeyframes,
+    std::vector<RotationKeyframe>   rotationKeyframes,
+    std::vector<ScaleKeyframe>      scaleKeyframes)
 {
     /* Sort keyframes by their frame indices */
     std::sort(positionKeyframes.begin(), positionKeyframes.end(), CompareKeyframeSWO<Gs::Vector3>);
@@ -123,7 +123,8 @@ void KeyframeSequence::BuildKeys(
     }
 }
 
-void KeyframeSequence::Interpolate(Gs::Vector3& position, Gs::Quaternion& rotation, Gs::Vector3& scale, std::size_t from, std::size_t to, Gs::Real interpolator)
+void KeyframeSequence::Interpolate(
+    Gs::Vector3& position, Gs::Quaternion& rotation, Gs::Vector3& scale, std::size_t from, std::size_t to, Gs::Real interpolator)
 {
     if (GetFrameBegin() < GetFrameEnd())
     {

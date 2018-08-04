@@ -20,9 +20,9 @@ namespace Gm
 //! Vectorized 3D floating-point AABB (Axis-Aligned Bounding-Box) array with 4 entries.
 class alignas(alignof(__m128)) VectorizedAABB3f
 {
-    
+
     public:
-        
+
         using ThisType = VectorizedAABB3f;
 
         VectorizedAABB3f(const VectorizedAABB3f&) = default;

@@ -27,7 +27,7 @@ using SkeletonJointPtr = std::unique_ptr<SkeletonJoint>;
 
 class SkeletonJoint
 {
-    
+
     public:
 
         //! Invalid ID for skeleton joints.

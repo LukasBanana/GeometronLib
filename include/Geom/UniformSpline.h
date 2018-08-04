@@ -30,9 +30,9 @@ namespace Gm
 template <typename P, typename T>
 class UniformSpline
 {
-    
+
     public:
-        
+
         GM_ASSERT_FLOAT_TYPE("UniformSpline");
 
         //! Spline dimension (e.g. 2 for a 2D-vector).
@@ -111,7 +111,7 @@ class UniformSpline
 
                 /* Get polynomial index and transform interpolator */
                 t *= static_cast<T>(polynomials_.size());
-                
+
                 auto trimedT = std::floor(t);
                 t -= trimedT;
 
@@ -122,14 +122,14 @@ class UniformSpline
             }
             return P(0);
         }
-        
+
         const std::vector<Polynomial>& GetPolynomials() const
         {
             return polynomials_;
         }
 
     private:
-        
+
         //! Builds the polynomials for the specified dimension.
         void BuildDimension(const std::vector<P>& points, std::size_t dim, const T& expansion)
         {

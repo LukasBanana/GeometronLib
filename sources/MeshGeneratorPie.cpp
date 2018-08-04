@@ -17,23 +17,23 @@ namespace MeshGenerator
 
 void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
 {
-    const auto idxBaseOffset = mesh.vertices.size();
+    const auto idxBaseOffset    = mesh.vertices.size();
 
-    const auto segsHorz = std::max(3u, desc.mantleSegments.x);
-    const auto segsVert = std::max(1u, desc.mantleSegments.y);
-    const auto segsCov = desc.coverSegments;
-    const auto segsCovMantle = std::max(1u, segsCov);
+    const auto segsHorz         = std::max(3u, desc.mantleSegments.x);
+    const auto segsVert         = std::max(1u, desc.mantleSegments.y);
+    const auto segsCov          = desc.coverSegments;
+    const auto segsCovMantle    = std::max(1u, segsCov);
 
-    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
-    const auto invCovMantle = Gs::Real(1) / static_cast<Gs::Real>(segsCovMantle);
+    const auto invHorz          = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert          = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invCovMantle     = Gs::Real(1) / static_cast<Gs::Real>(segsCovMantle);
 
-    const auto pieAngle = Gs::Clamp(desc.angle, Gs::Real(0), pi_2);
-    const auto pieAngleOffset = desc.angleOffset + pieAngle;
+    const auto pieAngle         = Gs::Clamp(desc.angle, Gs::Real(0), pi_2);
+    const auto pieAngleOffset   = desc.angleOffset + pieAngle;
 
-    const auto angleSteps = invHorz * (pi_2 - pieAngle);
+    const auto angleSteps       = invHorz * (pi_2 - pieAngle);
 
-    const auto halfHeight = desc.height*Gs::Real(0.5);
+    const auto halfHeight       = desc.height*Gs::Real(0.5);
 
     /* Generate outer mantle vertices */
     Gs::Vector3 coord, normal;
@@ -146,7 +146,7 @@ void GeneratePie(const PieDescriptor& desc, TriangleMesh& mesh)
                 {
                     auto interp = static_cast<Gs::Real>(v) * invCov;
                     auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
-                
+
                     if (i == 1)
                         texCoordFinal.y = Gs::Real(1) - texCoordFinal.y;
 

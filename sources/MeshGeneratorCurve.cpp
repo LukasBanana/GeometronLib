@@ -20,13 +20,10 @@ namespace MeshGenerator
 
 void GenerateCurve(const CurveDescriptor& desc, TriangleMesh& mesh)
 {
-    const auto idxBaseOffset = mesh.vertices.size();
+    const auto idxBaseOffset    = mesh.vertices.size();
 
-    const auto segsU = std::max(3u, desc.segments.x);
-    const auto segsV = std::max(3u, desc.segments.y);
-
-    //const auto invSegsU = Gs::Real(1) / static_cast<Gs::Real>(segsU);
-    //const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
+    const auto segsU            = std::max(3u, desc.segments.x);
+    const auto segsV            = std::max(3u, desc.segments.y);
 
     /* Sample curve progression function */
     std::vector<Gs::Vector3> curveSamples(segsU, Gs::Vector3());
@@ -85,8 +82,8 @@ void GenerateCurve(const CurveDescriptor& desc, TriangleMesh& mesh)
         for (std::uint32_t v = 0; v < segsV; ++v)
         {
             i0 = u*segsV + v;
-            
-            if (v + 1 < segsV) 
+
+            if (v + 1 < segsV)
                 i1 = u*segsV + v + 1;
             else
                 i1 = u*segsV;

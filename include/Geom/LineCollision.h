@@ -72,21 +72,21 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
     const auto dirA = lineA.Direction();
     const auto dirB = lineB.Direction();
     const auto r    = (lineA.a - lineB.a);
-    
+
     /* Compute squared length of segment A and B */
     const auto a = dirA.LengthSq();
     const auto e = dirB.LengthSq();
     const auto f = Gs::Dot(dirB, r);
-    
+
     /* Check if either or both segments degenerate into points */
     if (a <= Gs::Epsilon<T>() && e <= Gs::Epsilon<T>())
     {
         /* Both segments degenerate into points */
         return Line<Vec> { lineA.a, lineB.a };
     }
-    
+
     T s, t;
-    
+
     if (a <= Gs::Epsilon<T>())
     {
         /* First segment degenerates into a point */
@@ -97,7 +97,7 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
     else
     {
         const auto c = Gs::Dot(dirA, r);
-        
+
         if (e <= Gs::Epsilon<T>())
         {
             /* Second segment degenerates into a point */
@@ -110,7 +110,7 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
             /* The general nondegenerate case starts here */
             const auto b = Gs::Dot(dirA, dirB);
             const auto denom = a*e - b*b;
-            
+
             /* If segments not parallel, compute closest point on L1 to L2, and clamp to segment S1, or pick arbitrary s (here 0) otherwise */
             if (denom != T(0))
             {
@@ -119,10 +119,10 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
             }
             else
                 s = T(0);
-            
+
             /* Compute point on L2 closest to S1(s) */
             t = (b*s + f) / e;
-            
+
             /* If t in [0,1] done. Else clamp t, recompute s for the new value of t and clamp s to [0, 1] */
             if (t < T(0))
             {
@@ -138,7 +138,7 @@ Line<Vec> ClosestSegmentBetweenLines(const Line<Vec>& lineA, const Line<Vec>& li
             }
         }
     }
-    
+
     /* Return final line segment */
     Line<Vec> result { dirA, dirB };
 

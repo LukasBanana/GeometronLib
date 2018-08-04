@@ -17,17 +17,21 @@ namespace MeshGenerator
 
 
 static void BuildFace(
-    TriangleMesh& mesh, const Gs::Quaternion& rotation,
-    Gs::Real sizeHorz, Gs::Real sizeVert, Gs::Real sizeOffsetZ,
-    std::uint32_t segsHorz, std::uint32_t segsVert,
-    bool alternateGrid)
+    TriangleMesh&           mesh,
+    const Gs::Quaternion&   rotation,
+    Gs::Real                sizeHorz,
+    Gs::Real                sizeVert,
+    Gs::Real                sizeOffsetZ,
+    std::uint32_t           segsHorz,
+    std::uint32_t           segsVert,
+    bool                    alternateGrid)
 {
     sizeOffsetZ /= 2;
 
-    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto idxOffset    = mesh.vertices.size();
 
-    auto idxOffset = mesh.vertices.size();
+    const auto invHorz      = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert      = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
     auto AddQuad = [&](std::uint32_t u, std::uint32_t v, VertexIndex i0, VertexIndex i1, VertexIndex i2, VertexIndex i3)
     {

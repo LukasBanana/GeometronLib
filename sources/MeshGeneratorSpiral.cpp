@@ -17,17 +17,17 @@ namespace MeshGenerator
 
 void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
 {
-    const auto idxBaseOffset = mesh.vertices.size();
+    const auto idxBaseOffset    = mesh.vertices.size();
 
-    const auto turns = std::max(Gs::Real(0), desc.turns);
+    const auto turns            = std::max(Gs::Real(0), desc.turns);
 
-    const auto segsU = std::max(3u, desc.mantleSegments.x);
-    const auto segsV = std::max(3u, desc.mantleSegments.y);
+    const auto segsU            = std::max(3u, desc.mantleSegments.x);
+    const auto segsV            = std::max(3u, desc.mantleSegments.y);
 
-    const auto invSegsU = Gs::Real(1) / static_cast<Gs::Real>(segsU);
-    const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
+    const auto invSegsU         = Gs::Real(1) / static_cast<Gs::Real>(segsU);
+    const auto invSegsV         = Gs::Real(1) / static_cast<Gs::Real>(segsV);
 
-    const auto totalSegsU = static_cast<std::uint32_t>(turns * static_cast<Gs::Real>(segsU));
+    const auto totalSegsU       = static_cast<std::uint32_t>(turns * static_cast<Gs::Real>(segsU));
 
     auto GetCoverCoordAndNormal = [&](Gs::Real theta, Gs::Real phi, Gs::Vector3& coord, Gs::Vector3& normal, bool center)
     {
@@ -129,7 +129,7 @@ void GenerateSpiral(const SpiralDescriptor& desc, TriangleMesh& mesh)
             {
                 auto interp = static_cast<Gs::Real>(j) * invCov;
                 auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
-                
+
                 if (i == 1)
                     texCoordFinal.y = Gs::Real(1) - texCoordFinal.y;
 

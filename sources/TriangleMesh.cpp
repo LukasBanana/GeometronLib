@@ -86,7 +86,7 @@ TriangleMesh::Vertex TriangleMesh::Barycentric(TriangleIndex triangleIndex, cons
     const auto& tri = triangles[triangleIndex];
 
     #if 0
-    
+
     const auto& a = vertices[tri.a];
     const auto& b = vertices[tri.b];
     const auto& c = vertices[tri.c];
@@ -104,7 +104,9 @@ TriangleMesh::Vertex TriangleMesh::Barycentric(TriangleIndex triangleIndex, cons
     MeshModifier::InterpolateBarycentric(
         MeshModifier::GetDefaultVertexDesc(),
         &v, vertices.data(),
-        tri.a, tri.b, tri.c,
+        tri.a,
+        tri.b,
+        tri.c,
         barycentricCoords
     );
 

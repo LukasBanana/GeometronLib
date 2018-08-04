@@ -49,7 +49,7 @@ class KeyframeSequence
 {
 
     public:
-        
+
         void ClearKeys();
 
         /**
@@ -57,9 +57,9 @@ class KeyframeSequence
         \param[in] positionKeyframes Specifies the position keyframes.
         */
         void BuildKeys(
-            std::vector<PositionKeyframe> positionKeyframes,
-            std::vector<RotationKeyframe> rotationKeyframes,
-            std::vector<ScaleKeyframe> scaleKeyframes
+            std::vector<PositionKeyframe>   positionKeyframes,
+            std::vector<RotationKeyframe>   rotationKeyframes,
+            std::vector<ScaleKeyframe>      scaleKeyframes
         );
 
         /**
@@ -75,7 +75,14 @@ class KeyframeSequence
         \see GetFrameEnd
         \see BuildKeys
         */
-        void Interpolate(Gs::Vector3& position, Gs::Quaternion& rotation, Gs::Vector3& scale, std::size_t from, std::size_t to, Gs::Real interpolator);
+        void Interpolate(
+            Gs::Vector3&    position,
+            Gs::Quaternion& rotation,
+            Gs::Vector3&    scale,
+            std::size_t     from,
+            std::size_t     to,
+            Gs::Real        interpolator
+        );
 
         /**
         \brief Interpolates the specified keyframes and writes the result into the output matrix.

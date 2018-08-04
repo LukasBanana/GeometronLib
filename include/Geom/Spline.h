@@ -30,9 +30,9 @@ namespace Gm
 template <typename P, typename T>
 class Spline
 {
-    
+
     public:
-        
+
         GM_ASSERT_FLOAT_TYPE("Spline");
 
         struct ControlPoint
@@ -71,7 +71,7 @@ class Spline
 
             return result;
         }
-        
+
         int GetOrder() const
         {
             return order_;
@@ -106,7 +106,7 @@ class Spline
         }
 
     private:
-        
+
         std::size_t Idx(int i) const
         {
             if (i < 0)

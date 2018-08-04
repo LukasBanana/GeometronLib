@@ -29,9 +29,9 @@ namespace Gm
 template <typename T>
 class Transform3T
 {
-    
+
     public:
-        
+
         GM_ASSERT_FLOAT_TYPE("Transform3T");
 
         using MatrixType = Gs::AffineMatrix4T<T>;
@@ -82,7 +82,7 @@ class Transform3T
         {
             return scale_;
         }
-        
+
         const MatrixType& GetMatrix() const
         {
             if (hasChanged_)
@@ -123,7 +123,7 @@ class Transform3T
         }
 
     private:
-        
+
         Gs::Vector3T<T>     position_;
         Gs::QuaternionT<T>  rotation_;
         Gs::Vector3T<T>     scale_;

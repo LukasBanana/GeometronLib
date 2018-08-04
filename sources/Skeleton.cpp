@@ -14,10 +14,6 @@ namespace Gm
 {
 
 
-Skeleton::~Skeleton()
-{
-}
-
 SkeletonJoint& Skeleton::AddRootJoint(SkeletonJointPtr&& joint)
 {
     /* Validate input joint */
@@ -191,8 +187,12 @@ std::size_t Skeleton::NumSubJoints(const SkeletonJoint& joint) const
 }
 
 void Skeleton::FillGlobalTransformBuffer(
-    const SkeletonJoint& joint, Gs::Matrix4f parentMatrix, Gs::Matrix4f*& buffer,
-    std::size_t& writtenMatrices, std::size_t maxNumMatrices, bool relativeTransform) const
+    const SkeletonJoint&    joint,
+    Gs::Matrix4f            parentMatrix,
+    Gs::Matrix4f*&          buffer,
+    std::size_t&            writtenMatrices,
+    std::size_t             maxNumMatrices,
+    bool                    relativeTransform) const
 {
     /* Apply joint transformation to parent matrix */
     parentMatrix *= joint.transform.ToMatrix4().Cast<float>();

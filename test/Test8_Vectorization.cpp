@@ -66,7 +66,7 @@ public:
     }
 
 private:
-        
+
     LARGE_INTEGER   clockFrequency_;
     LARGE_INTEGER   t0_;
     LARGE_INTEGER   t1_;

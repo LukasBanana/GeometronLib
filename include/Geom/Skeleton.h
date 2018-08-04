@@ -26,7 +26,7 @@ using MakeSkeletonJointFunction = std::function<SkeletonJointPtr()>;
 //! Data model class for skeletal animations.
 class Skeleton
 {
-    
+
     public:
 
         Skeleton() = default;
@@ -34,7 +34,7 @@ class Skeleton
         Skeleton(const Skeleton&) = delete;
         Skeleton& operator = (const Skeleton&) = delete;
 
-        virtual ~Skeleton();
+        virtual ~Skeleton() = default;
 
         /**
         \brief Adds the specified skeleton joint and takes the ownership.
@@ -124,19 +124,19 @@ class Skeleton
         std::size_t NumSubJoints(const SkeletonJoint& joint) const;
 
         void FillGlobalTransformBuffer(
-            const SkeletonJoint& joint,
-            Gs::Matrix4f parentMatrix,
-            Gs::Matrix4f*& buffer,
-            std::size_t& writtenMatrices,
-            std::size_t maxNumMatrices,
-            bool relativeTransform
+            const SkeletonJoint&    joint,
+            Gs::Matrix4f            parentMatrix,
+            Gs::Matrix4f*&          buffer,
+            std::size_t&            writtenMatrices,
+            std::size_t             maxNumMatrices,
+            bool                    relativeTransform
         ) const;
 
         void FillLocalTransformBuffer(
-            const SkeletonJoint& joint,
-            Gs::Matrix4f*& buffer,
-            std::size_t& writtenMatrices,
-            std::size_t maxNumMatrices
+            const SkeletonJoint&    joint,
+            Gs::Matrix4f*&          buffer,
+            std::size_t&            writtenMatrices,
+            std::size_t             maxNumMatrices
         ) const;
 
         void ListJoints(const SkeletonJointPtr& joint, std::vector<SkeletonJoint*>& jointList) const;

@@ -26,9 +26,9 @@ namespace Gm
 template <template <typename> class Vec, typename T>
 class AABB
 {
-    
+
     public:
-        
+
         using ThisType = AABB<Vec, T>;
 
         AABB(const AABB<Vec, T>&) = default;

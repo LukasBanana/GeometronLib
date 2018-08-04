@@ -31,8 +31,8 @@ namespace Gm
 //  |              ^
 //  |              |
 //  |   plane ---------------
-//  |               
-//  |               
+//  |
+//  |
 //--0--------------------------------->X
 //  |
 \endcode
@@ -96,9 +96,9 @@ where (a, b, c) is a point on the plane, (x, y, z) is the normal vector and d is
 template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
 class PlaneT
 {
-    
+
     public:
-        
+
         GM_ASSERT_FLOAT_TYPE("PlaneT");
 
         PlaneT() :

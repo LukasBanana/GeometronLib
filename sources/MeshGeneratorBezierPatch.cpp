@@ -17,13 +17,13 @@ namespace MeshGenerator
 
 void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh)
 {
-    auto idxOffset = mesh.vertices.size();
+    const auto idxOffset    = mesh.vertices.size();
 
-    const auto segsHorz = std::max(1u, desc.segments.x);
-    const auto segsVert = std::max(1u, desc.segments.y);
+    const auto segsHorz     = std::max(1u, desc.segments.x);
+    const auto segsVert     = std::max(1u, desc.segments.y);
 
-    const auto invHorz  = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert  = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invHorz      = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert      = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
     auto AddQuad = [&](std::uint32_t u, std::uint32_t v, VertexIndex i0, VertexIndex i1, VertexIndex i2, VertexIndex i3)
     {
@@ -48,7 +48,7 @@ void GenerateBezierPatch(const BezierPatchDescriptor& desc, TriangleMesh& mesh)
             texCoord.y = static_cast<Gs::Real>(i) * invVert;
 
             coord = desc.bezierPatch(texCoord.x, texCoord.y);
-            
+
             /* Sample bezier patch to approximate normal */
             auto uOffset = (desc.bezierPatch(texCoord.x + delta, texCoord.y) - coord);
             auto vOffset = (desc.bezierPatch(texCoord.x, texCoord.y + delta) - coord);

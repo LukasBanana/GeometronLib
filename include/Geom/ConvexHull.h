@@ -27,9 +27,9 @@ so that all plane normals point out of the hull.
 template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
 class ConvexHullT
 {
-    
+
     public:
-        
+
         ConvexHullT() = default;
 
         ConvexHullT(std::size_t planeCount) :

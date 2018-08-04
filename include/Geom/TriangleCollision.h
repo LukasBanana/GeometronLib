@@ -126,20 +126,20 @@ Line3T<T> ClosestSegmentToTriangle(const Triangle3T<T>& triangle, const PlaneT<T
     auto distToAB = segmentToAB.LengthSq();
     auto distToBC = segmentToBC.LengthSq();
     auto distToCA = segmentToCA.LengthSq();
-    
+
     /* Get closest points between line start/end and triangle's plane */
     auto planePointA = ClosestPointOnPlane(trianglePlane, line.a);
     auto planePointB = ClosestPointOnPlane(trianglePlane, line.b);
-    
+
     auto planeDistA = Gs::DistanceSq(planePointA, line.a);
     auto planeDistB = Gs::DistanceSq(planePointB, line.b);
-    
+
     /* Determine which point is closest to line */
     auto dist = std::numeric_limits<T>::max();
 
     const Gs::Vector3T<T>* closestA = nullptr;
     const Gs::Vector3T<T>* closestB = nullptr;
-    
+
     if (IsInsideTriangle(triangle, planePointA))
     {
         closestA = &planePointA;
@@ -152,7 +152,7 @@ Line3T<T> ClosestSegmentToTriangle(const Triangle3T<T>& triangle, const PlaneT<T
         closestB = &line.b;
         dist = planeDistB;
     }
-    
+
     if (distToAB < dist)
     {
         closestA = &segmentToAB.a;
@@ -170,10 +170,10 @@ Line3T<T> ClosestSegmentToTriangle(const Triangle3T<T>& triangle, const PlaneT<T
         closestA = &segmentToCA.a;
         closestB = &segmentToCA.b;
     }
-    
+
     if (!closestA || !closestB)
         return {};
-    
+
     return { *closestA, *closestB };
 }
 

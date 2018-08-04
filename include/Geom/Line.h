@@ -22,9 +22,9 @@ namespace Gm
 template <typename T>
 class Line
 {
-    
+
     public:
-        
+
         Line() :
             a { T(0) },
             b { T(0) }
@@ -52,9 +52,9 @@ class Line
 template <typename T>
 class Line< Gs::Vector2T<T> >
 {
-    
+
     public:
-        
+
         Line() = default;
         Line(const Line< Gs::Vector2T<T> >&) = default;
 
@@ -109,9 +109,9 @@ class Line< Gs::Vector2T<T> >
 template <typename T>
 class Line< Gs::Vector3T<T> >
 {
-    
+
     public:
-        
+
         Line() = default;
         Line(const Line< Gs::Vector3T<T> >&) = default;
 

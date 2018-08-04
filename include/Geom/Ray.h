@@ -22,9 +22,9 @@ namespace Gm
 template <typename T>
 class Ray
 {
-    
+
     public:
-        
+
         Ray() = default;
 
         Ray(const T& origin, const T& direction) :
@@ -65,9 +65,9 @@ class Ray
 template <typename T>
 class Ray< Gs::Vector2T<T> >
 {
-    
+
     public:
-        
+
         Ray() = default;
 
         Ray(const Gs::Vector2T<T>& origin, const Gs::Vector2T<T>& direction) :

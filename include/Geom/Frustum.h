@@ -36,9 +36,9 @@ enum class FrustumPlane
 template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
 class FrustumT : private ConvexHullT<T, PlaneEq>
 {
-    
+
     public:
-        
+
         FrustumT() :
             ConvexHullT<T, PlaneEq> { 6 }
         {

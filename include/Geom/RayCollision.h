@@ -30,11 +30,11 @@ Line<Vec> ClosestSegmentBetweenRays(const Ray<Vec>& rayA, const Ray<Vec>& rayB)
     using T = typename Gs::ScalarType<Vec>::Type;
 
     const auto r = (rayA.origin - rayB.origin);
-    
+
     /* Compute components for linear equations */
     const auto c = Gs::Dot(rayA.direction, r);
     const auto f = Gs::Dot(rayB.direction, r);
-    
+
     /* The general non-degenerate case starts here */
     const auto b = Gs::Dot(rayA.direction, rayB.direction);
     const auto denom = T(1) - b*b;

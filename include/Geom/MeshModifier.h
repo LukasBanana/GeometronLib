@@ -81,12 +81,12 @@ const VertexDescriptor& GetDefaultVertexDesc();
 */
 void InterpolateBarycentric(
     const VertexDescriptor& vertexDesc,
-    void* outputVertexBuffer,
-    const void* inputVertexBuffer,
-    std::size_t v0,
-    std::size_t v1,
-    std::size_t v2,
-    const Gs::Vector3& barycentricCoords
+    void*                   outputVertexBuffer,
+    const void*             inputVertexBuffer,
+    std::size_t             v0,
+    std::size_t             v1,
+    std::size_t             v2,
+    const Gs::Vector3&      barycentricCoords
 );
 
 /**

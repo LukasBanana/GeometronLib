@@ -28,9 +28,9 @@ namespace Gm
 template <typename P, typename T>
 class BezierPatch
 {
-    
+
     public:
-        
+
         BezierPatch()
         {
             SetOrder(0);
@@ -49,7 +49,7 @@ class BezierPatch
         P Evaluate(const T& u, const T& v) const
         {
             P result;
-            
+
             for (std::uint32_t i = 0; i <= order_; ++i)
             {
                 for (std::uint32_t j = 0; j <= order_; ++j)
@@ -109,7 +109,7 @@ class BezierPatch
         }
 
     private:
-        
+
         //! Returns the control point index for the specified two indices.
         std::uint32_t GetIndex(std::uint32_t u, std::uint32_t v) const
         {

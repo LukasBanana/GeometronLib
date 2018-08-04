@@ -18,7 +18,7 @@ namespace MeshGenerator
 void GenerateTorusKnot(const TorusKnotDescriptor& desc, TriangleMesh& mesh)
 {
     CurveDescriptor curveDesc;
-    
+
     const auto loops = static_cast<Gs::Real>(desc.loops);
     const auto turns = static_cast<Gs::Real>(desc.turns);
 
@@ -26,7 +26,7 @@ void GenerateTorusKnot(const TorusKnotDescriptor& desc, TriangleMesh& mesh)
     curveDesc.curveFunction = [&](Gs::Real t)
     {
         t *= pi_2;
-        
+
         auto p = loops;
         auto q = turns;
         auto r = std::cos(q*t) + desc.innerRadius;

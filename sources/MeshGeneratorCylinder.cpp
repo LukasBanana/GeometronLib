@@ -17,17 +17,17 @@ namespace MeshGenerator
 
 void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
 {
-    const auto idxBaseOffset = mesh.vertices.size();
+    const auto idxBaseOffset    = mesh.vertices.size();
 
-    const auto segsHorz = std::max(3u, desc.mantleSegments.x);
-    const auto segsVert = std::max(1u, desc.mantleSegments.y);
+    const auto segsHorz         = std::max(3u, desc.mantleSegments.x);
+    const auto segsVert         = std::max(1u, desc.mantleSegments.y);
 
-    const auto invHorz = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invHorz          = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert          = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
 
-    const auto angleSteps = invHorz * pi_2;
+    const auto angleSteps       = invHorz * pi_2;
 
-    const auto halfHeight = desc.height*Gs::Real(0.5);
+    const auto halfHeight       = desc.height*Gs::Real(0.5);
 
     /* Generate mantle vertices */
     Gs::Vector3 coord, normal;
@@ -101,7 +101,7 @@ void GenerateCylinder(const CylinderDescriptor& desc, TriangleMesh& mesh)
             {
                 auto interp = static_cast<Gs::Real>(v) * invCov;
                 auto texCoordFinal = Gs::Vector2(Gs::Real(0.5)) + texCoord * Gs::Real(0.5) * interp;
-                
+
                 if (i == 1)
                     texCoordFinal.y = Gs::Real(1) - texCoordFinal.y;
 

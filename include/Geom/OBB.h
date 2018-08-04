@@ -20,9 +20,9 @@ namespace Gm
 template <template <typename> class Vec, typename T>
 class OBB
 {
-    
+
     public:
-        
+
         OBB() = default;
 
         OBB(Gs::UninitializeTag) :

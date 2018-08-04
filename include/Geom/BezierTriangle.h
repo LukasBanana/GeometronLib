@@ -27,9 +27,9 @@ namespace Gm
 template <typename P, typename T>
 class BezierTriangle
 {
-    
+
     public:
-        
+
         BezierTriangle()
         {
             SetOrder(0);
@@ -43,7 +43,7 @@ class BezierTriangle
         P Evaluate(const T& s, const T& t, const T& u) const
         {
             P result;
-            
+
             //todo...
 
             return result;
@@ -96,7 +96,7 @@ class BezierTriangle
         }
 
     private:
-        
+
         /**
         \brief Returns the control point index for the specified two indices.
         \remarks The values must always satisfy the equation: 0 <= i + j <= order;

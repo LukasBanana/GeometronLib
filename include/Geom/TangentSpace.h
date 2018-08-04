@@ -25,17 +25,20 @@ namespace Gm
 \param[out] bitangent Specifies the output bitangent vector (also called "binormal"). This is the second column of the 3x3 tangent-space matrix.
 \param[out] normal Specifies the output normal vector. This is the third column of the 3x3 tangent-space matrix.
 \remarks The tangent space can be constructed as 3x3 matrix:
-\code
-// t = tangent, b = bitangent, n = normal
-//       / t b n \
-//  M := | t b n |
-//       \ t b n /
+\code{.txt}
+t = tangent, b = bitangent, n = normal
+     / t b n \
+M := | t b n |
+     \ t b n /
 \endcode
 */
 template <typename T>
 void ComputeTangentSpace(
-    const Triangle3T<T>& triangleCoords, const Triangle2T<T>& triangleTexCoords,
-    Gs::Vector3T<T>& tangent, Gs::Vector3T<T>& bitangent, Gs::Vector3T<T>& normal)
+    const Triangle3T<T>&    triangleCoords,
+    const Triangle2T<T>&    triangleTexCoords,
+    Gs::Vector3T<T>&        tangent,
+    Gs::Vector3T<T>&        bitangent,
+    Gs::Vector3T<T>&        normal)
 {
     /* Get triangle vectors */
     auto v1 = triangleCoords.b - triangleCoords.a;

@@ -18,19 +18,19 @@ namespace MeshGenerator
 
 void GenerateCapsule(const CapsuleDescriptor& desc, TriangleMesh& mesh)
 {
-    const auto idxBaseOffset = mesh.vertices.size();
+    const auto idxBaseOffset    = mesh.vertices.size();
 
-    const auto segsHorz = std::max(3u, desc.mantleSegments.x);
-    const auto segsVert = std::max(1u, desc.mantleSegments.y);
-    const auto segsV    = std::max(2u, desc.ellipsoidSegments);
+    const auto segsHorz         = std::max(3u, desc.mantleSegments.x);
+    const auto segsVert         = std::max(1u, desc.mantleSegments.y);
+    const auto segsV            = std::max(2u, desc.ellipsoidSegments);
 
-    const auto invHorz  = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
-    const auto invVert  = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
-    const auto invSegsV = Gs::Real(1) / static_cast<Gs::Real>(segsV);
+    const auto invHorz          = Gs::Real(1) / static_cast<Gs::Real>(segsHorz);
+    const auto invVert          = Gs::Real(1) / static_cast<Gs::Real>(segsVert);
+    const auto invSegsV         = Gs::Real(1) / static_cast<Gs::Real>(segsV);
 
-    const auto angleSteps = invHorz * pi_2;
+    const auto angleSteps       = invHorz * pi_2;
 
-    const auto halfHeight = desc.height*Gs::Real(0.5);
+    const auto halfHeight       = desc.height*Gs::Real(0.5);
 
     /* Generate mantle vertices */
     Gs::Spherical point(1, 0, 0);

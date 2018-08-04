@@ -26,9 +26,9 @@ namespace Gm
 template <typename T>
 class ProjectionT
 {
-    
+
     public:
-        
+
         GM_ASSERT_FLOAT_TYPE("ProjectionT");
 
         using MatrixType = Gs::ProjectionMatrix4T<T>;
@@ -45,7 +45,7 @@ class ProjectionT
         {
             return near_;
         }
-        
+
         //! Sets the far clipping plane.
         void SetFar(const T& far)
         {
@@ -58,7 +58,7 @@ class ProjectionT
         {
             return far_;
         }
-        
+
         //! Sets the field-of-view (FOV) in radians. By default (74*pi/180).
         void SetFOV(const T& fov)
         {
@@ -71,7 +71,7 @@ class ProjectionT
         {
             return fov_;
         }
-        
+
         //! Sets the aspect ratio.
         void SetAspect(const T& aspect)
         {
@@ -139,7 +139,7 @@ class ProjectionT
         {
             return flags_;
         }
-        
+
         //! Returns the projection matrix.
         const MatrixType& GetMatrix() const
         {
@@ -164,7 +164,7 @@ class ProjectionT
         }
 
     private:
-        
+
         T                   near_       = T(1);             //!< Default near clipping plane: 1.
         T                   far_        = T(1000);          //!< Default far clipping plane: 1000.
         T                   fov_        = Gs::pi*T(0.25);   //!< Default field of view: 45 degrees (or 'pi*45/180' radians).

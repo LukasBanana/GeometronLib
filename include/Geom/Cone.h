@@ -21,9 +21,9 @@ namespace Gm
 template <typename T>
 class ConeT
 {
-    
+
     public:
-        
+
         ConeT() :
             height { T(0) },
             radius { T(0) }

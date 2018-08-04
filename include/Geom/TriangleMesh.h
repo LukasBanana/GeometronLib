@@ -34,7 +34,7 @@ However, it is only meant to be used to operate with this library, but not to us
 */
 class TriangleMesh
 {
-    
+
     public:
 
         //! Base vertex structure. Contains the members: position, normal, and texCoord.
@@ -101,9 +101,9 @@ class TriangleMesh
         */
         std::set<TriangleIndex> TriangleNeighbors(
             std::set<TriangleIndex> triangleIndices,
-            std::size_t searchDepth = 1,
-            bool edgeBondOnly = false,
-            bool searchViaPosition = false
+            std::size_t             searchDepth = 1,
+            bool                    edgeBondOnly = false,
+            bool                    searchViaPosition = false
         ) const;
 
         //! Computes the list of all triangles that are connected to the specified vertex.
