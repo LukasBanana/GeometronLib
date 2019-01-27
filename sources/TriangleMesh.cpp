@@ -387,7 +387,12 @@ AABB3 TriangleMesh::BoundingBoxMultiThreaded(std::size_t threadCount) const
     for (std::size_t i = 0; i < threadCount; ++i)
     {
         threads[i] = std::unique_ptr<std::thread>(
-            new std::thread(BoundingBoxThreadProc, subBoxes[i], &(vertices[verticesPerThread*i]), verticesPerThread)
+            new std::thread(
+                BoundingBoxThreadProc,
+                std::ref(subBoxes[i]),
+                &(vertices[verticesPerThread*i]),
+                verticesPerThread
+            )
         );
     }
 
