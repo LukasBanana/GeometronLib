@@ -57,8 +57,8 @@ bool IntersectionWithAABBInterp(const Box& box, const Ray<Vec>& ray, typename Gs
                 std::swap(t1, t2);
 
             /* Compute the intersection of slab intersection intervals */
-            tmin = std::max(tmin, t1);
-            tmax = std::min(tmax, t2);
+            tmin = (std::max)(tmin, t1);
+            tmax = (std::min)(tmax, t2);
 
             /* Exit with no collision as soon as slab intersection becomes empty */
             if (tmin > tmax)
