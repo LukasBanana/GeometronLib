@@ -56,7 +56,7 @@ int main()
         // Alternate the triangle grid (looks more uniform)
         cuboidDesc.alternateGrid    = true;
     }
-    auto cuboidMesh = Gm::MeshGenerator::GenerateCuboid(desc);
+    auto cuboidMesh = Gm::MeshGenerator::GenerateCuboid(cuboidDesc);
 
     /* ... */
 }
