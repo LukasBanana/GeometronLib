@@ -170,7 +170,7 @@ void updateProjection()
     );
 
     #else
-    
+
     projection = Gs::ProjectionMatrix4::Perspective(
         static_cast<Gs::Real>(resolution.x) / resolution.y,
         0.1f,
@@ -213,7 +213,7 @@ void initGL()
 
     // setup lighting
     GLfloat lightPos[]  = { 0.0f, 0.0f, -1.0f, 0.0f };
-    
+
     glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
     // initialize projection

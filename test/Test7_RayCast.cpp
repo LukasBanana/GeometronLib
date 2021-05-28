@@ -16,6 +16,9 @@
 // number of threads for ray casting (no threading if <= 1)
 #define NUM_THREADS ( 8 )
 
+// enables occlusion rays for each light source
+#define ENABLE_SHADOWS
+
 //#define ENABLE_PRECOMPUTED_TRIANGLES
 
 using namespace Gs;
@@ -69,10 +72,14 @@ struct Intersection
 
 struct Geometry
 {
-    virtual ~Geometry()
-    {
-    }
+    virtual ~Geometry() = default;
+
+    // Compute intersection between ray and this geometry.
     virtual bool RayCast(const Ray3& ray, Intersection& intersect) const = 0;
+
+    // Query occlusion against ray and this geometry.
+    virtual bool RayOccluded(const Ray3& ray) const = 0;
+
     Material material;
 };
 
@@ -88,6 +95,12 @@ struct PlaneGeometry : public Geometry
         }
         return false;
     }
+
+    bool RayOccluded(const Ray3& ray) const override
+    {
+        return (IntersectionWithPlaneInterp(plane, ray.origin, ray.direction) >= 0);
+    }
+
     Plane plane;
 };
 
@@ -112,6 +125,12 @@ struct AABBGeometry : public Geometry
         }
         return false;
     }
+
+    bool RayOccluded(const Ray3& ray) const override
+    {
+        return IntersectionWithAABB(aabb, ray);
+    }
+
     AABB3 aabb;
 };
 
@@ -128,6 +147,13 @@ struct SphereGeometry : public Geometry
         }
         return false;
     }
+
+    bool RayOccluded(const Ray3& ray) const override
+    {
+        Real t;
+        return IntersectionWithSphereInterp(sphere, ray.origin, ray.direction, t);
+    }
+
     Sphere sphere;
 };
 
@@ -175,21 +201,50 @@ struct TriangleGeometry : public Geometry
 
         #endif
     }
+
+    bool RayOccluded(const Ray3& ray) const override
+    {
+        #ifdef ENABLE_PRECOMPUTED_TRIANGLES
+
+        PrecomputedIntersectionRay<Real> precomputedRay;
+        precomputedRay.ray = ray;
+        precomputedRay.Update();
+
+        Vector3 barycentric;
+        return IntersectionWithPrecomputedTriangleBarycentric(precomputed, precomputedRay, barycentric);
+
+        #else
+
+        Real t;
+        if (IntersectionWithTriangleInterp(precomputed.triangle, Plane{ precomputed.triangle }, ray.origin, ray.direction, t))
+            return (t > 0);
+
+        #endif
+
+        return false;
+    }
+
     PrecomputedIntersectionTriangle<Real> precomputed;
 };
 
 struct Light
 {
-    virtual ~Light()
-    {
-    }
+    virtual ~Light() = default;
+
+    // Compute the shading for the specified intersection point.
     virtual Vector3 Shade(const Ray3& viewRay, const Intersection& intersect, int recursionDepth) const = 0;
+
+    // Return a ray for occlusion queries.
+    virtual Ray3 OcclusionRay(const Vector3& point) const = 0;
+
     Vector3 color;
 };
 
 struct PointLight : public Light
 {
     Vector3 Shade(const Ray3& viewRay, const Intersection& intersect, int recursionDepth) const override;
+    Ray3 OcclusionRay(const Vector3& point) const override;
+
     Vector3 position;
 };
 
@@ -308,6 +363,16 @@ bool rayCastIntoScene(const Ray3& ray, Intersection& intersect)
     return result;
 }
 
+bool rayOccludedByScene(const Ray3& ray)
+{
+    for (const auto& geom : geometries)
+    {
+        if (geom->RayOccluded(ray))
+            return true;
+    }
+    return false;
+}
+
 static const int maxRecursionDepth = 4;
 
 Vector3 shadeIntersection(const Ray3& viewRay, const Intersection& intersect, int recursionDepth)
@@ -315,7 +380,14 @@ Vector3 shadeIntersection(const Ray3& viewRay, const Intersection& intersect, in
     Vector3 color;
 
     for (const auto& light : lights)
-        color += light->Shade(viewRay, intersect, recursionDepth);
+    {
+        #ifdef ENABLE_SHADOWS
+        if (!rayOccludedByScene(light->OcclusionRay(intersect.point + intersect.normal * Real(0.01))))
+        #endif
+        {
+            color += light->Shade(viewRay, intersect, recursionDepth);
+        }
+    }
 
     return color;
 }
@@ -370,6 +442,11 @@ Vector3 PointLight::Shade(const Ray3& viewRay, const Intersection& intersect, in
     }
 
     return lighting;
+}
+
+Ray3 PointLight::OcclusionRay(const Vector3& point) const
+{
+    return Ray3{ point, (position - point).Normalized() };
 }
 
 void rayCastWorker(std::size_t begin, std::size_t end)
@@ -473,7 +550,7 @@ void displayCallback()
 
     // draw frame
     drawScene();
-    
+
     glutSwapBuffers();
 }
 

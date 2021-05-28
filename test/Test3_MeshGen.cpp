@@ -263,7 +263,7 @@ void initGL()
 
     // setup lighting
     GLfloat lightPos[]  = { 0.0f, 0.0f, -1.0f, 0.0f };
-    
+
     glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
     // initialize projection
@@ -277,13 +277,13 @@ void showModel(size_t index)
         static const std::size_t maxLen = 50;
 
         selectedModel = &(models[index]);
-        
+
         std::stringstream sstr;
         sstr << "\rModel: " << selectedModel->name << ", Vertices: " << selectedModel->mesh.vertices.size() << ", Triangles: " << selectedModel->mesh.triangles.size();
 
         auto s = sstr.str();
         std::cout << s;
-        
+
         if (s.size() < maxLen)
             std::cout << std::string(maxLen - s.size(), ' ');
 
@@ -636,7 +636,7 @@ void addModelTeapot()
         // handle
         {  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56 },
         {  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  28,  65,  66,  67 },
-        
+
         // spout
         {  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83 },
         {  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95 },
@@ -659,7 +659,7 @@ void addModelTeapot()
             for (int j = 0; j < 16; ++j)
             {
                 auto point = verts[patches[i][j]].Cast<Gs::Real>();
-                
+
                 std::swap(point.y, point.z);
                 if (r % 2 == 1)
                     point.z = -point.z;
@@ -705,11 +705,11 @@ void initScene()
     addModelPipe();
     addModelCapsule();
     addModelTorus();
-    addModelSpiral();
+    //addModelSpiral();
     //addModelTorusKnot();
     //addModelCurve();
     //addModelBezierPatch();
-    //addModelTeapot();
+    addModelTeapot();
     //...
 
     for (auto it = models.begin(); it != models.end();)
@@ -943,9 +943,9 @@ void displayCallback()
 
     // draw frame
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     drawScene();
-    
+
     glutSwapBuffers();
 }
 
@@ -971,7 +971,6 @@ void quitApp()
     texture.reset();
     glutDestroyWindow(winID);
     std::cout << std::endl;
-    exit(0);
 }
 
 void keyboardCallback(unsigned char key, int x, int y)
