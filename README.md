@@ -32,6 +32,14 @@ There is a generic mesh generator for the following 3D models:
 ![Spiral](docu/images/mesh/spiral.png)
 
 
+Ray/Geometry Intersection
+-------------------------
+
+The interesction functions can be used to select objects in an editor or even basic software ray tracing:
+
+<p align="center"><img src="docu/images/raytracing.png"/></p>
+
+
 Example
 -------
 
