@@ -46,7 +46,7 @@ T BernsteinPolynomial(const T& t, std::uint32_t i, std::uint32_t n)
     if (i <= n && n > 0)
     {
         auto coeff = static_cast<T>(Details::BinomialCoefficient(i, n));
-        return coeff * std::pow(t, static_cast<int>(i)) * std::pow(T(1) - t, static_cast<int>(n - i));
+        return coeff * static_cast<T>(std::pow(t, static_cast<int>(i))) * static_cast<T>(std::pow(T(1) - t, static_cast<int>(n - i)));
     }
     return T(0);
 }

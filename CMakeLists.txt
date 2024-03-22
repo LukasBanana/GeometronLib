@@ -1,7 +1,7 @@
 
 # === CMake lists for the GeometronLib - (26/07/2015) ===
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5)
 project(GeometronLib)
 
 
@@ -18,7 +18,7 @@ set(PROJECT_TEST_DIR "${PROJECT_SOURCE_DIR}/test")
 
 macro(ADD_TEST_PROJECT TEST_NAME TEST_FILES)
 	add_executable(${TEST_NAME} ${TEST_FILES})
-	target_link_libraries(${TEST_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} geomlib)
+	target_link_libraries(${TEST_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} geomlib)
 	set_target_properties(${TEST_NAME} PROPERTIES LINKER_LANGUAGE CXX DEBUG_POSTFIX "D")
 	target_compile_features(${TEST_NAME} PRIVATE cxx_range_for)
 endmacro()
