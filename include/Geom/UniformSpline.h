@@ -9,7 +9,7 @@
 #define GM_UNIFORM_SPLINE_H
 
 
-#include "Macros.h"
+#include <Geom/Macros.h>
 
 #include <Gauss/Real.h>
 #include <Gauss/Vector2.h>

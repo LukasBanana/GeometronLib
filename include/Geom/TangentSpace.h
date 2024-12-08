@@ -9,7 +9,8 @@
 #define GM_TANGENT_SPACE_H
 
 
-#include "Triangle.h"
+#include <Geom/Triangle.h>
+
 #include <Gauss/Matrix.h>
 
 

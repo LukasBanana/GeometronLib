@@ -9,8 +9,9 @@
 #define GM_SPHERE_COLLISION_H
 
 
-#include "Sphere.h"
-#include "Ray.h"
+#include <Geom/Sphere.h>
+#include <Geom/Ray.h>
+
 #include <Gauss/Algebra.h>
 #include <Gauss/Epsilon.h>
 

@@ -9,7 +9,7 @@
 #define GM_PROJECTION_H
 
 
-#include "Macros.h"
+#include <Geom/Macros.h>
 
 #include <Gauss/ProjectionMatrix4.h>
 #include <Gauss/Vector2.h>

@@ -9,7 +9,8 @@
 #define GM_RAY_COLLISION_H
 
 
-#include "Ray.h"
+#include <Geom/Ray.h>
+
 #include <Gauss/ScalarType.h>
 
 

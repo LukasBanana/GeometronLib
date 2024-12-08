@@ -15,7 +15,7 @@
 #include <limits>
 #include <vector>
 
-#include "Line.h"
+#include <Geom/Line.h>
 
 
 namespace Gm

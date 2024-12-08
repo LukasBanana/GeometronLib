@@ -9,8 +9,9 @@
 #define GM_MESH_MODIFIER_H
 
 
-#include "TriangleMesh.h"
-#include "Plane.h"
+#include <Geom/TriangleMesh.h>
+#include <Geom/Plane.h>
+
 #include <cstdint>
 
 

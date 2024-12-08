@@ -9,42 +9,42 @@
 #define GM_GEOM_H
 
 
-#include "AABB.h"
-#include "ConvexHull.h"
-#include "Frustum.h"
-#include "Line.h"
-#include "OBB.h"
-#include "Plane.h"
-#include "Ray.h"
-#include "Sphere.h"
-#include "Cone.h"
-#include "Spline.h"
-#include "UniformSpline.h"
-#include "Triangle.h"
-#include "TangentSpace.h"
+#include <Geom/AABB.h>
+#include <Geom/ConvexHull.h>
+#include <Geom/Frustum.h>
+#include <Geom/Line.h>
+#include <Geom/OBB.h>
+#include <Geom/Plane.h>
+#include <Geom/Ray.h>
+#include <Geom/Sphere.h>
+#include <Geom/Cone.h>
+#include <Geom/Spline.h>
+#include <Geom/UniformSpline.h>
+#include <Geom/Triangle.h>
+#include <Geom/TangentSpace.h>
 
-#include "TriangleMesh.h"
-#include "MeshGenerator.h"
-#include "MeshModifier.h"
+#include <Geom/TriangleMesh.h>
+#include <Geom/MeshGenerator.h>
+#include <Geom/MeshModifier.h>
 
-#include "Transform2.h"
-#include "Transform3.h"
-#include "Projection.h"
+#include <Geom/Transform2.h>
+#include <Geom/Transform3.h>
+#include <Geom/Projection.h>
 
-#include "PlaneCollision.h"
-#include "TriangleCollision.h"
-#include "LineCollision.h"
-#include "RayCollision.h"
-#include "AABBCollision.h"
-#include "ConeCollision.h"
-#include "SphereCollision.h"
+#include <Geom/PlaneCollision.h>
+#include <Geom/TriangleCollision.h>
+#include <Geom/LineCollision.h>
+#include <Geom/RayCollision.h>
+#include <Geom/AABBCollision.h>
+#include <Geom/ConeCollision.h>
+#include <Geom/SphereCollision.h>
 
-#include "BezierCurve.h"
-#include "BezierTriangle.h"
-#include "BezierPatch.h"
+#include <Geom/BezierCurve.h>
+#include <Geom/BezierTriangle.h>
+#include <Geom/BezierPatch.h>
 
-#include "Playback.h"
-#include "Skeleton.h"
+#include <Geom/Playback.h>
+#include <Geom/Skeleton.h>
 
 
 /**

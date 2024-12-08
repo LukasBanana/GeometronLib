@@ -9,7 +9,7 @@
 #define GM_TRANSFORM2_H
 
 
-#include "Macros.h"
+#include <Geom/Macros.h>
 
 #include <Gauss/Vector2.h>
 #include <Gauss/AffineMatrix3.h>

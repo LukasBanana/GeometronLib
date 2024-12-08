@@ -9,8 +9,8 @@
 #define GM_MESH_GENERATOR_H
 
 
-#include "TriangleMesh.h"
-#include "BezierPatch.h"
+#include <Geom/TriangleMesh.h>
+#include <Geom/BezierPatch.h>
 
 #include <functional>
 #include <cstdint>

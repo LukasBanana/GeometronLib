@@ -9,12 +9,12 @@
 #define GM_PLANE_COLLISION_H
 
 
-#include "Plane.h"
-#include "AABB.h"
-#include "OBB.h"
-#include "Line.h"
-#include "Ray.h"
-#include "Cone.h"
+#include <Geom/Plane.h>
+#include <Geom/AABB.h>
+#include <Geom/OBB.h>
+#include <Geom/Line.h>
+#include <Geom/Ray.h>
+#include <Geom/Cone.h>
 
 #include <Gauss/Epsilon.h>
 

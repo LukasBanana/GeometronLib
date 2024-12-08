@@ -9,9 +9,9 @@
 #define GM_FRUSTUM_H
 
 
-#include "ConvexHull.h"
-#include "AABB.h"
-#include "PlaneCollision.h"
+#include <Geom/ConvexHull.h>
+#include <Geom/AABB.h>
+#include <Geom/PlaneCollision.h>
 
 #include <Gauss/Matrix.h>
 #include <array>

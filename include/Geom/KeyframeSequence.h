@@ -9,7 +9,8 @@
 #define GM_KEYFRAME_SEQUENCE_H
 
 
-#include "Playback.h"
+#include <Geom/Playback.h>
+
 #include <Gauss/Real.h>
 #include <Gauss/Vector3.h>
 #include <Gauss/Quaternion.h>

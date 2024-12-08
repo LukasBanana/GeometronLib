@@ -9,7 +9,7 @@
 #define GM_TRANSFORM3_H
 
 
-#include "Macros.h"
+#include <Geom/Macros.h>
 
 #include <Gauss/Vector3.h>
 #include <Gauss/Quaternion.h>

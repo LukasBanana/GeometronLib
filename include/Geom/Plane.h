@@ -9,9 +9,9 @@
 #define GM_PLANE_H
 
 
-#include "Macros.h"
-#include "Triangle.h"
-#include "Config.h"
+#include <Geom/Macros.h>
+#include <Geom/Triangle.h>
+#include <Geom/Config.h>
 
 #include <Gauss/Vector3.h>
 #include <Gauss/RotateVector.h>

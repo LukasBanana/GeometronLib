@@ -9,12 +9,12 @@
 #define GM_TRIANGLE_COLLISION_H
 
 
-#include "Triangle.h"
-#include "Plane.h"
-#include "Ray.h"
-#include "Line.h"
-#include "PlaneCollision.h"
-#include "LineCollision.h"
+#include <Geom/Triangle.h>
+#include <Geom/Plane.h>
+#include <Geom/Ray.h>
+#include <Geom/Line.h>
+#include <Geom/PlaneCollision.h>
+#include <Geom/LineCollision.h>
 
 #include <Gauss/Epsilon.h>
 #include <array>

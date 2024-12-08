@@ -9,7 +9,8 @@
 #define GM_SKELETON_H
 
 
-#include "SkeletonJoint.h"
+#include <Geom/SkeletonJoint.h>
+
 #include <functional>
 
 

@@ -9,10 +9,10 @@
 #define GM_TRIANGLE_MESH_H
 
 
-#include "Config.h"
-#include "Line.h"
-#include "Triangle.h"
-#include "AABB.h"
+#include <Geom/Config.h>
+#include <Geom/Line.h>
+#include <Geom/Triangle.h>
+#include <Geom/AABB.h>
 
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>

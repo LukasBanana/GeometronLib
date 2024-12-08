@@ -9,8 +9,8 @@
 #define GM_CONE_COLLISION_H
 
 
-#include "Cone.h"
-#include "Plane.h"
+#include <Geom/Cone.h>
+#include <Geom/Plane.h>
 
 #include <Gauss/Epsilon.h>
 

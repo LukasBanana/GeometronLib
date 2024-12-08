@@ -9,9 +9,9 @@
 #define GM_CONVEX_HULL_H
 
 
-#include "Plane.h"
-#include "PlaneCollision.h"
-#include "Sphere.h"
+#include <Geom/Plane.h>
+#include <Geom/PlaneCollision.h>
+#include <Geom/Sphere.h>
 
 #include <vector>
 

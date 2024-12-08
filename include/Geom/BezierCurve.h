@@ -9,7 +9,7 @@
 #define GM_BEZIER_CURVE_H
 
 
-#include "BernsteinPolynomial.h"
+#include <Geom/BernsteinPolynomial.h>
 
 #include <Gauss/Real.h>
 #include <Gauss/Vector2.h>

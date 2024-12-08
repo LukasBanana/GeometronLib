@@ -9,9 +9,9 @@
 #define GM_AABB_COLLISION_H
 
 
-#include "AABB.h"
-#include "Line.h"
-#include "Ray.h"
+#include <Geom/AABB.h>
+#include <Geom/Line.h>
+#include <Geom/Ray.h>
 
 #include <Gauss/Epsilon.h>
 #include <algorithm>

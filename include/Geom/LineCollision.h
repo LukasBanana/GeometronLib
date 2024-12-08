@@ -9,7 +9,8 @@
 #define GM_LINE_COLLISION_H
 
 
-#include "Line.h"
+#include <Geom/Line.h>
+
 #include <Gauss/Algebra.h>
 #include <Gauss/Epsilon.h>
 #include <Gauss/ScalarType.h>

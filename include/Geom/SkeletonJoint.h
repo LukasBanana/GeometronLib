@@ -9,9 +9,10 @@
 #define GM_SKELETON_JOINT_H
 
 
-#include "TriangleMesh.h"
-#include "Transform3.h"
-#include "KeyframeSequence.h"
+#include <Geom/TriangleMesh.h>
+#include <Geom/Transform3.h>
+#include <Geom/KeyframeSequence.h>
+
 #include <Gauss/AffineMatrix4.h>
 #include <vector>
 #include <memory>

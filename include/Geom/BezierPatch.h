@@ -9,7 +9,7 @@
 #define GM_BEZIER_PATCH_H
 
 
-#include "BernsteinPolynomial.h"
+#include <Geom/BernsteinPolynomial.h>
 
 #include <Gauss/Vector2.h>
 #include <Gauss/Vector3.h>

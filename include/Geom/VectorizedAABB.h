@@ -9,7 +9,8 @@
 #define GM_VECTORIZED_AABB_H
 
 
-#include "AABB.h"
+#include <Geom/AABB.h>
+
 #include <xmmintrin.h>
 
 
