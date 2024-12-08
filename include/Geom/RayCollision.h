@@ -30,25 +30,25 @@ Line<Vec> ClosestSegmentBetweenRays(const Ray<Vec>& rayA, const Ray<Vec>& rayB)
 {
     using T = typename Gs::ScalarType<Vec>::Type;
 
-    const auto r = (rayA.origin - rayB.origin);
+    const Vec r = (rayA.origin - rayB.origin);
 
     /* Compute components for linear equations */
-    const auto c = Gs::Dot(rayA.direction, r);
-    const auto f = Gs::Dot(rayB.direction, r);
+    const T c = Gs::Dot(rayA.direction, r);
+    const T f = Gs::Dot(rayB.direction, r);
 
     /* The general non-degenerate case starts here */
-    const auto b = Gs::Dot(rayA.direction, rayB.direction);
-    const auto denom = T(1) - b*b;
+    const T b = Gs::Dot(rayA.direction, rayB.direction);
+    const T denom = T(1) - b*b;
 
     /* If segments are  not parallel, compute closest point on rayA to rayB */
     if (denom != T(0))
     {
-        const auto s = (b*f - c) / denom;
-        const auto t = b*s + f;
-        return Line<Vec> { rayA.Lerp(s), rayB.Lerp(t) };
+        const T s = (b*f - c) / denom;
+        const T t = b*s + f;
+        return Line<Vec>{ rayA.Lerp(s), rayB.Lerp(t) };
     }
     else
-        return Line<Vec> { rayA.origin, rayB.origin };
+        return Line<Vec>{ rayA.origin, rayB.origin };
 }
 
 

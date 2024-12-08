@@ -33,9 +33,9 @@ bool IsInsideTriangle(const Triangle3T<T>& triangle, const Gs::Vector3T<T>& poin
 {
     auto IsOnSameSide = [](const Gs::Vector3T<T>& p, const Gs::Vector3T<T>& q, const Gs::Vector3T<T>& a, const Gs::Vector3T<T>& b) -> bool
     {
-        auto diff = b - a;
-        auto v0 = Gs::Cross(diff, p - a);
-        auto v1 = Gs::Cross(diff, q - a);
+        Gs::Vector3T<T> diff = b - a;
+        Gs::Vector3T<T> v0 = Gs::Cross(diff, p - a);
+        Gs::Vector3T<T> v1 = Gs::Cross(diff, q - a);
         return (Gs::Dot(v0, v1) >= T(0));
     };
     return
@@ -53,58 +53,58 @@ bool IsInsideTriangle(const Triangle3T<T>& triangle, const Gs::Vector3T<T>& poin
 template <typename T>
 Gs::Vector3T<T> ClosestPointOnTriangle(const Triangle3T<T>& triangle, const Gs::Vector3T<T>& point)
 {
-    auto ab = triangle.b - triangle.a;
-    auto ac = triangle.c - triangle.a;
+    Gs::Vector3T<T> ab = triangle.b - triangle.a;
+    Gs::Vector3T<T> ac = triangle.c - triangle.a;
 
     /* Check if P is in vertex region outside A */
-    auto ap = point - triangle.a;
-    auto d1 = Gs::Dot(ab, ap);
-    auto d2 = Gs::Dot(ac, ap);
+    Gs::Vector3T<T> ap = point - triangle.a;
+    T d1 = Gs::Dot(ab, ap);
+    T d2 = Gs::Dot(ac, ap);
     if (d1 <= T(0) && d2 <= T(0))
         return triangle.a;
 
     /* Check if P is in vertex region outside B */
-    auto bp = point - triangle.b;
-    auto d3 = Gs::Dot(ab, bp);
-    auto d4 = Gs::Dot(ac, bp);
+    Gs::Vector3T<T> bp = point - triangle.b;
+    T d3 = Gs::Dot(ab, bp);
+    T d4 = Gs::Dot(ac, bp);
     if (d3 >= T(0) && d4 <= d3)
         return triangle.b;
 
     /* Check if P is in edge region of AB, if so return projection of P onto AB */
-    auto vc = d1*d4 - d3*d2;
+    T vc = d1*d4 - d3*d2;
     if (vc <= T(0) && d1 > T(0) && d3 <= T(0))
     {
-        auto v = d1 / (d1 - d3);
+        T v = d1 / (d1 - d3);
         return triangle.a + ab * v;
     }
 
     /* Check if P is in vertex region outside C */
-    auto cp = point - triangle.c;
-    auto d5 = Gs::Dot(ab, cp);
-    auto d6 = Gs::Dot(ac, cp);
+    Gs::Vector3T<T> cp = point - triangle.c;
+    T d5 = Gs::Dot(ab, cp);
+    T d6 = Gs::Dot(ac, cp);
     if (d6 >= T(0) && d5 <= d6)
         return triangle.c;
 
     /* Check if P is in edge region of AC, if so return projection of P onto AC */
-    auto vb = d5*d2 - d1*d6;
+    T vb = d5*d2 - d1*d6;
     if (vb <= T(0) && d2 > T(0) && d6 <= T(0))
     {
-        auto w = d2 / (d2 - d6);
+        T w = d2 / (d2 - d6);
         return triangle.a + ac * w;
     }
 
     /* Check if P is in edge region of BC, if so return projection of P onto BC */
-    auto va = d3*d6 - d5*d4;
+    T va = d3*d6 - d5*d4;
     if (va <= T(0) && (d4 - d3) > T(0) && (d5 - d6) >= T(0))
     {
-        auto w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+        T w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
         return triangle.b + (triangle.c - triangle.b) * w;
     }
 
     /* P is inside face region. Compute Q through its barycentric coordinates (u, v, w) */
-    auto denom = T(1) / (va + vb + vc);
-    auto v = vb * denom;
-    auto w = vc * denom;
+    T denom = T(1) / (va + vb + vc);
+    T v = vb * denom;
+    T w = vc * denom;
 
     return triangle.a + ab * v + ac * w;
 }
@@ -119,23 +119,23 @@ template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
 Line3T<T> ClosestSegmentToTriangle(const Triangle3T<T>& triangle, const PlaneT<T, PlaneEq>& trianglePlane, const Line3T<T>& line)
 {
     /* Get closest point between line and all three triangle edges */
-    auto segmentToAB = ClosestSegmentBetweenLines(Line3T<T> { triangle.a, triangle.b }, line);
-    auto segmentToBC = ClosestSegmentBetweenLines(Line3T<T> { triangle.b, triangle.c }, line);
-    auto segmentToCA = ClosestSegmentBetweenLines(Line3T<T> { triangle.c, triangle.a }, line);
+    Line3T<T> segmentToAB = ClosestSegmentBetweenLines(Line3T<T>{ triangle.a, triangle.b }, line);
+    Line3T<T> segmentToBC = ClosestSegmentBetweenLines(Line3T<T>{ triangle.b, triangle.c }, line);
+    Line3T<T> segmentToCA = ClosestSegmentBetweenLines(Line3T<T>{ triangle.c, triangle.a }, line);
 
-    auto distToAB = segmentToAB.LengthSq();
-    auto distToBC = segmentToBC.LengthSq();
-    auto distToCA = segmentToCA.LengthSq();
+    T distToAB = segmentToAB.LengthSq();
+    T distToBC = segmentToBC.LengthSq();
+    T distToCA = segmentToCA.LengthSq();
 
     /* Get closest points between line start/end and triangle's plane */
-    auto planePointA = ClosestPointOnPlane(trianglePlane, line.a);
-    auto planePointB = ClosestPointOnPlane(trianglePlane, line.b);
+    Gs::Vector3T<T> planePointA = ClosestPointOnPlane(trianglePlane, line.a);
+    Gs::Vector3T<T> planePointB = ClosestPointOnPlane(trianglePlane, line.b);
 
-    auto planeDistA = Gs::DistanceSq(planePointA, line.a);
-    auto planeDistB = Gs::DistanceSq(planePointB, line.b);
+    T planeDistA = Gs::DistanceSq(planePointA, line.a);
+    T planeDistB = Gs::DistanceSq(planePointB, line.b);
 
     /* Determine which point is closest to line */
-    auto dist = std::numeric_limits<T>::max();
+    T dist = std::numeric_limits<T>::max();
 
     const Gs::Vector3T<T>* closestA = nullptr;
     const Gs::Vector3T<T>* closestB = nullptr;
@@ -225,8 +225,8 @@ template <typename T>
 bool IntersectionWithPrecomputedTriangleBarycentric(const PrecomputedIntersectionTriangle<T>& precomputed, const PrecomputedIntersectionRay<T>& ray, Gs::Vector3T<T>& barycentric)
 {
     /* Check if ray direction is inside the edges bc, ca and ab */
-    auto s = Gs::Dot(ray.crossDirOrigin, precomputed.triangle.c - precomputed.triangle.b);
-    auto t = Gs::Dot(ray.crossDirOrigin, precomputed.triangle.a - precomputed.triangle.c);
+    T s = Gs::Dot(ray.crossDirOrigin, precomputed.triangle.c - precomputed.triangle.b);
+    T t = Gs::Dot(ray.crossDirOrigin, precomputed.triangle.a - precomputed.triangle.c);
 
     barycentric.x = Gs::Dot(ray.ray.direction, precomputed.crossCB) + s;
     barycentric.y = Gs::Dot(ray.ray.direction, precomputed.crossAC) + t;
@@ -248,7 +248,7 @@ bool IntersectionWithPrecomputedTriangleBarycentric(const PrecomputedIntersectio
         return false;
 
     /* Compute intersection point with barycentric coordinates */
-    auto denom = T(1) / (barycentric.x + barycentric.y + barycentric.z);
+    T denom = T(1) / (barycentric.x + barycentric.y + barycentric.z);
     barycentric *= denom;
 
     return true;
@@ -259,12 +259,12 @@ template <typename T>
 bool IntersectionWithTriangleBarycentric(const Triangle3T<T>& triangle, const Ray3T<T>& ray, Gs::Vector3T<T>& barycentric)
 {
     /* Get edge vectors */
-    auto pa = triangle.a - ray.origin;
-    auto pb = triangle.b - ray.origin;
-    auto pc = triangle.c - ray.origin;
+    Gs::Vector3T<T> pa = triangle.a - ray.origin;
+    Gs::Vector3T<T> pb = triangle.b - ray.origin;
+    Gs::Vector3T<T> pc = triangle.c - ray.origin;
 
     /* Check if ray direction is inside the edges bc, ca and ab */
-    auto m = Gs::Cross(ray.direction, pc);
+    Gs::Vector3T<T> m = Gs::Cross(ray.direction, pc);
 
     barycentric.x = Gs::Dot(pb, m);
     if (barycentric.x < T(0))
@@ -279,7 +279,7 @@ bool IntersectionWithTriangleBarycentric(const Triangle3T<T>& triangle, const Ra
         return false;
 
     /* Check if ray points towards the triangle */
-    auto normal = Gs::Cross(triangle.b - triangle.a, triangle.c - triangle.a);
+    Gs::Vector3T<T> normal = Gs::Cross(triangle.b - triangle.a, triangle.c - triangle.a);
     if (Gs::Dot(normal, ray.direction) >= T(0))
         return false;
 
@@ -288,7 +288,7 @@ bool IntersectionWithTriangleBarycentric(const Triangle3T<T>& triangle, const Ra
         return false;
 
     /* Compute intersection point with barycentric coordinates */
-    auto denom = T(1) / (barycentric.x + barycentric.y + barycentric.z);
+    T denom = T(1) / (barycentric.x + barycentric.y + barycentric.z);
     barycentric *= denom;
 
     return true;
@@ -299,9 +299,9 @@ template <typename T, typename PlaneEq = DefaultPlaneEquation<T>>
 bool IntersectionWithTriangleInterp(const Triangle3T<T>& triangle, const PlaneT<T, PlaneEq>& trianglePlane, const Gs::Vector3T<T>& origin, const Gs::Vector3T<T>& direction, T& interp)
 {
     /* Get edge vectors */
-    auto pa = triangle.a - origin;
-    auto pb = triangle.b - origin;
-    auto pc = triangle.c - origin;
+    Gs::Vector3T<T> pa = triangle.a - origin;
+    Gs::Vector3T<T> pb = triangle.b - origin;
+    Gs::Vector3T<T> pc = triangle.c - origin;
 
     /* Check if ray direction is inside the edges bc, ca and ab */
     if (Gs::Dot(pb, Gs::Cross(direction, pc)) < T(0))
@@ -377,8 +377,8 @@ bool IntersectionWithTriangle(const Triangle3T<T>& triangleA, const Triangle3T<T
 
     for (std::size_t i = 0; i < 2; ++i)
     {
-        auto triangleRef = triangleRefList[i];
-        auto triangleOpponentRef = triangleRefList[(i + 1) % 2];
+        const Triangle3T<T>* triangleRef = triangleRefList[i];
+        const Triangle3T<T>* triangleOpponentRef = triangleRefList[(i + 1) % 2];
 
         for (std::size_t j = 0; j < 3; ++j)
         {
@@ -489,13 +489,13 @@ PlaneRelation ClipTriangle(
     for (std::size_t i = 0; i < 3; ++i)
     {
         /* Setup next edge (a, b) */
-        auto j = (i + 1) % 3;
+        std::size_t j = (i + 1) % 3;
         b = triangle[j];
 
         if (rel[j] != PlaneRelation::Onto)
         {
             /* Check for intersection with plane */
-            auto t = IntersectionWithPlaneInterp(clipPlane, a, b - a);
+            T t = IntersectionWithPlaneInterp(clipPlane, a, b - a);
 
             if (t >= T(0) && t <= T(1))
             {

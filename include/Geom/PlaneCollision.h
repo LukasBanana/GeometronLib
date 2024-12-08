@@ -103,7 +103,7 @@ template <typename T, typename PlaneEq>
 bool IntersectionWithPlane(const PlaneT<T, PlaneEq>& plane, const Ray3T<T>& ray, Gs::Vector3T<T>& intersection)
 {
     /* Compute interpolation factor */
-    const auto t = IntersectionWithPlaneInterp(plane, ray.origin, ray.direction);
+    const T t = IntersectionWithPlaneInterp<T, PlaneEq>(plane, ray.origin, ray.direction);
 
     if (t >= T(0))
     {
@@ -119,7 +119,7 @@ template <typename T, typename PlaneEq>
 bool IntersectionWithPlane(const PlaneT<T, PlaneEq>& plane, const Line3T<T>& line, Gs::Vector3T<T>& intersection)
 {
     /* Compute interpolation factor */
-    const auto t = IntersectionWithPlaneInterp(plane, line.a, line.Direction());
+    const T t = IntersectionWithPlaneInterp<T, PlaneEq>(plane, line.a, line.Direction());
 
     if (t >= T(0) && t <= T(1))
     {
@@ -214,7 +214,7 @@ PlaneRelation RelationToPlane(const PlaneT<T, PlaneEq>& plane, const AABB3T<T>& 
 template <typename T, typename PlaneEq>
 PlaneRelation RelationToPlane(const PlaneT<T, PlaneEq>& plane, const Gs::Vector3T<T>& point, const T& epsilon = Gs::Epsilon<T>())
 {
-    const auto d = SgnDistanceToPlane(plane, point);
+    const T d = SgnDistanceToPlane(plane, point);
 
     if (d > epsilon)
         return PlaneRelation::InFrontOf;
@@ -240,12 +240,12 @@ bool IsFrontFacingPlane(const PlaneT<T, PlaneEq>& plane, const ConeT<T>& cone)
         return false;
 
     /* Compute offset vector */
-    auto offsetVec = Gs::Cross(plane.normal, cone.direction);
+    Gs::Vector3T<T> offsetVec = Gs::Cross(plane.normal, cone.direction);
     offsetVec = Gs::Cross(offsetVec, cone.direction);
     offsetVec.Normalize();
 
     /* Check closest point against plane */
-    auto closestPoint = cone.point + (cone.direction * cone.height) + (offsetVec * cone.radius);
+    Gs::Vector3T<T> closestPoint = cone.point + (cone.direction * cone.height) + (offsetVec * cone.radius);
 
     return IsFrontFacingPlane(plane, closestPoint);
 }

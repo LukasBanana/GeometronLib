@@ -62,10 +62,10 @@ class TriangleMesh
         TriangleMesh() = default;
 
         TriangleMesh(const TriangleMesh&) = default;
-        TriangleMesh(TriangleMesh&& rhs);
+        TriangleMesh(TriangleMesh&& rhs) noexcept;
 
         TriangleMesh& operator = (const TriangleMesh& rhs) = default;
-        TriangleMesh& operator = (TriangleMesh&& rhs);
+        TriangleMesh& operator = (TriangleMesh&& rhs) noexcept;
 
         //! Clears all vertices and triangles.
         void Clear();

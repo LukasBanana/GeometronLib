@@ -36,20 +36,20 @@ template <typename T>
 bool IntersectionWithSphereInterp(const SphereT<T>& sphere, const Gs::Vector3T<T>& origin, const Gs::Vector3T<T>& direction, T& t)
 {
     /* Compute the sphere/ray vectors and scalar products */
-    auto dif = origin - sphere.origin;
-    auto c = Gs::LengthSq(dif) - sphere.radius*sphere.radius;
+    Gs::Vector3T<T> dif = origin - sphere.origin;
+    T c = Gs::LengthSq(dif) - sphere.radius*sphere.radius;
 
     /* Exit if ray is inside sphere */
     if (c < T(0))
         return false;
 
-    auto b = Gs::Dot(dif, direction);
+    T b = Gs::Dot(dif, direction);
 
     /* Exit if ray points away from sphere (b > 0) */
     if (b > T(0))
         return false;
 
-    auto d = b*b - c;
+    T d = b*b - c;
 
     /* Negative discriminant corresponds to ray missing sphere */
     if (d < T(0))

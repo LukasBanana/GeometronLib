@@ -48,17 +48,17 @@ bool IntersectionWithAABBInterp(const Box& box, const Ray<Vec>& ray, typename Gs
         else
         {
             /* Compute intersection t value of ray with near and far plane of slab */
-            const auto ood = T(1) / ray.direction[i];
-            auto t1 = (box.min[i] - ray.origin[i]) * ood;
-            auto t2 = (box.max[i] - ray.origin[i]) * ood;
+            const T ood = T(1) / ray.direction[i];
+            T t1 = (box.min[i] - ray.origin[i]) * ood;
+            T t2 = (box.max[i] - ray.origin[i]) * ood;
 
             /* Make t1 be intersection with near plane, t2 with far plane */
             if (t1 > t2)
                 std::swap(t1, t2);
 
             /* Compute the intersection of slab intersection intervals */
-            tmin = (std::max)(tmin, t1);
-            tmax = (std::min)(tmax, t2);
+            tmin = std::max<T>(tmin, t1);
+            tmax = std::min<T>(tmax, t2);
 
             /* Exit with no collision as soon as slab intersection becomes empty */
             if (tmin > tmax)

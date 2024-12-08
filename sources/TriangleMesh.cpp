@@ -45,13 +45,13 @@ TriangleMesh::Vertex& TriangleMesh::Vertex::operator *= (Gs::Real rhs)
     return *this;
 }
 
-TriangleMesh::TriangleMesh(TriangleMesh&& rhs) :
+TriangleMesh::TriangleMesh(TriangleMesh&& rhs) noexcept :
     vertices  { std::move(rhs.vertices)  },
     triangles { std::move(rhs.triangles) }
 {
 }
 
-TriangleMesh& TriangleMesh::operator = (TriangleMesh&& rhs)
+TriangleMesh& TriangleMesh::operator = (TriangleMesh&& rhs) noexcept
 {
     vertices = std::move(rhs.vertices);
     triangles = std::move(rhs.triangles);
@@ -276,8 +276,8 @@ std::vector<TriangleMesh::TriangleIndex> TriangleMesh::FindTriangles(VertexIndex
 
     for (TriangleIndex i = 0; i < triangles.size(); ++i)
     {
-        const auto& tri = triangles[i];
-        if (tri.a == vertexIndex || tri.b == vertexIndex || tri.b == vertexIndex)
+        const Triangle& tri = triangles[i];
+        if (tri.a == vertexIndex || tri.b == vertexIndex || tri.c == vertexIndex)
             result.push_back(i);
     }
 

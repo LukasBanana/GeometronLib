@@ -26,12 +26,12 @@ template <typename T, typename PlaneEq>
 Gs::Vector3T<T> ClosestPointOnCone(const ConeT<T>& cone, const PlaneT<T, PlaneEq>& plane)
 {
     /* Compute offset vector */
-    auto offsetVec = Gs::Cross(plane.normal, cone.direction);
+    Gs::Vector3T<T> offsetVec = Gs::Cross(plane.normal, cone.direction);
     offsetVec = Gs::Cross(offsetVec, cone.direction);
     offsetVec.Normalize();
 
     /* Get closest point on cone towards plane */
-    auto closestPoint = cone.point + (cone.direction * cone.height) + (offsetVec * cone.radius);
+    Gs::Vector3T<T> closestPoint = cone.point + (cone.direction * cone.height) + (offsetVec * cone.radius);
 
     if (DistanceToPlane(plane, closestPoint) < DistanceToPlane(plane, cone.point))
         return closestPoint;
